@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
+
+@custom-variant dark (&:where(.dark, .dark *)); 
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-amethyst-50: #fbf5fe;
+  --color-amethyst-100: #f5e9fe;
+  --color-amethyst-200: #ecd2fc;
+  --color-amethyst-300: #dfaff8;
+  --color-amethyst-400: #ce80f2;
+  --color-amethyst-500: #b03fe4;
+  --color-amethyst-600: #9c2fca;
+  --color-amethyst-700: #8424a7;
+  --color-amethyst-800: #6d1f89;
+  --color-amethyst-900: #5d1f70;
+  --color-amethyst-950: #3b084a;
+
+  --color-coral-tree-50: #fbf5f5;
+--color-coral-tree-100: #f7edec;
+--color-coral-tree-200: #efdddc;
+--color-coral-tree-300: #e1c2c0;
+--color-coral-tree-400: #d09e9c;
+--color-coral-tree-500: #b56969;
+--color-coral-tree-600: #a45a5d;
+--color-coral-tree-700: #89474c;
+--color-coral-tree-800: #733e44;
+--color-coral-tree-900: #64373d;
+--color-coral-tree-950: #361b1e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111111;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
