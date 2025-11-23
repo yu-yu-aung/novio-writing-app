@@ -36,7 +36,7 @@ const Header = () => {
       : "text-amethyst-900 dark:text-amethyst-100";
 
   return (
-    <header className="bg-gray-50 dark:bg-gray-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-30">
+    <header className="bg-amethyst-100 dark:bg-amethyst-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-30">
 
       <div className="grid grid-cols-1 sm:flex lg:flex sm:justify-between sm:items-center lg:justify-between lg:items-center">
         
@@ -66,7 +66,7 @@ const Header = () => {
                   block w-full rounded-lg p-2 sm:p-3 pl-2 sm:pl-10
                   text-xs sm:text-sm
                   text-gray-900 dark:text-gray-100
-                  bg-gray-100 dark:bg-gray-700
+                  bg-amethyst-100 dark:bg-amethyst-850
                   border border-gray-300 dark:border-gray-600
                   focus:outline-none transition
                 "

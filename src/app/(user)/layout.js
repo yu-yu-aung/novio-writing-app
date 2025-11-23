@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function UserLayout({ children }) {
   return (
-      <div>
+      <div className="min-h-screen flex flex-col">
         <Header />
         {children}
         <SubFooter/>

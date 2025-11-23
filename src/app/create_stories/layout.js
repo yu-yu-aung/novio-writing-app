@@ -1,7 +1,5 @@
 import "@/styles/globals.css";
 import Header from "@/components/Header";
-import { ThemeProvider } from "next-themes";
-import MainFooter from "@/components/MainFooter";
 import SubFooter from "@/components/SubFooter";
 
 export const metadata = {
@@ -10,9 +8,9 @@ export const metadata = {
     "Novia is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
-export default function AuthLayout({ children }) {
+export default function CreateLayout({ children }) {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
       {children}
       <SubFooter/>
