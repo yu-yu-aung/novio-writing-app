@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import Header from "@/components/Header";
 import { ThemeProvider } from "next-themes";
 import MainFooter from "@/components/MainFooter";
+import SubFooter from "@/components/SubFooter";
 
 export const metadata = {
   title: "Novia, Writer's Paradise",
@@ -9,14 +10,12 @@ export const metadata = {
     "Novia is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
-export default function RootLayout({ children }) {
+export default function AuthLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col">
-        <ThemeProvider attribute={"class"} enableSystem defaultTheme="system">
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <div>
+      <Header />
+      {children}
+      <SubFooter/>
+    </div>
   );
 }

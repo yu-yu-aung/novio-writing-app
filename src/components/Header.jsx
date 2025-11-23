@@ -1,151 +1,176 @@
-'use client'
+"use client";
 
-import ThemeButton from "./ThemeButton"
-import useAuthStore from '@/store/useAuthStore'
-import { Search, User, Menu, X } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
+import ThemeButton from "./ThemeButton";
+import {
+  Search,
+  User2,
+  Bell,
+  HomeIcon,
+  PencilLine,
+} from "lucide-react";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import useAuthStore from "@/store/useAuthStore";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
-  const router = useRouter()
-  const { isLoggedIn } = useAuthStore()
-  const [keyWord, setKeyWord] = useState("")
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const { isLoggedIn } = useAuthStore();
+  const pathname = usePathname();
 
-  // mark client mount
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const [keyWord, setKeyWord] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   const handleSearch = (e) => {
-    e.preventDefault()
-    if (!keyWord.trim()) return
+    e.preventDefault();
+    console.log("Search for:", keyWord);
+    setKeyWord("");
+  };
 
-    router.push(`/search?query=${keyWord}`)
-    setKeyWord("")
-    setMenuOpen(false) // close menu on search
-  }
+  const isActive = (path) =>
+    pathname === path
+      ? "text-coral-tree-700 dark:text-amethyst-300 font-bold"
+      : "text-amethyst-900 dark:text-amethyst-100";
 
   return (
-    <header className="bg-gray-50 shadow-md py-5 px-4 sm:px-8 lg:px-24 sticky top-0 z-30">
-      <div className="flex justify-between items-center">
+    <header className="bg-gray-50 dark:bg-gray-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-30">
 
-        {/* Logo */}
-        <Link href="/" className="flex gap-2 items-center">
-          <img src="/logo.png" alt="The Eagle's Daily News Logo" className="w-12 h-12" />
-          <h2 className="text-lg sm:text-xl font-bold italic font-serif leading-tight">
-            Eagle's <br /> Daily News
-          </h2>
-        </Link>
-
-        {/* Desktop Search */}
-        <form onSubmit={handleSearch} className="hidden md:block max-w-md w-[300px]">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search className="w-4 h-4 text-gray-500" />
-            </div>
-            <input
-              type="search"
-              className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
-              placeholder="Search news…"
-              value={keyWord}
-              onChange={(e) => setKeyWord(e.target.value)}
-              required
+      <div className="grid grid-cols-1 sm:flex lg:flex sm:justify-between sm:items-center lg:justify-between lg:items-center">
+        
+        {/* Logo and Search Bar */}
+        <div className="flex gap-2 lg:gap-12 items-center">
+          <Link href="/" className="flex gap-1 sm:gap-2 items-center">
+            <img
+              src="/logo.png"
+              alt="Novio Writing App Logo"
+              className="size-10 sm:size-12 lg:size-16"
             />
-            <button
-              type="submit"
-              className="text-white absolute right-2.5 bottom-2 bg-orange-700 hover:bg-orange-800 font-medium rounded-lg text-sm px-3 py-1.5"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+            <h2 className="hidden sm:block text-xl lg:text-2xl font-bold italic font-serif">
+              Novio
+            </h2>
+          </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-4">
-          <Link className="p-2 text-lg font-semibold hover:text-orange-700" href="/">Home</Link>
+          <form onSubmit={handleSearch} className="max-w-md w-[280px] sm:w-[400px] lg:w-[500px]">
+            <div className="relative">
+
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Search className="hidden sm:block size-4 text-gray-600 dark:text-gray-200" />
+              </div>
+
+              <input
+                type="search"
+                className="
+                  block w-full rounded-lg p-2 sm:p-3 pl-2 sm:pl-10
+                  text-xs sm:text-sm
+                  text-gray-900 dark:text-gray-100
+                  bg-gray-100 dark:bg-gray-700
+                  border border-gray-300 dark:border-gray-600
+                  focus:outline-none transition
+                "
+                placeholder="Explore stories"
+                value={keyWord}
+                onChange={(e) => setKeyWord(e.target.value)}
+                required
+              />
+
+              <button
+                type="submit"
+                className="
+                  absolute right-1 bottom-1 sm:bottom-2
+                  px-2 py-1 sm:px-3 sm:py-1.5
+                  rounded-lg text-sm transition
+                  text-black dark:text-white
+                  bg-transparent sm:bg-amethyst-300 sm:hover:bg-amethyst-400
+                  sm:dark:bg-amethyst-700 sm:dark:hover:bg-amethyst-800
+                "
+              >
+                <Search className="size-4 sm:hidden text-amethyst-900 dark:text-amethyst-400" />
+                <span className="hidden sm:block">Search</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* NAVIGATION BAR*/}
+        <nav className="flex items-center gap-4">
+
+          <Link
+            href="/"
+            className={`
+              flex items-center gap-1 p-2 font-medium transition
+              hover:text-coral-tree-700 dark:hover:text-amethyst-300
+              ${isActive("/")}
+            `}
+          >
+            <HomeIcon className="size-4 sm:hidden" />
+            <span className="hidden sm:block text-xl lg:text-2xl">Home</span>
+          </Link>
+
+          <Link
+            href="/create_stories"
+            className={`
+              flex items-center gap-1 p-2 font-medium transition
+              hover:text-coral-tree-700 dark:hover:text-amethyst-300
+              ${isActive("/create_stories")}
+            `}
+          >
+            <PencilLine className="size-4 sm:hidden" />
+            <span className="hidden sm:block text-xl lg:text-2xl">Create</span>
+          </Link>
 
           {isLoggedIn ? (
-            <Link href="/user-info" className="p-2 text-lg font-semibold hover:text-orange-700">
-              <User />
-            </Link>
+            <>
+              <Link
+                href="/profile"
+                className={`
+                  flex items-center gap-1 p-2 font-medium transition
+                  hover:text-coral-tree-700 dark:hover:text-amethyst-300
+                  ${isActive("/profile")}
+                `}
+              >
+                <User2 className="size-4 sm:hidden" />
+                <span className="hidden sm:block text-xl lg:text-2xl">Profile</span>
+              </Link>
+
+              <Link
+                href="/notification"
+                className={`
+                  flex items-center gap-1 p-2 font-medium transition
+                  hover:text-coral-tree-700 dark:hover:text-amethyst-300
+                  ${isActive("/notification")}
+                `}
+              >
+                <Bell className="size-4 sm:hidden" />
+                <span className="hidden sm:block text-xl lg:text-2xl">Notification</span>
+              </Link>
+            </>
           ) : (
             <>
-              <button onClick={() => router.push("/auth?mode=signup")} className="p-2 text-lg font-semibold hover:text-orange-700">Register</button>
-              <button onClick={() => router.push("/auth?mode=login")} className="p-2 text-lg font-semibold hover:text-orange-700">Log In</button>
+              <Link
+                href="/authentication"
+                className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
+              >
+                Register
+              </Link>
+
+              {/* LOGIN */}
+              <Link
+                href="/authentication"
+                className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
+              >
+                Log In
+              </Link>
             </>
           )}
 
-          <ThemeButton/>
+          <ThemeButton />
         </nav>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Slide-In Menu */}
-      <div
-        className={`
-          fixed top-0 right-0 h-full w-72 bg-white shadow-lg p-6 z-40
-          transform transition-transform duration-300 ease-in-out
-          ${menuOpen ? "translate-x-0" : "translate-x-full"}
-          ${!mounted ? "opacity-0 pointer-events-none" : ""}
-        `}
-      >
-        {mounted && (
-          <>
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-lg">Eagle's Daily News</h3>
-              <button onClick={() => setMenuOpen(false)}>
-                <X size={28} />
-              </button>
-            </div>
-
-            {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="mt-12">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="w-4 h-4 text-gray-500" />
-                </div>
-                <input
-                  type="search"
-                  className="block w-full p-3 pl-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="Search news…"
-                  value={keyWord}
-                  onChange={(e) => setKeyWord(e.target.value)}
-                  required
-                />
-                <button type="submit" className="text-sm text-white absolute right-2.5 bottom-2 px-2 py-1 bg-orange-700 hover:bg-orange-800 font-medium rounded">
-                  Search
-                </button>
-              </div>
-            </form>
-
-            {/* Mobile Nav Links */}
-            <nav className="mt-8 flex flex-col gap-4 text-lg font-semibold">
-              <Link href="/" className="hover:text-orange-700">Home</Link>
-
-              {isLoggedIn ? (
-                <Link href="/user-info" className="hover:text-orange-700 flex items-center gap-2">
-                  <User /> Profile
-                </Link>
-              ) : (
-                <>
-                  <button onClick={() => router.push("/auth?mode=signup")} className="text-left hover:text-orange-700">Register</button>
-                  <button onClick={() => router.push("/auth?mode=login")} className="text-left hover:text-orange-700">Log In</button>
-                </>
-              )}
-              <ThemeButton/>
-            </nav>
-          </>
-        )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -8,12 +8,12 @@ export const metadata = {
     "Novia is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
-export default function UserLayout({ children }) {
+export default function SearchLayout({ children }) {
   return (
-      <div>
-        <Header />
-        {children}
-        <SubFooter/>
-      </div>
+    <div>
+      <Header />
+      {children}
+      <SubFooter/>
+    </div>
   );
 }

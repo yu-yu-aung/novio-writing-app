@@ -19,12 +19,11 @@ export default function ThemeButton() {
     <button
       onClick={() => setTheme( theme === "light" ? "dark" : "light")}
       type="button"
-      className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 
-                 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 
-                 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg 
+      className="text-gray-500 dark:text-gray-400 hover:scale-110 active:scale-110  
+                  focus:outline-none rounded-lg 
                  text-sm p-2.5"
     >
-      {theme === "light" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      {theme === "light" ? <Moon className="w-5 h-5 focus:outline-none" /> : <Sun className="w-5 h-5 focus:outline-none" />}
     </button>
   );
 }
