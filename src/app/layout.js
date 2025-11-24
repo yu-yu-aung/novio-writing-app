@@ -2,11 +2,12 @@ import "@/styles/globals.css";
 import Header from "@/components/Header";
 import { ThemeProvider } from "next-themes";
 import MainFooter from "@/components/MainFooter";
+import { Toaster } from "sonner";
 
 export const metadata = {
-  title: "Novia, Writer's Paradise",
+  title: "Novio, Writer's Paradise",
   description:
-    "Novia is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
+    "Novio is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
 export default function RootLayout({ children }) {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider attribute={"class"} enableSystem defaultTheme="system">
           {children}
         </ThemeProvider>
+        <Toaster position="top-center" richColors closeButton expand />
       </body>
     </html>
   );

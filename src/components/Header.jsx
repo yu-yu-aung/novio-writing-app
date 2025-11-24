@@ -150,7 +150,7 @@ const Header = () => {
           ) : (
             <>
               <Link
-                href="/authentication"
+                href="/sign_up"
                 className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
               >
                 Register
@@ -158,7 +158,7 @@ const Header = () => {
 
               {/* LOGIN */}
               <Link
-                href="/authentication"
+                href="/log_in"
                 className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
               >
                 Log In

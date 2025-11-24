@@ -4,10 +4,10 @@ import { useState } from "react";
 import StoryCard from "./StoryCard";
 
 const CardSlider = ({ stories }) => {
-  const [current, setCurrent] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
-    setCurrent((prev) => (prev + 1) % stories.length);
+    setCurrentIndex((prev) => prev === 0 ? prev + 1 : stories.length -1)
   };
 
   const handlePrev = () => {
@@ -16,22 +16,23 @@ const CardSlider = ({ stories }) => {
     );
   };
 
+  const distance = Math.abs(stories.length - currentIndex)
+
+  let scale = "scale-60 opacity-50"; // farthest cards
+            if (distance === 0) scale = "scale-100 opacity-100";
+            if (distance === 1) scale = "scale-90 opacity-90";
+            if (distance === 2) scale = "scale-75 opacity-75";
+
   return (
     <div className="w-full flex flex-col items-center">
       {/* Slider */}
       <div className="relative w-full overflow-hidden py-10">
         <div className="flex justify-center gap-6 transition-transform">
-          {stories.map((story, index) => {
-            const distance = Math.abs(current - index);
-
-            let scale = "scale-60 opacity-50"; // farthest cards
-            if (distance === 0) scale = "scale-100 opacity-100";
-            if (distance === 1) scale = "scale-90 opacity-90";
-            if (distance === 2) scale = "scale-75 opacity-75";
+          {stories.map((story, index) => {      
 
             return (
               <div
-                key={story.id}
+                key={index}
                 className={`transition-all duration-300 ease-out transform ${scale}`}
               >
                 <StoryCard story={story} />

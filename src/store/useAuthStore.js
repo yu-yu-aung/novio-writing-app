@@ -1,15 +1,8 @@
 import { create } from "zustand";
-
-const useAuthStore = create((set) => ({
-  isLoggedIn: true,
-  user: {
-    userId: null,
-    userName: "",
-    penName: "",
-    userEmail: "",
-  },
-  logOut: (set) =>
-    set({
+import { persist } from "zustand/middleware";
+const useAuthStore = create()(
+  persist(
+    (set) => ({
       isLoggedIn: false,
       user: {
         userId: null,
@@ -17,7 +10,22 @@ const useAuthStore = create((set) => ({
         penName: "",
         userEmail: "",
       },
+      setUser: () => set({}),
+      logOut: (set) =>
+        set({
+          isLoggedIn: false,
+          user: {
+            userId: null,
+            userName: "",
+            penName: "",
+            userEmail: "",
+          },
+        }),
     }),
-}));
+    {
+      name: "auth-storage",
+    }
+  )
+);
 
 export default useAuthStore;

@@ -5,9 +5,9 @@ import MainFooter from "@/components/MainFooter";
 import SubFooter from "@/components/SubFooter";
 
 export const metadata = {
-  title: "Novia, Writer's Paradise",
+  title: "Novio, Writer's Paradise",
   description:
-    "Novia is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
+    "Novio is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
 export default function AuthLayout({ children }) {
@@ -15,7 +15,7 @@ export default function AuthLayout({ children }) {
     <div className="min-h-screen flex flex-col">
       <Header />
       {children}
-      <SubFooter/>
+      <SubFooter />
     </div>
   );
 }
