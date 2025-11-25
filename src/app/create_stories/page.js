@@ -1,12 +1,24 @@
 "use client";
 
 import SmallStoryCard from "@/components/SmallStoryCard";
+import { saveStorytoDB } from "@/lib/story";
+import { uploadStoryImage } from "@/lib/upload";
+import useAuthStore from "@/store/useAuthStore";
 import { Plus } from "lucide-react";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Page = () => {
   const [clickPublish, setClickPublish] = useState(true);
   const [clickDraft, setClickDraft] = useState(false);
+
+  const { user, isLoggedIn } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const handlePublishClick = () => {
     setClickPublish(true);
@@ -18,24 +30,64 @@ const Page = () => {
     setClickPublish(false);
   };
 
+  const onSubmit = async (data) => {
+    if (!isLoggedIn || !user) {
+      toast.error("Please log in or sign up to create a story");
+      return;
+    }
+
+    const file = data.image?.[0];
+
+    let imageUrl = null;
+
+    if (file) {
+      imageUrl = await uploadStoryImage(file, user.id);
+    }
+
+    const { error } = await saveStorytoDB(user.id, data, imageUrl);
+
+    if (error) {
+      toast.error("Something went wrong! Failed to create the story");
+      return;
+    }
+
+    toast.success("Story created!");
+  };
+
   return (
     <div className="min-h-screen pb-20">
       {/* Header Section */}
       <section className="max-w-4xl mx-auto px-4 py-10">
         <div className="flex items-center gap-4 mb-10">
-          <img src="/swan.png" alt="Logo" className="size-[100px] dark:hidden"/>
-          <img src="/light_swan.png" alt="Logo" className="size-[100px] hidden dark:block"/>
+          <img
+            src="/swan.png"
+            alt="Logo"
+            className="size-[100px] dark:hidden"
+          />
+          <img
+            src="/light_swan.png"
+            alt="Logo"
+            className="size-[100px] hidden dark:block"
+          />
           <h2 className="text-2xl lg:text-3xl font-bold text-heading">
             Create a New Story
           </h2>
         </div>
 
         {/* Form */}
-        <form className="flex flex-col lg:flex-row gap-10">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col lg:flex-row gap-10"
+        >
           {/* Image Upload */}
           <div className="relative group">
             <label className="block">
-              <input type="file" id="file" className="hidden" />
+              <input
+                type="file"
+                id="file"
+                className="hidden"
+                {...register("image")}
+              />
               <div className="w-40 h-56 sm:w-72 sm:h-[500px] border-2 border-dashed border-brand rounded-xl bg-brand-soft cursor-pointer flex flex-col items-center justify-center transition group-hover:bg-brand-light/40">
                 <Plus className="size-10 text-brand" />
                 <p className="text-sm text-muted mt-2">Upload Cover</p>
@@ -50,7 +102,7 @@ const Page = () => {
               <input
                 type="text"
                 id="title"
-                required
+                {...register("title", { required: true })}
                 className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
               />
               <label
@@ -66,7 +118,7 @@ const Page = () => {
               <textarea
                 id="description"
                 rows="3"
-                required
+                {...register("description", { required: true })}
                 className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
               />
               <label
@@ -82,7 +134,7 @@ const Page = () => {
               <input
                 type="text"
                 id="category"
-                required
+                {...register("category", { required: true })}
                 className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
               />
               <label
@@ -98,7 +150,7 @@ const Page = () => {
               <input
                 type="text"
                 id="genre"
-                required
+                {...register("genre", { required: true })}
                 className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
               />
               <label
@@ -106,6 +158,22 @@ const Page = () => {
                 className="absolute left-1 top-3 text-body text-sm transition-all peer-focus:text-brand peer-focus:-top-3 peer-focus:text-xs peer-valid:-top-3 peer-valid:text-xs"
               >
                 Genre
+              </label>
+            </div>
+
+            {/* Tags */}
+            <div className="relative mb-6 group">
+              <input
+                type="text"
+                id="tags"
+                {...register("tags", { required: true })}
+                className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
+              />
+              <label
+                htmlFor="tags"
+                className="absolute left-1 top-3 text-body text-sm transition-all peer-focus:text-brand peer-focus:-top-3 peer-focus:text-xs peer-valid:-top-3 peer-valid:text-xs"
+              >
+                Tags
               </label>
             </div>
 
