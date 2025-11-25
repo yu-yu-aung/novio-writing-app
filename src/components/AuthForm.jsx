@@ -1,35 +1,58 @@
 "use client"
 
 import { signIn, signUp } from '@/lib/auth';
-import React from 'react'
+import useAuthStore from '@/store/useAuthStore';
 import { useForm } from 'react-hook-form'
 
 const AuthForm = ({mode = "Log In"}) => {
-
-  const {
-    register, 
-    handleSubmit, 
-    watch, 
-    formState: {errors},
-  } = useForm(); 
+  const setUser = useAuthStore((state) => state.setUser); 
+  
+  const { register, handleSubmit } = useForm(); 
 
   const onSubmit = async (data) => {
     const { email, password, userName, penName } = data;
 
+    let response; 
+
+    //Connect with supabase log in and sign up
     if (mode === "Log In") {
-      return await signIn(email, password);
+      response = await signIn(email, password);
     } else {
-      return await signUp(email, password, userName, penName);
+      response = await signUp(email, password, userName, penName);
     }
+
+    if (response.error) {
+      console.log("Error: ", response.error);
+      return;
+    }
+
+    // Saving Data into zustand store
+    const userData = {
+      userId: response.data?.auth?.user?.id, 
+      userName: response.data?.profile?.user_name, 
+      penName: response.data?.profile?.pen_name, 
+      userEmail: email,
+    }; 
+
+    setUser(userData); 
   };
+
+  
+
 
   return (  
 
     <form 
-      onSubmit={handleSubmit(onSubmit)} className="max-w-sm mx-auto"
+      onSubmit={handleSubmit(onSubmit)} 
+      className="max-w-sm mx-auto"
     >
       <div className="mb-5">
-        <label htmlFor="userName" className="block mb-2.5 text-sm font-medium text-heading">Your user name</label>
+        <label 
+          htmlFor="userName" 
+          className="block mb-2.5 text-sm font-medium text-heading"
+        >
+          Your user name
+        </label>
         <input 
           type="text" 
           id="userName" 
@@ -40,7 +63,12 @@ const AuthForm = ({mode = "Log In"}) => {
         />
       </div>
       <div className="mb-5">
-        <label htmlFor="penName" className="block mb-2.5 text-sm font-medium text-heading">Your penname</label>
+        <label 
+          htmlFor="penName" 
+          className="block mb-2.5 text-sm font-medium text-heading"
+        >
+          Your penname
+        </label>
         <input 
           type="text" 
           id="penName" 
@@ -51,7 +79,10 @@ const AuthForm = ({mode = "Log In"}) => {
         />
       </div>
       <div className="mb-5">
-        <label htmlFor="email" className="block mb-2.5 text-sm font-medium text-heading">Your email</label>
+        <label 
+          htmlFor="email" 
+          className="block mb-2.5 text-sm font-medium text-heading"
+        >Your email</label>
         <input 
           type="email" 
           id="email" 
@@ -97,9 +128,14 @@ const AuthForm = ({mode = "Log In"}) => {
         </a>.
       </p>
       </label>
-      <button type="submit" className="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">{mode}</button>
+      <button 
+        type="submit" 
+        className="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none"
+      >
+        {mode}
+      </button>
     </form>
   )
 }
 
-export default AuthForm
+export default AuthForm;

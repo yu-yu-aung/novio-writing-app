@@ -7,6 +7,8 @@ import {
   Bell,
   HomeIcon,
   PencilLine,
+  LogInIcon,
+  LogIn,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
@@ -153,7 +155,8 @@ const Header = () => {
                 href="/sign_up"
                 className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
               >
-                Register
+                <LogInIcon className="size-4 sm:hidden" />
+                <span className="hidden sm:block text-xl lg:text-2xl">Register</span>
               </Link>
 
               {/* LOGIN */}
@@ -161,7 +164,8 @@ const Header = () => {
                 href="/log_in"
                 className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
               >
-                Log In
+                <LogIn className="size-4 sm:hidden" />
+                <span className="hidden sm:block text-xl lg:text-2xl">Log In</span>
               </Link>
             </>
           )}
