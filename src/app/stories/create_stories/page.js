@@ -5,6 +5,7 @@ import { saveStorytoDB } from "@/lib/story";
 import { uploadStoryImage } from "@/lib/upload";
 import useAuthStore from "@/store/useAuthStore";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,6 +13,9 @@ import { toast } from "sonner";
 const Page = () => {
   const [clickPublish, setClickPublish] = useState(true);
   const [clickDraft, setClickDraft] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const router = useRouter();
 
   const { user, isLoggedIn } = useAuthStore();
   const {
@@ -52,11 +56,12 @@ const Page = () => {
     }
 
     toast.success("Story created!");
+    router.push(`/stories/${StoryCard.id}`);
   };
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Header Section */}
+      {/* Create Section */}
       <section className="max-w-4xl mx-auto px-4 py-10">
         <div className="flex items-center gap-4 mb-10">
           <img
@@ -86,11 +91,27 @@ const Page = () => {
                 type="file"
                 id="file"
                 className="hidden"
+                accept="image/*"
                 {...register("image")}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setPreviewImage(URL.createObjectURL(file));
+                }}
               />
-              <div className="w-40 h-56 sm:w-72 sm:h-[500px] border-2 border-dashed border-brand rounded-xl bg-brand-soft cursor-pointer flex flex-col items-center justify-center transition group-hover:bg-brand-light/40">
-                <Plus className="size-10 text-brand" />
-                <p className="text-sm text-muted mt-2">Upload Cover</p>
+              <div className="w-40 h-56 sm:w-72 sm:h-[500px] border-2 border-dashed border-brand rounded-xl bg-brand-soft cursor-pointer flex items-center justify-center transition group-hover:bg-brand-light/40">
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center">
+                    <Plus className="size-10 text-brand" />
+                    <p className="text-sm text-muted mt-2">Upload Cover</p>
+                  </div>
+                )}
               </div>
             </label>
           </div>

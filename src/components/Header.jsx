@@ -112,7 +112,7 @@ const Header = () => {
           </Link>
 
           <Link
-            href="/create_stories"
+            href="/stories/create_stories"
             className={`
               flex items-center gap-1 p-2 font-medium transition
               hover:text-coral-tree-700 dark:hover:text-amethyst-300
