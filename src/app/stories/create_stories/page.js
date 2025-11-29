@@ -1,5 +1,6 @@
 "use client";
 
+import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import { saveStorytoDB } from "@/lib/story";
 import { uploadStoryImage } from "@/lib/upload";
@@ -60,24 +61,10 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 px-4 sm:px-8 lg:px-24">
       {/* Create Section */}
       <section className="max-w-4xl mx-auto px-4 py-10">
-        <div className="flex items-center gap-4 mb-10">
-          <img
-            src="/swan.png"
-            alt="Logo"
-            className="size-[100px] dark:hidden"
-          />
-          <img
-            src="/light_swan.png"
-            alt="Logo"
-            className="size-[100px] hidden dark:block"
-          />
-          <h2 className="text-2xl lg:text-3xl font-bold text-heading">
-            Create a New Story
-          </h2>
-        </div>
+        <SmallHeading title="Create a New Story" />
 
         {/* Form */}
         <form

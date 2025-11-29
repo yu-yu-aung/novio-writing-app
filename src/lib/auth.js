@@ -16,7 +16,8 @@ export async function signUp(email, password, userName, penName) {
   const userId = authData?.user?.id;
   if (!userId) return { error: "User ID not found after signing up!" };
 
-  const { error: profileError } = await supabase.from("profiles").insert({
+  // Inserting Profile
+  const { error: profileInsertError } = await supabase.from("profiles").insert({
     id: userId,
     user_id: userId,
     user_name: userName,
@@ -24,10 +25,19 @@ export async function signUp(email, password, userName, penName) {
     pen_name: penName,
   });
 
-  if (profileError) return { error: profileError };
+  if (profileInsertError) return { error: profileInsertError };
+
+  // Fetch profile
+  const { data: profileData, error: profileFetchError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (profileFetchError) return { error: profileFetchError };
 
   console.log("Sign Up and Profile Creation Success!");
-  return { data: authData, error: null };
+  return { data: { auth: authData, profile: profileData }, error: null };
 }
 
 //sign in function

@@ -1,6 +1,5 @@
 "use client";
 
-import ThemeButton from "./ThemeButton";
 import {
   Search,
   User2,
@@ -9,6 +8,7 @@ import {
   PencilLine,
   LogInIcon,
   LogIn,
+  DoorOpen,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
@@ -38,24 +38,24 @@ const Header = () => {
       : "text-amethyst-900 dark:text-amethyst-100";
 
   return (
-    <header className="bg-amethyst-100 dark:bg-amethyst-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-30">
+    <header className="bg-amethyst-100 dark:bg-amethyst-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-40">
 
       <div className="grid grid-cols-1 sm:flex lg:flex sm:justify-between sm:items-center lg:justify-between lg:items-center">
         
         {/* Logo and Search Bar */}
-        <div className="flex gap-2 lg:gap-12 items-center">
-          <Link href="/" className="flex gap-1 sm:gap-2 items-center">
+        <div className="flex gap-2 sm:gap-4 lg:gap-12 items-center">
+          <Link href="/" className="flex gap-1 items-center">
             <img
               src="/logo.png"
               alt="Novio Writing App Logo"
               className="size-10 sm:size-12 lg:size-16"
             />
-            <h2 className="hidden sm:block text-xl lg:text-2xl font-bold italic font-serif">
+            <h2 className="hidden sm:hidden lg:block lg:text-2xl font-bold italic font-serif">
               Novio
             </h2>
           </Link>
 
-          <form onSubmit={handleSearch} className="max-w-md w-[280px] sm:w-[400px] lg:w-[500px]">
+          <form onSubmit={handleSearch} className="max-w-md w-[280px] sm:w-[300px] lg:w-[500px]">
             <div className="relative">
 
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -97,7 +97,7 @@ const Header = () => {
         </div>
 
         {/* NAVIGATION BAR*/}
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center lg:gap-4 justify-between mt-2 sm:mt-0 lg:mt-0">
 
           <Link
             href="/"
@@ -107,8 +107,8 @@ const Header = () => {
               ${isActive("/")}
             `}
           >
-            <HomeIcon className="size-4 sm:hidden" />
-            <span className="hidden sm:block text-xl lg:text-2xl">Home</span>
+            <HomeIcon className="size-6 sm:hidden" />
+            <span className="hidden sm:block sm:text-lg lg:text-2xl">Home</span>
           </Link>
 
           <Link
@@ -119,8 +119,8 @@ const Header = () => {
               ${isActive("/create_stories")}
             `}
           >
-            <PencilLine className="size-4 sm:hidden" />
-            <span className="hidden sm:block text-xl lg:text-2xl">Create</span>
+            <PencilLine className="size-6 sm:hidden" />
+            <span className="hidden sm:block sm:text-lg lg:text-2xl">Create</span>
           </Link>
 
           {isLoggedIn ? (
@@ -133,8 +133,8 @@ const Header = () => {
                   ${isActive("/profile")}
                 `}
               >
-                <User2 className="size-4 sm:hidden" />
-                <span className="hidden sm:block text-xl lg:text-2xl">Profile</span>
+                <User2 className="size-6 sm:hidden" />
+                <span className="hidden sm:block sm:text-lg lg:text-2xl">Profile</span>
               </Link>
 
               <Link
@@ -145,32 +145,31 @@ const Header = () => {
                   ${isActive("/notification")}
                 `}
               >
-                <Bell className="size-4 sm:hidden" />
-                <span className="hidden sm:block text-xl lg:text-2xl">Notification</span>
+                <Bell className="size-6 sm:hidden" />
+                <span className="hidden sm:block sm:text-lg lg:text-2xl">Notification</span>
               </Link>
             </>
           ) : (
             <>
               <Link
                 href="/sign_up"
-                className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
+                className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/sign_up")}`}
               >
-                <LogInIcon className="size-4 sm:hidden" />
-                <span className="hidden sm:block text-xl lg:text-2xl">Register</span>
+                <DoorOpen className="size-6 sm:hidden" />
+                <span className="hidden sm:block sm:text-lg lg:text-2xl">Register</span>
               </Link>
 
               {/* LOGIN */}
               <Link
                 href="/log_in"
-                className="p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition"
+                className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/log_in")}`}
               >
-                <LogIn className="size-4 sm:hidden" />
-                <span className="hidden sm:block text-xl lg:text-2xl">Log In</span>
+                <LogIn className="size-6 sm:hidden" />
+                <span className="hidden sm:block sm:text-lg lg:text-2xl">Log In</span>
               </Link>
             </>
           )}
 
-          <ThemeButton />
         </nav>
       </div>
     </header>

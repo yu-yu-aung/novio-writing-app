@@ -13,7 +13,7 @@ const HeroSection = () => {
         <h3 className='text-lg sm:text-3xl lg:text-4xl font-bold font-sans'>Read and Write with Novio</h3>
 
       <Link 
-        href='/authentication'
+        href='/sign_up'
         className='mt-auto text-lg sm:text-2xl lg:text-3xl font-bold rounded bg-coral-tree-700 text-white p-4 font-body'  
       >
         <button >

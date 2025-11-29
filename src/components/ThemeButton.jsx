@@ -19,11 +19,10 @@ export default function ThemeButton() {
     <button
       onClick={() => setTheme( theme === "light" ? "dark" : "light")}
       type="button"
-      className="text-gray-500 dark:text-gray-400 hover:scale-110 active:scale-110  
-                  focus:outline-none rounded-lg 
-                 text-sm p-2.5"
+      className="flex items-center gap-2 w-full px-4 sm:px-6 py-2 rounded-lg transition font-medium cursor-pointer hover:bg-amethyst-200 dark:hover:bg-amethyst-700"
     >
       {theme === "light" ? <Moon className="w-5 h-5 focus:outline-none" /> : <Sun className="w-5 h-5 focus:outline-none" />}
+      <span>Tap to Change Mode</span>
     </button>
   );
 }
