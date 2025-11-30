@@ -1,29 +1,29 @@
+"use client";
+
 import SmallHeading from "@/components/SmallHeading";
-import supabase from "@/lib/supabaseClient";
-import useStoryStore from "@/store/useStoryStore";
+import useFetchAllChapters from "@/hooks/useFetchAllChapters";
+
+import useFetchStory from "@/hooks/useFetchStory";
+
 import Link from "next/link";
-import React from "react";
+import React, { use } from "react";
 
-const Page = async ({ params }) => {
-  const { storyId } = await params;
-
-  const { story, setStory } = useStoryStore();
+const Page = ({ params }) => {
+  const { storyId } = params;
 
   //Fetch story
-  const { data: currentStory } = await supabase
-    .from("stories")
-    .select("*")
-    .eq("id", storyId)
-    .single();
+  const {
+    story,
+    loading: storyLoading,
+    error: storyError,
+  } = useFetchStory(params.storyId);
 
-  setStory(currentStory);
-
-  //Fetch chapters
-  const { data: chapters } = await supabase
-    .from("chapters")
-    .select("*")
-    .eq("story_id", storyId)
-    .order("chapter_number", { ascending: true });
+  //Fetch all chapters
+  const {
+    chapters,
+    loading: chaptersLoading,
+    error: chaptersError,
+  } = useFetchAllChapters(params.storyId);
 
   if (!story) {
     return <div className="p-10">Story not found</div>;
@@ -32,7 +32,7 @@ const Page = async ({ params }) => {
 
   return (
     <>
-      <SmallHeading title={`Story Dashboard for ${currentStory.title}`} />
+      <SmallHeading title={`Story Dashboard for ${story.title}`} />
 
       <div
         className="
@@ -61,21 +61,19 @@ const Page = async ({ params }) => {
           {/* Image */}
           <div className="w-full max-w-xs rounded-xl overflow-hidden shadow">
             <img
-              src={currentStory.image}
+              src={story.image}
               alt="cover image of the story"
               className="w-full h-auto object-cover"
             />
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-bold">{currentStory.title}</h1>
-          <h3 className="text-lg text-text-secondary">
-            {currentStory.category}
-          </h3>
+          <h1 className="text-2xl font-bold">{story.title}</h1>
+          <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
           {/* Tags */}
           <div className="flex flex-wrap justify-center gap-3 w-full">
-            {currentStory.tags.map(
+            {story.tags.map(
               (t, index) =>
                 t !== "" && (
                   <button
@@ -97,16 +95,16 @@ const Page = async ({ params }) => {
 
           {/* Description */}
           <p className="text-sm text-text-secondary max-w-md leading-relaxed">
-            {currentStory.description}
+            {story.description}
           </p>
 
           {/* Status */}
           <p className="font-medium">
-            <span className="font-bold">Status:</span> {currentStory.status}
+            <span className="font-bold">Status:</span> {story.status}
           </p>
 
           {/* Publish / Unpublish */}
-          {currentStory.status === "published" ? (
+          {story.status === "published" ? (
             <button
               className="
                 bg-red-500 dark:bg-red-300 

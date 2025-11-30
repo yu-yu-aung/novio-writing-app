@@ -3,35 +3,35 @@
 import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 
-export default function useFetchStory(storyId) {
-  const [story, setStory] = useState(null);
+export default function useFetchChapter(chapterId) {
+  const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     async function load() {
-      if (!storyId) return;
+      if (!chapterId) return;
 
       setLoading(true);
 
       const { data, error } = await supabase
-        .from("stories")
+        .from("chapters")
         .select("*")
-        .eq("id", storyId)
+        .eq("id", chapterId)
         .single();
 
       if (error) {
-        console.error("Error fetching story: ", error);
+        console.error("Error fetching chapter: ", error);
         setError(error);
       } else {
-        setStory(data);
+        setChapter(data);
       }
 
       setLoading(false);
     }
 
     load();
-  }, [storyId]);
+  }, [chapterId]);
 
-  return { story, loading, error };
+  return { chapter, loading, error };
 }

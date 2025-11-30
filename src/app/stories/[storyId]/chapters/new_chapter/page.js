@@ -1,16 +1,15 @@
 // Requirements => Chapter No., title, content, image, publish/ save as draft btns, bar to edit and decorate text
 "use client";
 
+import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import { uploadChapterImage } from "@/lib/upload";
-import useChapterStore from "@/store/useChapterStore";
-import useStoryStore from "@/store/useStoryStore";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Page = async () => {
   const [previewImage, setPreviewImage] = useState(false);
-  const { story } = useStoryStore();
-  const { chapter, setChapter } = useChapterStore();
+  // const { story } = useStoryStore();
+  // const { chapter, setChapter } = useChapterStore();
   const {
     handleSubmit,
     register,
@@ -18,11 +17,7 @@ const Page = async () => {
   } = useForm();
 
   //Fetch chapters
-  const { data: chapters } = await supabase
-    .from("chapters")
-    .select("*")
-    .eq("story_id", storyId)
-    .order("chapter_number", { ascending: true });
+  const { chapters, loading, error } = useFetchAllChapters(storyId);
 
   console.log("chapters: ", chapters);
 

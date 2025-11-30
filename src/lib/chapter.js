@@ -2,11 +2,11 @@ import supabase from "./supabaseClient";
 
 export async function saveChaptertoDB(storyId, chapter, imageUrl) {
   const { data, error } = await supabase
-    .from("stories")
+    .from("chapters")
     .insert({
       story_id: storyId,
       title: chapter.title,
-      chapter_number: chapter.no,
+      chapter_number: chapter.chapter_number,
       content: chapter.content,
       is_published: chapter.status || false,
       image_url: imageUrl || "",
@@ -14,7 +14,7 @@ export async function saveChaptertoDB(storyId, chapter, imageUrl) {
     .select()
     .single();
 
-  console.log("chapter: ", story);
+  console.log("chapter: ", data);
 
   if (error) {
     console.error("Error saving the chapter: ", error);
