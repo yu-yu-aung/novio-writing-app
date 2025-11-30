@@ -112,11 +112,11 @@ const Header = () => {
           </Link>
 
           <Link
-            href="/stories/create_stories"
+            href="/stories/create_story"
             className={`
               flex items-center gap-1 p-2 font-medium transition
               hover:text-coral-tree-700 dark:hover:text-amethyst-300
-              ${isActive("/create_stories")}
+              ${isActive("/create_story")}
             `}
           >
             <PencilLine className="size-6 sm:hidden" />

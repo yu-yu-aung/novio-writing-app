@@ -59,8 +59,8 @@ const Page = () => {
 
         {/* User Info */}
         <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold">{user.displayName}</h2>
-          <p className="text-sm text-muted">@{user.userName}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold">{user.penName}</h2>
+          <p className="text-sm text-muted">{user.userName}</p>
           <p className="text-sm text-body">{user.userEmail}</p>
         </div>
 
@@ -84,7 +84,7 @@ const Page = () => {
 
         {/* Buttons: Edit / Share / Settings */}
         <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <Link href={'/edit'} className={baseStyle}>
+          <Link href={"/edit"} className={baseStyle}>
             <Pencil className="size-4 sm:size-6" />
             <span>Edit </span>
           </Link>

@@ -49,7 +49,7 @@ const Page = () => {
       imageUrl = await uploadStoryImage(file, user.id);
     }
 
-    const { error } = await saveStorytoDB(user.id, data, imageUrl);
+    const { data: newStory, error } = await saveStorytoDB(user.id, data, imageUrl);
 
     if (error) {
       toast.error("Something went wrong! Failed to create the story");
@@ -57,7 +57,8 @@ const Page = () => {
     }
 
     toast.success("Story created!");
-    router.push(`/stories/${StoryCard.id}`);
+    console.log("data: ", newStory);
+    router.push(`/stories/${newStory.id}`);
   };
 
   return (
