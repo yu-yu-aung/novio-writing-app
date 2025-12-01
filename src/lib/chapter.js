@@ -1,6 +1,6 @@
 import supabase from "./supabaseClient";
 
-export async function saveChaptertoDB(storyId, chapter, imageUrl) {
+export async function saveChaptertoDB(storyId, chapter, imageUrl, user) {
   const { data, error } = await supabase
     .from("chapters")
     .insert({
@@ -8,8 +8,9 @@ export async function saveChaptertoDB(storyId, chapter, imageUrl) {
       title: chapter.title,
       chapter_number: chapter.chapter_number,
       content: chapter.content,
-      is_published: chapter.status || false,
+      is_published: chapter.is_published || false,
       image_url: imageUrl || "",
+      author_id: user.userId,
     })
     .select()
     .single();

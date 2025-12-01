@@ -46,10 +46,14 @@ const Page = () => {
     let imageUrl = null;
 
     if (file) {
-      imageUrl = await uploadStoryImage(file, user.id);
+      imageUrl = await uploadStoryImage(file, user.userId);
     }
 
-    const { data: newStory, error } = await saveStorytoDB(user.id, data, imageUrl);
+    console.log("data.image: ", data.image?.[0]);
+    console.log("file: ", file);
+    console.log("image: ", imageUrl);
+
+    const { data: newStory, error } = await saveStorytoDB(user, data, imageUrl);
 
     if (error) {
       toast.error("Something went wrong! Failed to create the story");
@@ -57,7 +61,9 @@ const Page = () => {
     }
 
     toast.success("Story created!");
-    console.log("data: ", newStory);
+    console.log("story info: ", newStory);
+    console.log("user: ", user);
+    console.log("image: ", imageUrl);
     router.push(`/stories/${newStory.id}`);
   };
 
@@ -80,12 +86,13 @@ const Page = () => {
                 id="file"
                 className="hidden"
                 accept="image/*"
-                {...register("image")}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  setPreviewImage(URL.createObjectURL(file));
-                }}
+                {...register("image", {
+                  onChange: (e) => {
+                    const file = e.target.files?.[0];
+                    console.log("file: ", file);
+                    if (file) setPreviewImage(URL.createObjectURL(file));
+                  },
+                })}
               />
               <div className="w-40 h-56 sm:w-72 sm:h-[500px] border-2 border-dashed border-brand rounded-xl bg-brand-soft cursor-pointer flex items-center justify-center transition group-hover:bg-brand-light/40">
                 {previewImage ? (

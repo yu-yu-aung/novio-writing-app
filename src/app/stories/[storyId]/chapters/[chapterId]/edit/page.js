@@ -1,8 +1,8 @@
-
+import React from 'react'
 
 const Page = () => {
   return (
-    <div>page</div>
+    <div>Edit your chapter</div>
   )
 }
 

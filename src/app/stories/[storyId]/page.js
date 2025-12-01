@@ -1,34 +1,32 @@
 "use client";
 
+import ChapterCard from "@/components/ChapterCard";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
-
 import useFetchStory from "@/hooks/useFetchStory";
-
 import Link from "next/link";
 import React, { use } from "react";
 
 const Page = ({ params }) => {
-  const { storyId } = params;
+  const { storyId } = use(params);
 
   //Fetch story
   const {
     story,
     loading: storyLoading,
     error: storyError,
-  } = useFetchStory(params.storyId);
+  } = useFetchStory(storyId);
 
   //Fetch all chapters
   const {
     chapters,
     loading: chaptersLoading,
     error: chaptersError,
-  } = useFetchAllChapters(params.storyId);
+  } = useFetchAllChapters(storyId);
 
   if (!story) {
     return <div className="p-10">Story not found</div>;
   }
-  console.log("tags: ", story.tags);
 
   return (
     <>
@@ -50,28 +48,25 @@ const Page = ({ params }) => {
           className="
             lg:col-span-3 
             flex flex-col items-center 
-            gap-6 
-            border-r border-default 
+            gap-6 border-b
+            lg:border-r border-default 
             py-10 sm:py-16 lg:py-20 
             px-6 
             bg-background-soft
             text-center
           "
         >
-          {/* Image */}
           <div className="w-full max-w-xs rounded-xl overflow-hidden shadow">
             <img
-              src={story.image}
+              src={story.image_url}
               alt="cover image of the story"
               className="w-full h-auto object-cover"
             />
           </div>
 
-          {/* Title */}
           <h1 className="text-2xl font-bold">{story.title}</h1>
           <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
-          {/* Tags */}
           <div className="flex flex-wrap justify-center gap-3 w-full">
             {story.tags.map(
               (t, index) =>
@@ -93,17 +88,14 @@ const Page = ({ params }) => {
             )}
           </div>
 
-          {/* Description */}
           <p className="text-sm text-text-secondary max-w-md leading-relaxed">
             {story.description}
           </p>
 
-          {/* Status */}
           <p className="font-medium">
             <span className="font-bold">Status:</span> {story.status}
           </p>
 
-          {/* Publish / Unpublish */}
           {story.status === "published" ? (
             <button
               className="
@@ -140,28 +132,19 @@ const Page = ({ params }) => {
         >
           <h2 className="text-2xl font-bold">Chapters</h2>
 
-          {/* Chapters List */}
-          <ul className="flex flex-col gap-3">
-            {chapters.map((ch) => (
-              <li
-                key={ch.id}
-                className="
-                  bg-background-soft 
-                  border border-default 
-                  rounded-lg 
-                  p-4 
-                  shadow-sm 
-                  hover:shadow-md transition
-                "
-              >
-                <span className="font-semibold">{ch.chapter_number}.</span>{" "}
-                {ch.title}
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-col gap-3">
+            {!chapters || chapters.length === 0 ? (
+              <p className="text-center text-text-secondary">
+                No chapters yet!
+              </p>
+            ) : (
+              chapters.map((chapter, index) => (
+                <ChapterCard chapter={chapter} key={index} />
+              ))
+            )}
+          </div>
 
-          {/* CREATE NEW CHAPTER */}
-          <Link href={`/stories/${storyId}/chapters/new_chapter`}>
+          <Link href={`/stories/${storyId}/new_chapter`}>
             <button
               className="
                 mx-auto 

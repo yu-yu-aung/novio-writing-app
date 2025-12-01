@@ -1,10 +1,10 @@
 import supabase from "./supabaseClient";
 
-export async function saveStorytoDB(userId, story, imageUrl) {
+export async function saveStorytoDB(user, story, imageUrl) {
   const { data, error } = await supabase
     .from("stories")
     .insert({
-      author_id: userId,
+      author_id: user.userId,
       title: story.title,
       description: story.description,
       category: story.category,

@@ -55,7 +55,7 @@ const Header = () => {
             </h2>
           </Link>
 
-          <form onSubmit={handleSearch} className="max-w-md w-[280px] sm:w-[300px] lg:w-[500px]">
+          <form onSubmit={handleSearch} className="max-w-md w-[280px] sm:w-[300px] lg:w-[400px]">
             <div className="relative">
 
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -108,7 +108,7 @@ const Header = () => {
             `}
           >
             <HomeIcon className="size-6 sm:hidden" />
-            <span className="hidden sm:block sm:text-lg lg:text-2xl">Home</span>
+            <span className="hidden sm:block sm:text-lg lg:text-xl">Home</span>
           </Link>
 
           <Link
@@ -120,7 +120,7 @@ const Header = () => {
             `}
           >
             <PencilLine className="size-6 sm:hidden" />
-            <span className="hidden sm:block sm:text-lg lg:text-2xl">Create</span>
+            <span className="hidden sm:block sm:text-lg lg:text-xl">Create</span>
           </Link>
 
           {isLoggedIn ? (
@@ -134,7 +134,7 @@ const Header = () => {
                 `}
               >
                 <User2 className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-2xl">Profile</span>
+                <span className="hidden sm:block sm:text-lg lg:text-xl">Profile</span>
               </Link>
 
               <Link
@@ -146,7 +146,7 @@ const Header = () => {
                 `}
               >
                 <Bell className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-2xl">Notification</span>
+                <span className="hidden sm:block sm:text-lg lg:text-xl">Notification</span>
               </Link>
             </>
           ) : (
@@ -156,7 +156,7 @@ const Header = () => {
                 className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/sign_up")}`}
               >
                 <DoorOpen className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-2xl">Register</span>
+                <span className="hidden sm:block sm:text-lg lg:text-xl">Register</span>
               </Link>
 
               {/* LOGIN */}
@@ -165,7 +165,7 @@ const Header = () => {
                 className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/log_in")}`}
               >
                 <LogIn className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-2xl">Log In</span>
+                <span className="hidden sm:block sm:text-lg lg:text-xl">Log In</span>
               </Link>
             </>
           )}
