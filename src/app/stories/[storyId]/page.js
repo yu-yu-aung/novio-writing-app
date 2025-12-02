@@ -49,7 +49,7 @@ const Page = ({ params }) => {
             lg:col-span-3 
             flex flex-col items-center 
             gap-6 border-b
-            lg:border-r border-default 
+            lg:border-r lg:border-b-transparent border-default 
             py-10 sm:py-16 lg:py-20 
             px-6 
             bg-background-soft

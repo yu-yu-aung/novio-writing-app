@@ -4,6 +4,7 @@ import BookShelf from "@/components/BookShelf";
 import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
+import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useAuthStore from "@/store/useAuthStore";
 import {
   Book,
@@ -27,6 +28,9 @@ const Page = () => {
   const [showForm, setShowForm] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
   const [share, setShare] = useState(false);
+
+  const { stories, loading, error } = useFetchAllStories(user);
+  console.log("stories", stories);
 
   const baseStyle =
     "mx-auto bg-brand-soft text-brand border border-brand hover:scale-110 px-4 sm:px-6 lg:px-6 py-2 rounded-lg shadow hover:scale-110 transition font-medium flex items-center gap-2";
@@ -144,8 +148,20 @@ const Page = () => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
-          {activeTab === "published" && <SmallStoryCard />}
-          {activeTab === "draft" && <SmallStoryCard />}
+          {activeTab === "published" &&
+            stories?.map((story) =>
+              story.status === "published" ? (
+                <SmallStoryCard key={story.id} story={story} />
+              ) : null
+            )}
+
+          {activeTab === "draft" &&
+            stories?.map((story) =>
+              story.status === "draft" ? (
+                <SmallStoryCard key={story.id} story={story} />
+              ) : null
+            )}
+
           {activeTab === "library" && <BookShelf />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">

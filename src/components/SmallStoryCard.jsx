@@ -1,42 +1,85 @@
-import { Star } from "lucide-react";
+"use client";
 
-const SmallStoryCard = ({
-  title = "Wuthering Heights",
-  author = "Ahahaha",
-  image = "/placeholder.png",
-  likes = "4k",
-  onEdit = () => {
-    console.log("You clicked next!");
-  },
-}) => {
+import useFetchAuthor from "@/hooks/useFetchAuthor";
+import { Star } from "lucide-react";
+import Link from "next/link";
+
+const SmallStoryCard = ({ story }) => {
+  const authorId = story?.author_id;
+  const { author, loading, error } = useFetchAuthor(authorId);
+
   return (
-    <div className="flex gap-6 items-start p-6  bg-amethyst-50 dark:bg-amethyst-950 text-gray-950 dark:text-gray-100 rounded-xl shadow dark:shadow-amethyst-850 mt-6 w-full">
-      {/* Book Cover */}
+    <div
+      className="
+        group flex flex-col md:flex-row gap-6 items-start 
+        p-6 rounded-2xl w-full
+        bg-white dark:bg-amethyst-950 
+        shadow-sm hover:shadow-md transition-shadow
+        border border-transparent dark:border-amethyst-800
+      "
+    >
+
+      {/* Image */}
       <img
-        src={image}
-        className="w-36 h-56 object-cover rounded-lg"
-        alt={title}
+        src={story?.image_url}
+        alt={story?.title}
+        className="
+          w-full md:w-36 h-56 object-cover rounded-xl 
+          shadow-sm 
+          group-hover:scale-[1.02] transition-transform
+        "
       />
 
-      {/* Details */}
-      <div>
-        <h3 className="text-xl font-semibold">{title}</h3>
+      {/* Content */}
+      <div className="flex-1 w-full flex flex-col justify-between h-full">
 
-        <h4 className="text-sm text-muted mb-2">{author}</h4>
+        {/* Top Content */}
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold leading-tight">
+            {story?.title}
+          </h3>
 
-        <div className="flex items-center gap-2 mb-4 text-yellow-500">
-          <Star className="size-4" />
-          <p className="text-sm text-heading">{likes} Likes</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {author?.pen_name || "Loading..."}
+          </p>
+
+          <div className="flex items-center gap-2 text-yellow-500 text-sm mt-1">
+            <Star className="w-4 h-4" />
+            <span>4k Likes</span>
+          </div>
         </div>
 
-        <button
-          onClick={onEdit}
-          className="px-4 py-2 rounded bg-brand-soft text-brand border border-brand hover:bg-brand-light transition"
-        >
-          Edit
-        </button>
+        {/* Bottom Buttons */}
+        <div className="flex justify-between items-center mt-4">
+
+          {/* Edit Button */}
+          <Link
+            href="/stories/create_story"
+            className="
+              px-4 py-2 rounded-lg text-sm font-medium
+              border border-brand text-brand bg-brand-soft
+              hover:bg-brand-light transition
+            "
+          >
+            Edit
+          </Link>
+
+          {/* Status Badge */}
+          <span
+            className="
+              px-3 py-1 rounded-full text-xs font-medium
+              bg-amethyst-100 text-amethyst-700 
+              dark:bg-amethyst-800 dark:text-amethyst-200
+            "
+          >
+            {story?.status}
+          </span>
+
+        </div>
+
       </div>
     </div>
+
   );
 };
 

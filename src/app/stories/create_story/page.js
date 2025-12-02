@@ -2,6 +2,7 @@
 
 import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
+import useFetchAllStories from "@/hooks/useFetchAllStories";
 import { saveStorytoDB } from "@/lib/story";
 import { uploadStoryImage } from "@/lib/upload";
 import useAuthStore from "@/store/useAuthStore";
@@ -17,13 +18,14 @@ const Page = () => {
   const [previewImage, setPreviewImage] = useState(null);
 
   const router = useRouter();
-
   const { user, isLoggedIn } = useAuthStore();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const { stories, loading, error } = useFetchAllStories(user);
 
   const handlePublishClick = () => {
     setClickPublish(true);
@@ -46,7 +48,7 @@ const Page = () => {
     let imageUrl = null;
 
     if (file) {
-      imageUrl = await uploadStoryImage(file, user.userId);
+      imageUrl = await uploadStoryImage(file, user?.userId);
     }
 
     console.log("data.image: ", data.image?.[0]);
@@ -231,10 +233,20 @@ const Page = () => {
         </div>
 
         {/* Published */}
-        {clickPublish && <SmallStoryCard />}
+        {clickPublish &&
+          stories?.map((story) =>
+            story.status === "published" ? (
+              <SmallStoryCard key={story.id} story={story} />
+            ) : null
+          )}
 
-        {/* Draft */}
-        {clickDraft && <SmallStoryCard />}
+        {/* Drafts */}
+        {clickDraft &&
+          stories?.map((story) =>
+            story.status === "draft" ? (
+              <SmallStoryCard key={story.id} story={story} />
+            ) : null
+          )}
       </section>
     </div>
   );
