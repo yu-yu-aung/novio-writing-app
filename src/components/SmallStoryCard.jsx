@@ -3,13 +3,21 @@
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import { Star } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SmallStoryCard = ({ story }) => {
   const authorId = story?.author_id;
   const { author, loading, error } = useFetchAuthor(authorId);
 
+  const router = useRouter(); 
+
+  const handleClickCard = () => {
+    router.push(`/stories/${story.id}`);
+  }
+
   return (
     <div
+    onClick={handleClickCard}
       className="
         group flex flex-col md:flex-row gap-6 items-start 
         p-6 rounded-2xl w-full

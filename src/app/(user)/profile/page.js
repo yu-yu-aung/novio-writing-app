@@ -48,7 +48,7 @@ const Page = () => {
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
-      <section className="lg:col-span-3 flex flex-col items-center gap-8 border-r border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
+      <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b sm:border-r sm:border-b-transparent lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
         {/* Profile Image */}
         <div className="relative group">
           <img
@@ -82,7 +82,7 @@ const Page = () => {
 
           <div className="flex flex-col items-center">
             <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">10 Stories</span>
+            <span className="text-sm font-medium mt-1">{stories?.length} stories</span>
           </div>
         </div>
 

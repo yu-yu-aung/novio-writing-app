@@ -32,9 +32,7 @@ const Page = ({ params }) => {
   const handlePublish = () => {
     const toastId = toast(
       <div className="flex flex-col gap-2">
-        <p className="text-sm ">
-          Are you sure you want to publish?
-        </p>
+        <p className="text-sm ">Are you sure you want to publish?</p>
         <div className="flex gap-2 justify-end">
           <button
             onClick={() => {
@@ -60,17 +58,19 @@ const Page = ({ params }) => {
     <div className="w-full">
       {/* ---------- Cover Image Section ---------- */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
-        <img
-          src={chapter.image_url}
-          alt="chapter cover"
-          className="w-full h-full object-cover"
-        />
+        {chapter?.image_url && (
+          <img
+            src={chapter.image_url}
+            alt="chapter cover"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
       </div>
 
       {/* ---------- Content Section ---------- */}
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 leading-tight">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
           <span className="text-amethyst-600 mr-2 hidden">
             {chapter.chapter_number}.
           </span>

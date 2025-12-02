@@ -76,7 +76,7 @@ const NewChapterPage = ({storyId}) => {
   return (
     <div
       className="
-        flex flex-col 
+        flex flex-col sm:grid sm:grid-cols-7 
         lg:grid lg:grid-cols-7 
         w-full min-h-screen 
         relative 
@@ -102,7 +102,7 @@ const NewChapterPage = ({storyId}) => {
           <p className="text-center text-text-secondary">No chapters yet!</p>
         ) : (
           chapters.map((chapter, index) => (
-            <ChapterCard chapter={chapter} key={index} />
+            <ChapterCard chapter={chapter} key={index} storyId={storyId}/>
           ))
         )}
       </section>
@@ -116,7 +116,8 @@ const NewChapterPage = ({storyId}) => {
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
             {/* Image Upload */}
             <div 
-              className="w-full border border-amethyst-600 h-[120px] sm:h-[200px] lg:h-[300px] relative flex items-center justify-center cursor-pointer"
+              className="w-full border border-amethyst-600 h-[120px] sm:h-[200px] lg:h-[300px] 
+                        relative flex items-center justify-center cursor-pointer overflow-hidden"
               onClick={() => fileInputRef.current.click()}
             >
               <input
@@ -130,17 +131,20 @@ const NewChapterPage = ({storyId}) => {
                   if (file) setPreviewImage(URL.createObjectURL(file));
                 }}
               />
+
               {previewImage ? (
                 <img
                   src={previewImage}
                   alt="Preview"
-                  className="w-40 h-40 object-cover mt-2"
+                  className="w-full h-full object-contain p-2"
                 />
               ) : (
-                <p className="text-center font-bold text-gray-500">Click here to add an image for your chapter</p>
+                <p className="text-center font-bold text-gray-500">
+                  Click here to add an image for your chapter
+                </p>
               )}
-              
             </div>
+
             {/* Chapter Number */}
             <input
               type="number"
