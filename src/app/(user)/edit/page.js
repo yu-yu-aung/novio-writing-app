@@ -1,15 +1,20 @@
 "use client";
 
 import SmallHeading from "@/components/SmallHeading";
+import supabase from "@/lib/supabaseClient";
+import { uploadProfileImage } from "@/lib/upload";
 import useAuthStore from "@/store/useAuthStore";
 import { Pen } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Page = () => {
   const { user } = useAuthStore();
-  const [previewImage, setPreviewImage] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -20,7 +25,7 @@ const Page = () => {
     defaultValues: {
       userName: user?.userName || "",
       penName: user?.penName || "",
-      email: user?.email || "",
+      email: user?.userEmail || "",
       bio: user?.bio || "",
     },
   });
@@ -30,8 +35,39 @@ const Page = () => {
   console.log("user: ", user);
 
   const onSubmit = async (data) => {
-    console.log("You clicked confirm!");
-    console.log(data);
+    try {
+      const file = data.image?.[0];
+      let imageUrl = user.image;
+
+      // Upload new image if provided
+      if (file) {
+        const uploadedUrl = await uploadProfileImage(file, user.userId);
+        if (uploadedUrl) imageUrl = uploadedUrl;
+      }
+
+      const { data: updatedProfile, error } = await supabase
+        .from("profiles")
+        .update({
+          user_name: data.userName,
+          pen_name: data.penName,
+          email: data.email,
+          bio: data.bio,
+          profile_image_url: imageUrl,
+        })
+        .eq("user_id", user.userId);
+
+      if (error) {
+        console.error("Supabase Error: ", error);
+        toast.error("Error updating profile!");
+        return;
+      }
+
+      toast.success("Profile updated!");
+      router.push("/profile");
+    } catch (err) {
+      console.error(err);
+      toast.error("Unexpected error!");
+    }
   };
 
   return (
@@ -164,5 +200,4 @@ const Page = () => {
     </section>
   );
 };
-
 export default Page;

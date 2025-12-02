@@ -47,3 +47,25 @@ export async function uploadChapterImage(file, storyId) {
 
   return data.publicUrl;
 }
+
+export async function uploadProfileImage(file, userId) {
+  if (!file) return null;
+
+  const fileExt = file.name.split(".").pop();
+  const filePath = `profiles/${userId}/${Date.now()}.${fileExt}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("profile_images")
+    .upload(filePath, file);
+
+  if (uploadError) {
+    console.log("Upload Error: ", uploadError);
+    return null;
+  }
+
+  const { data } = supabase.storage
+    .from("profile_images")
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}

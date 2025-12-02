@@ -2,6 +2,15 @@ import supabase from "./supabaseClient";
 
 //sign up function
 export async function signUp(email, password, userName, penName) {
+  //Check if user_name is unique first
+  const { data: checkUser } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("user_name", userName)
+    .maybeSingle();
+
+  if (checkUser) return { error: "userName already taken!" };
+
   // Creating user by using original auth table
   const { data: authData, error: authError } = await supabase.auth.signUp(
     {

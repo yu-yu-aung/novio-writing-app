@@ -3,9 +3,11 @@
 
 import ChapterCard from "@/components/ChapterCard";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
+import useFetchStory from "@/hooks/useFetchStory";
 import { saveChaptertoDB } from "@/lib/chapter";
 import { uploadChapterImage } from "@/lib/upload";
 import useAuthStore from "@/store/useAuthStore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -27,8 +29,11 @@ const NewChapterPage = ({storyId}) => {
   //Fetch chapters
   const { chapters, loading: loadingFetchChapters, error } = useFetchAllChapters(storyId);
 
-  console.log("chapters: ", chapters);
+  //Fetch story 
+  const { story, loading: loadingFetchStory, error: storyFetchError } = useFetchStory(storyId); 
 
+  console.log("chapters: ", chapters);
+  console.log("user: ", user);
   const onSubmit = async (e) => {
     e.preventDefault(); 
     if (!storyId) {
@@ -98,6 +103,12 @@ const NewChapterPage = ({storyId}) => {
           bg-background-soft
         "
       >
+        <div className="flex flex-col space-y-4 items-center justify-between">
+          <img src={story?.image_url} alt="Story Cover Image" />
+          <Link href={`/stories/${storyId}`} className="">{story?.title}</Link>
+          <Link href={`/profile`}>{user?.penName}</Link>
+        </div>
+
         {!chapters || chapters.length === 0 ? (
           <p className="text-center text-text-secondary">No chapters yet!</p>
         ) : (
@@ -108,7 +119,7 @@ const NewChapterPage = ({storyId}) => {
       </section>
 
       {/* RIGHT SECTION — FORM */}
-        <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6">
+        <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">
           <h2 className="text-xl font-semibold">
             Create New Chapter
           </h2>

@@ -1,12 +1,17 @@
 "use client";
 
 import useFetchChapter from "@/hooks/useFetchChapter";
+import { confirmAction } from "@/lib/confirmAction";
+import supabase from "@/lib/supabaseClient";
+import useAuthStore from "@/store/useAuthStore";
+import Link from "next/link";
 import React, { use } from "react";
 import { toast } from "sonner";
 
 const Page = ({ params }) => {
-  const { chapterId } = use(params);
+  const { storyId, chapterId } = use(params);
   const { chapter, loading, error } = useFetchChapter(chapterId);
+  const { user } = useAuthStore(); 
 
   if (loading)
     return (
@@ -29,29 +34,35 @@ const Page = ({ params }) => {
       </div>
     );
 
-  const handlePublish = () => {
-    const toastId = toast(
-      <div className="flex flex-col gap-2">
-        <p className="text-sm ">Are you sure you want to publish?</p>
-        <div className="flex gap-2 justify-end">
-          <button
-            onClick={() => {
-              chapter.is_published = true;
-            }}
-            className="px-3 py-1 bg-amethyst-600 text-white rounded hover:bg-amethyst-700"
-          >
-            Publish Now
-          </button>
-          <button
-            onClick={() => toast.dismiss(toastId)}
-            className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>,
-      { duration: Infinity }
-    );
+  const handleConfirmPublish = async (chapter) => {
+    const { error } = await supabase
+      .from("chapters")
+      .update({ is_published: true })
+      .eq("id", chapter.id);
+
+    if (error) return toast.error("Failed to publish the chapter!");
+
+    const { error: storyError } = await supabase
+      .from("stories")
+      .update({ status: "published" })
+      .eq("id", chapter.story_id);
+
+    if (storyError) return toast.error("Failed to publish the story!");
+
+    toast.success("Chapter published successfully!");
+    window.location.reload();
+  };
+
+  const handleConfirmUnpublish = async (chapter) => {
+    const { error } = await supabase
+      .from("chapters")
+      .update({ is_published: false })
+      .eq("id", chapter.id);
+
+    if (error) return toast.error("Failed to unpublish the chapter!");
+
+    toast.success("Chapter unpublished successfully!");
+    window.location.reload();
   };
 
   return (
@@ -82,24 +93,63 @@ const Page = ({ params }) => {
         </div>
 
         {/* ---------- Publish Button ---------- */}
-        <div className="mt-10 flex justify-end">
-          <button
-            onClick={handlePublish}
-            className="
-              bg-amethyst-600 
-              text-white 
-              px-6 py-3 
-              rounded-xl 
-              shadow-md 
-              hover:bg-amethyst-700 
-              hover:shadow-lg 
-              transition 
-              font-medium
-            "
-          >
-            Publish Chapter
-          </button>
+        {user?.userId === chapter?.author_id && (
+          <div className="mt-10 flex justify-between">
+          {chapter.is_published ? (
+            <button
+              onClick={() =>
+                confirmAction(
+                  () => handleConfirmUnpublish(chapter),
+                  "Are you sure you want to unpublish this chapter?"
+                )
+              }
+              className="
+                bg-red-500 dark:bg-red-300 
+                text-white dark:text-black 
+                px-6 py-2 rounded-lg 
+                shadow hover:scale-105 transition
+              "
+            >
+              Unpublish
+            </button>
+          ) : (
+            <button
+              onClick={() =>
+                confirmAction(
+                  () => handleConfirmPublish(chapter),
+                  "Are you sure you want to publish this chapter?"
+                )
+              }
+              className="
+                bg-green-600 dark:bg-green-300 
+                text-white dark:text-black 
+                px-6 py-2 rounded-lg 
+                shadow hover:scale-105 transition
+              "
+            >
+              Publish Chapter
+            </button>
+          )}
+
+          <Link href={`/stories/${storyId}/new_chapter`}>
+            <button
+              className="
+                mx-auto 
+                bg-amethyst-600 dark:bg-amethyst-300 
+                text-white dark:text-black 
+                px-8 py-3 
+                rounded-lg 
+                shadow 
+                hover:scale-105 transition 
+                font-semibold
+              "
+            >
+              Create New Chapter
+            </button>
+          </Link>
         </div>
+        )}
+        
       </div>
     </div>
   );

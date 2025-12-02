@@ -45,6 +45,8 @@ const Page = () => {
 
   if (!user) return null;
 
+  console.log("user: ", user);
+
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
@@ -57,7 +59,9 @@ const Page = () => {
             className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
           />
           <div className="absolute bottom-2 right-2 bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black rounded-full p-2 shadow cursor-pointer hover:scale-110 transition">
-            <Pen className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Link href={"/edit"}>
+              <Pen className="w-5 h-5 sm:w-6 sm:h-6" />
+            </Link>
           </div>
         </div>
 
@@ -66,6 +70,12 @@ const Page = () => {
           <h2 className="text-2xl sm:text-3xl font-bold">{user.penName}</h2>
           <p className="text-sm text-muted">{user.userName}</p>
           <p className="text-sm text-body">{user.userEmail}</p>
+        </div>
+
+        {/* About */}
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h2 className="text-xs sm:text-sm font-bold">About</h2>
+          <p className="text-sm text-muted">{user.bio}</p>
         </div>
 
         {/* Stats */}
@@ -82,7 +92,9 @@ const Page = () => {
 
           <div className="flex flex-col items-center">
             <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">{stories?.length} stories</span>
+            <span className="text-sm font-medium mt-1">
+              {stories?.length} stories
+            </span>
           </div>
         </div>
 

@@ -4,11 +4,16 @@ import ChapterCard from "@/components/ChapterCard";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchStory from "@/hooks/useFetchStory";
+import { confirmAction } from "@/lib/confirmAction";
+import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { use } from "react";
+import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { storyId } = use(params);
+  const router = useRouter();
 
   //Fetch story
   const {
@@ -27,6 +32,66 @@ const Page = ({ params }) => {
   if (!story) {
     return <div className="p-10">Story not found</div>;
   }
+
+  const handleClickPublish = async (storyId) => {
+    console.log("CLICKED storyId:", storyId);
+    const { data, error: storyError } = await supabase
+      .from("stories")
+      .update({ status: "published" })
+      .eq("id", storyId);
+
+    console.log("SUPABASE STORY UPDATE ERROR:", storyError);
+    if (storyError) {
+      console.log("story error: ", storyError);
+      return toast.error("Failed to publish the story!");
+    }
+
+    const { error: chapterError } = await supabase
+      .from("chapters")
+      .update({ is_published: true })
+      .eq("story_id", storyId);
+
+    if (chapterError) {
+      return toast.error(
+        "Story published! Failed in publishing some chapters!"
+      );
+    }
+
+    // console.log("story error: ", storyError);
+    // console.log("updated story: ", data);
+    toast.success("Story published successfully!");
+    //window.location.reload();
+    router.refresh();
+  };
+
+  const handleClickUnpublish = async (storyId) => {
+    const { data, error: storyError } = await supabase
+      .from("stories")
+      .update({ status: "draft" })
+      .eq("id", storyId);
+
+    if (storyError) {
+      console.log("Story Error: ", storyError);
+      return toast.error("Failed to unpublish the story!");
+    }
+
+    const { error: chapterError } = await supabase
+      .from("chapters")
+      .update({ is_published: false })
+      .eq("story_id", storyId);
+
+    if (chapterError) {
+      return toast.error(
+        "Story unpublished! Failed in unpublishing some chapters!"
+      );
+    }
+
+    // console.log("story error: ", storyError);
+    // console.log("updated story: ", data);
+    toast.success("Story unpublished successfully!");
+    //window.location.reload();
+    router.refresh();
+  };
 
   return (
     <>
@@ -98,6 +163,12 @@ const Page = ({ params }) => {
 
           {story.status === "published" ? (
             <button
+              onClick={() =>
+                confirmAction(
+                  () => handleClickUnpublish(storyId),
+                  "Are you sure you want to unpublish the whole story?"
+                )
+              }
               className="
                 bg-red-500 dark:bg-red-300 
                 text-white dark:text-black 
@@ -109,6 +180,12 @@ const Page = ({ params }) => {
             </button>
           ) : (
             <button
+              onClick={() =>
+                confirmAction(
+                  () => handleClickPublish(storyId),
+                  "Are you sure you want to publish the whole story?"
+                )
+              }
               className="
                 bg-green-600 dark:bg-green-300 
                 text-white dark:text-black 

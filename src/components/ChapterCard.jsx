@@ -24,7 +24,7 @@ const ChapterCard = ({ chapter, storyId }) => {
       className="bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer"
     >
       
-      <h3 className="text-base sm:text-lg md:text-xl font-bold  mb-2">
+      <h3 className="text-base sm:text-xs md:text-lg font-bold  mb-2">
         {chapter.title}
       </h3>
       
@@ -36,6 +36,16 @@ const ChapterCard = ({ chapter, storyId }) => {
         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
           Chapter {chapter.chapter_number}
         </span>
+
+        <span
+            className="
+              px-3 py-1 rounded-full text-xs font-medium
+              bg-amethyst-100 text-amethyst-700 
+              dark:bg-amethyst-800 dark:text-amethyst-200
+            "
+          >
+            {chapter.is_published ? "Published" : "Draft"}
+          </span>
       </div>
     </div>
   )
