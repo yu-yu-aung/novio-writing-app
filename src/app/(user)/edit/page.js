@@ -71,9 +71,7 @@ const Page = () => {
         image: profile?.profile_image_url,
       });
 
-      // setUser(profile);
-
-      console.log("updated info: ", user);
+      //console.log("updated info: ", user);
 
       if (error) {
         console.error("Supabase Error: ", error);

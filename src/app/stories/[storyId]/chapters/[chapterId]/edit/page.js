@@ -1,9 +1,12 @@
 "use client";
 
 import useFetchChapter from "@/hooks/useFetchChapter";
+import supabase from "@/lib/supabaseClient";
 import { uploadChapterImage } from "@/lib/upload";
-import React, { use, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { use, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { storyId, chapterId } = use(params);
@@ -11,9 +14,42 @@ const Page = ({ params }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
+  const router = useRouter();
 
   console.log("chapter id: ", chapterId);
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      chapterNumber: "",
+      title: "",
+      content: "",
+      image: "",
+    },
+  });
+
   const { chapter, loading, error } = useFetchChapter(chapterId);
+
+  useEffect(() => {
+    if (chapter) {
+      reset({
+        chapterNumber: chapter.chapter_number,
+        title: chapter.title,
+        content: chapter.content,
+        image: chapter.image_url,
+      });
+    }
+  }, [chapter, reset]);
+
+  useEffect(() => {
+    if (chapter?.image_url) {
+      setPreviewImage(chapter.image_url);
+    }
+  }, [chapter]);
 
   if (error) {
     console.log("Error Fetching chapter: ", error);
@@ -24,28 +60,14 @@ const Page = ({ params }) => {
     return <p>Loading...</p>;
   }
 
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      chapterNumber: chapter?.chapter_number,
-      title: chapter?.title,
-      content: chapter?.content,
-      image: chapter?.image_url,
-    },
-  });
-
   const onSubmit = async (data) => {
     try {
-      const file = data.image?.[0];
+      //const file = data.image?.[0];
       let imageUrl = chapter.image_url;
 
       // Upload new image if provided
-      if (file) {
-        const uploadedUrl = await uploadChapterImage(file, storyId);
+      if (imageFile) {
+        const uploadedUrl = await uploadChapterImage(imageFile, storyId);
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
@@ -64,10 +86,6 @@ const Page = ({ params }) => {
         .single();
 
       console.log("returned info: ", editedChapter);
-
-      // setUser(profile);
-
-      console.log("updated info: ", user);
 
       if (error) {
         console.error("Supabase Error: ", error);
@@ -94,7 +112,7 @@ const Page = ({ params }) => {
         px-4 sm:px-8 lg:px-24
       "
     >
-      {/* RIGHT SECTION — FORM */}
+      {/* FORM */}
       <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">
         <h2 className="text-xl font-semibold">Edit</h2>
 
@@ -110,13 +128,11 @@ const Page = ({ params }) => {
               accept="image/*"
               ref={fileInputRef}
               className="hidden"
-              {...register("image", {
-                onChange: (e) => {
-                  const file = e.target.files[0];
-                  setImageFile(file);
-                  if (file) setPreviewImage(URL.createObjectURL(file));
-                },
-              })}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setImageFile(file);
+                if (file) setPreviewImage(URL.createObjectURL(file));
+              }}
             />
 
             {previewImage ? (
