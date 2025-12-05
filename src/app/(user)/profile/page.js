@@ -5,6 +5,7 @@ import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
+import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import {
   Book,
@@ -17,17 +18,42 @@ import {
   Share,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Page = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState("published");
 
   const { register, handleSubmit } = useForm();
   const [showForm, setShowForm] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
   const [share, setShare] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.userId)
+        .single();
+
+      if (profile) {
+        setUser({
+          userId: profile.user_id,
+          userName: profile.user_name,
+          penName: profile.pen_name,
+          userEmail: profile.email,
+          bio: profile.bio,
+          image: profile.profile_image_url,
+        });
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const { stories, loading, error } = useFetchAllStories(user);
   console.log("stories", stories);

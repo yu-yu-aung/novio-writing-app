@@ -1,9 +1,26 @@
+"use client";
+
+import ShareMoodle from "@/components/ShareMoodle";
+import SmallStoryCard from "@/components/SmallStoryCard";
+import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import supabase from "@/lib/supabaseClient";
-import React from "react";
+import {
+  Bell,
+  Book,
+  Share,
+  UserPlus2,
+  UserRoundCheck,
+  UserRoundPlus,
+} from "lucide-react";
+import React, { use, useEffect, useState } from "react";
 
-const Page = async ({ params }) => {
-  const { userName } = params;
+const Page = ({ params }) => {
+  const { userName } = use(params);
+
+  const [share, setShare] = useState(false);
+  const [activeTab, setActiveTab] = useState("published");
+  const [stories, setStories] = useState([]);
 
   if (!userName) return;
 
@@ -12,6 +29,24 @@ const Page = async ({ params }) => {
     error: errorFetchAuthor,
     loading: loadingFetchAuthor,
   } = useFetchAuthor({ userName: userName });
+
+  useEffect(() => {
+    if (!author) return;
+
+    const fetchStories = async () => {
+      const { data: fetchedStories } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("author_id", author.id);
+
+      if (fetchedStories) {
+        console.log("fetched stories: ", fetchedStories);
+        setStories(fetchedStories);
+      }
+    };
+
+    fetchStories();
+  }, [author]);
 
   console.log("author info: ", author);
 
@@ -24,9 +59,13 @@ const Page = async ({ params }) => {
     return <p>Loading...</p>;
   }
 
-  const { stories, loading, error } = useFetchAllStories(author);
+  console.log("fetched stories: ", stories);
+  const publishedStories = stories?.filter(
+    (story) => story.status === "drafts"
+  );
 
   console.log("stories", stories);
+  console.log("published stories: ", publishedStories);
 
   if (errorFetchAuthor) {
     console.log("Error Fetching Author Info: ", errorFetchAuthor);
@@ -45,30 +84,23 @@ const Page = async ({ params }) => {
       {/* Left Sidebar — Profile Section */}
       <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b sm:border-r sm:border-b-transparent lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
         {/* Profile Image */}
-        <div className="relative group">
+        <div className=" group">
           <img
-            src={user.image}
-            alt={`Profile picture of ${user.userName}`}
+            src={author?.profile_image_url}
+            alt={`Profile picture of ${author?.user_name}`}
             className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
           />
-          <div className="absolute bottom-2 right-2 bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black rounded-full p-2 shadow cursor-pointer hover:scale-110 transition">
-            <Link href={"/edit"}>
-              <Pen className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Link>
-          </div>
         </div>
 
         {/* User Info */}
         <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold">{user.penName}</h2>
-          <p className="text-sm text-muted">{user.userName}</p>
-          <p className="text-sm text-body">{user.userEmail}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold">{author?.pen_name}</h2>
         </div>
 
         {/* About */}
         <div className="flex flex-col items-center gap-1 text-center">
           <h2 className="text-xs sm:text-sm font-bold">About</h2>
-          <p className="text-sm text-muted">{user.bio}</p>
+          <p className="text-sm text-muted">{author.bio}</p>
         </div>
 
         {/* Stats */}
@@ -86,38 +118,24 @@ const Page = async ({ params }) => {
           <div className="flex flex-col items-center">
             <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
             <span className="text-sm font-medium mt-1">
-              {stories?.length} stories
+              {publishedStories?.length} stories
             </span>
           </div>
         </div>
 
         {/* Buttons: Edit / Share / Settings */}
         <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <Link href={"/edit"} className={baseStyle}>
-            <Pencil className="size-4 sm:size-6" />
-            <span>Edit </span>
-          </Link>
+          <button className={baseStyle}>
+            <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
+            Follow
+          </button>
 
           <button onClick={() => setShare(true)} className={baseStyle}>
             <Share className="w-5 h-5 sm:w-6 sm:h-6" />
             Share
           </button>
-
-          <button onClick={handleClickSetting} className={baseStyle}>
-            <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
-            Settings
-          </button>
         </div>
       </section>
-
-      {/* Setting Drawer */}
-      <div
-        className={`w-[260px] sm:w-[320px] lg:w-[360px] z-30 h-full absolute left-0 top-0 shadow-xl shadow-gray-100 dark:shadow-gray-800 transition-transform duration-300 ${
-          showSetting ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <SettingDrawer setShowSetting={setShowSetting} />
-      </div>
 
       <div
         className={`${
@@ -133,13 +151,10 @@ const Page = async ({ params }) => {
         <div className="flex gap-6 border-b border-default pb-3 overflow-x-auto">
           {[
             { key: "published", label: "Published Stories" },
-            { key: "draft", label: "Drafts" },
-            { key: "library", label: "Library" },
             { key: "notice", label: "Notice Board" },
-          ].map((tab) => (
+          ].map((tab, index) => (
             <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              key={index}
               className={`pb-2 font-semibold text-lg whitespace-nowrap transition ${
                 activeTab === tab.key
                   ? "text-brand border-b-2 border-brand"
@@ -160,14 +175,6 @@ const Page = async ({ params }) => {
               ) : null
             )}
 
-          {activeTab === "draft" &&
-            stories?.map((story, index) =>
-              story.status === "draft" ? (
-                <SmallStoryCard key={index} story={story} storyId={story.id} />
-              ) : null
-            )}
-
-          {activeTab === "library" && <BookShelf />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
               {!showForm && (
@@ -176,49 +183,8 @@ const Page = async ({ params }) => {
                     <Bell className="mx-auto w-10 h-10 text-brand" />
                     <p className="text-lg text-muted">No announcements yet.</p>
                   </div>
-
-                  <button
-                    onClick={() => setShowForm(true)}
-                    className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
-                  >
-                    Make an announcement!
-                  </button>
                 </>
               )}
-
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className={`transition-all duration-300 overflow-hidden ${
-                  showForm ? "opacity-100 max-h-[400px]" : "opacity-0 max-h-0"
-                }`}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-end gap-6 mt-4">
-                  <div className="relative w-full">
-                    <textarea
-                      id="description"
-                      rows="3"
-                      {...register("description", { required: true })}
-                      className="block w-full py-3 px-3 text-sm text-heading bg-background-soft
-                      border-b-2 border-default focus:outline-none focus:border-brand rounded-md transition peer"
-                    />
-                    <label
-                      htmlFor="description"
-                      className="absolute left-3 top-3 text-body text-sm transition-all
-                      peer-focus:text-brand peer-focus:-top-2 peer-focus:text-xs
-                      peer-valid:-top-2 peer-valid:text-xs"
-                    >
-                      Description
-                    </label>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="bg-coral-tree-300 dark:bg-coral-tree-800 text-heading font-semibold hover:scale-105 rounded px-6 py-3 shadow transition"
-                  >
-                    Announce
-                  </button>
-                </div>
-              </form>
             </div>
           )}
         </div>

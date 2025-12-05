@@ -137,6 +137,7 @@ const Page = ({ params }) => {
           </div>
 
           <h1 className="text-2xl font-bold">{story.title}</h1>
+          <h1 className="text-2xl font-bold">{story.title}</h1>
           <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
           <div className="flex flex-wrap justify-center gap-3 w-full">
