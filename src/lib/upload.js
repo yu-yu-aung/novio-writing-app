@@ -56,7 +56,10 @@ export async function uploadProfileImage(file, userId) {
 
   const { error: uploadError } = await supabase.storage
     .from("profile_images")
-    .upload(filePath, file);
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
 
   if (uploadError) {
     console.log("Upload Error: ", uploadError);

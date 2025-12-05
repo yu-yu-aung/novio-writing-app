@@ -32,6 +32,7 @@ export async function signUp(email, password, userName, penName) {
     user_name: userName,
     email: email,
     pen_name: penName,
+    profile_image_url: imageUrl || "",
   });
 
   if (profileInsertError) return { error: profileInsertError };

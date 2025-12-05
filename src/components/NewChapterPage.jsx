@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
+import LeftContentBar from "./LeftContentBar";
 
 const NewChapterPage = ({storyId}) => {
 
@@ -90,33 +91,8 @@ const NewChapterPage = ({storyId}) => {
         px-4 sm:px-8 lg:px-24
       "
     >
-      {/* LEFT SECTION — CHAPTER LIST */}
-      <section
-        className="
-          hidden sm:flex 
-          sm:col-span-2 lg:col-span-2 
-          flex-col 
-          gap-6 
-          border-r border-default 
-          py-10 sm:py-16 lg:py-20 
-          px-6 
-          bg-background-soft
-        "
-      >
-        <div className="flex flex-col space-y-4 items-center justify-between">
-          <img src={story?.image_url} alt="Story Cover Image" />
-          <Link href={`/stories/${storyId}`} className="">{story?.title}</Link>
-          <Link href={`/profile`}>{user?.penName}</Link>
-        </div>
 
-        {!chapters || chapters.length === 0 ? (
-          <p className="text-center text-text-secondary">No chapters yet!</p>
-        ) : (
-          chapters.map((chapter, index) => (
-            <ChapterCard chapter={chapter} key={index} storyId={storyId}/>
-          ))
-        )}
-      </section>
+      <LeftContentBar storyId={storyId} story={story} chapters={chapters} user={user}/>
 
       {/* RIGHT SECTION — FORM */}
         <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">

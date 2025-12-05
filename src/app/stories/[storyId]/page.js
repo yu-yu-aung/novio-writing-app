@@ -5,6 +5,7 @@ import SmallHeading from "@/components/SmallHeading";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
+import { deleteStory } from "@/lib/story";
 import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -93,6 +94,12 @@ const Page = ({ params }) => {
     router.refresh();
   };
 
+  const handleDeleteBtn = async (storyId) => {
+    const { data } = await deleteStory(storyId);
+    toast.success("Story Deleted Successfully!");
+    router.push("/profile");
+  };
+
   return (
     <>
       <SmallHeading title={`Story Dashboard for ${story.title}`} />
@@ -161,12 +168,47 @@ const Page = ({ params }) => {
             <span className="font-bold">Status:</span> {story.status}
           </p>
 
-          {story.status === "published" ? (
+          <div className="flex justify-between">
+            {story.status === "published" ? (
+              <button
+                onClick={() =>
+                  confirmAction(
+                    () => handleClickUnpublish(storyId),
+                    "Are you sure you want to unpublish the whole story?"
+                  )
+                }
+                className="
+                bg-red-500 dark:bg-red-300 
+                text-white dark:text-black 
+                px-6 py-2 rounded-lg 
+                shadow hover:scale-105 transition
+              "
+              >
+                Unpublish
+              </button>
+            ) : (
+              <button
+                onClick={() =>
+                  confirmAction(
+                    () => handleClickPublish(storyId),
+                    "Are you sure you want to publish the whole story?"
+                  )
+                }
+                className="
+                bg-green-600 dark:bg-green-300 
+                text-white dark:text-black 
+                px-6 py-2 rounded-lg 
+                shadow hover:scale-105 transition
+              "
+              >
+                Publish Now
+              </button>
+            )}
             <button
               onClick={() =>
                 confirmAction(
-                  () => handleClickUnpublish(storyId),
-                  "Are you sure you want to unpublish the whole story?"
+                  () => handleDeleteBtn(storyId),
+                  "Are you sure you want to delete the whole story? The deleted story cannot be retrieved!"
                 )
               }
               className="
@@ -176,26 +218,9 @@ const Page = ({ params }) => {
                 shadow hover:scale-105 transition
               "
             >
-              Unpublish
+              Delete story
             </button>
-          ) : (
-            <button
-              onClick={() =>
-                confirmAction(
-                  () => handleClickPublish(storyId),
-                  "Are you sure you want to publish the whole story?"
-                )
-              }
-              className="
-                bg-green-600 dark:bg-green-300 
-                text-white dark:text-black 
-                px-6 py-2 rounded-lg 
-                shadow hover:scale-105 transition
-              "
-            >
-              Publish Now
-            </button>
-          )}
+          </div>
         </section>
 
         {/* RIGHT SECTION — CHAPTERS */}
@@ -216,7 +241,7 @@ const Page = ({ params }) => {
               </p>
             ) : (
               chapters.map((chapter, index) => (
-                <ChapterCard chapter={chapter} key={index} />
+                <ChapterCard chapter={chapter} key={index} storyId={storyId} />
               ))
             )}
           </div>

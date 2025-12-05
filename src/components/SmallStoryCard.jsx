@@ -5,14 +5,18 @@ import { Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const SmallStoryCard = ({ story }) => {
+const SmallStoryCard = ({ story, storyId }) => {
   const authorId = story?.author_id;
-  const { author, loading, error } = useFetchAuthor(authorId);
+
+  console.log("Author id: ", authorId);
+
+  //fetch author's info using 
+  const { author, loading, error } = useFetchAuthor({userId: authorId});
 
   const router = useRouter(); 
 
   const handleClickCard = () => {
-    router.push(`/stories/${story.id}`);
+    router.push(`/stories/${storyId}`);
   }
 
   return (

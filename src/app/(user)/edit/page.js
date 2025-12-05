@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const Page = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [previewImage, setPreviewImage] = useState(null);
   const router = useRouter();
 
@@ -45,7 +45,9 @@ const Page = () => {
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
-      const { data: updatedProfile, error } = await supabase
+      console.log("uploaded image: ", imageUrl);
+
+      const { data: profile, error } = await supabase
         .from("profiles")
         .update({
           user_name: data.userName,
@@ -54,7 +56,24 @@ const Page = () => {
           bio: data.bio,
           profile_image_url: imageUrl,
         })
-        .eq("user_id", user.userId);
+        .eq("user_id", user.userId)
+        .select()
+        .single();
+
+      console.log("returned info: ", profile);
+
+      setUser({
+        userId: profile?.user_id,
+        userName: profile?.user_name,
+        penName: profile?.pen_name,
+        userEmail: profile?.email,
+        bio: profile?.bio,
+        image: profile?.profile_image_url,
+      });
+
+      // setUser(profile);
+
+      console.log("updated info: ", user);
 
       if (error) {
         console.error("Supabase Error: ", error);
@@ -86,12 +105,14 @@ const Page = () => {
               type="file"
               className="hidden"
               accept="image/*"
-              {...register("image")}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                setPreviewImage(URL.createObjectURL(file));
-              }}
+              {...register("image", {
+                onChange: (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  console.log("image file: ", file);
+                  setPreviewImage(URL.createObjectURL(file));
+                },
+              })}
             />
             <div className="size-28 sm:size-44 border-2 border-dashed border-brand rounded-full bg-brand-soft cursor-pointer flex items-center justify-center  overflow-hidden">
               <img
