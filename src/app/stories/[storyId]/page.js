@@ -7,6 +7,7 @@ import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
 import { deleteStory } from "@/lib/story";
 import supabase from "@/lib/supabaseClient";
+import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { use } from "react";
@@ -15,6 +16,7 @@ import { toast } from "sonner";
 const Page = ({ params }) => {
   const { storyId } = use(params);
   const router = useRouter();
+  const { user } = useAuthStore();
 
   //Fetch story
   const {
@@ -137,7 +139,7 @@ const Page = ({ params }) => {
           </div>
 
           <h1 className="text-2xl font-bold">{story.title}</h1>
-          <h1 className="text-2xl font-bold">{story.title}</h1>
+          <h1 className="text-xl font-bold">{user.penName}</h1>
           <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
           <div className="flex flex-wrap justify-center gap-3 w-full">

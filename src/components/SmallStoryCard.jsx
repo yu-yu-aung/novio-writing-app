@@ -1,22 +1,30 @@
 "use client";
 
 import useFetchAuthor from "@/hooks/useFetchAuthor";
+import useAuthStore from "@/store/useAuthStore";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const SmallStoryCard = ({ story, storyId }) => {
+const  SmallStoryCard = ({ story, storyId }) => {
   const authorId = story?.author_id;
 
   console.log("Author id: ", authorId);
 
-  //fetch author's info using 
+  //fetch author's info using author id
   const { author, loading, error } = useFetchAuthor({userId: authorId});
+  const { user } = useAuthStore(); 
+  console.log("author info: ", author);
 
   const router = useRouter(); 
 
   const handleClickCard = () => {
-    router.push(`/stories/${storyId}`);
+    if ( user.id === authorId) {
+      router.push(`/stories/${storyId}`);
+    } else {
+      router.push(`/p_stories/${storyId}`);
+    }
+    
   }
 
   return (

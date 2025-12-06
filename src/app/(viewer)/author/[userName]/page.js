@@ -123,7 +123,7 @@ const Page = ({ params }) => {
           </div>
         </div>
 
-        {/* Buttons: Edit / Share / Settings */}
+        {/* Buttons: Follow / Share */}
         <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
           <button className={baseStyle}>
             <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -155,6 +155,7 @@ const Page = ({ params }) => {
           ].map((tab, index) => (
             <button
               key={index}
+              onClick={() => setActiveTab(tab.key)}
               className={`pb-2 font-semibold text-lg whitespace-nowrap transition ${
                 activeTab === tab.key
                   ? "text-brand border-b-2 border-brand"
@@ -177,14 +178,7 @@ const Page = ({ params }) => {
 
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              {!showForm && (
-                <>
-                  <div className="flex flex-col gap-3">
-                    <Bell className="mx-auto w-10 h-10 text-brand" />
-                    <p className="text-lg text-muted">No announcements yet.</p>
-                  </div>
-                </>
-              )}
+              <p className="text-lg text-muted">No announcements yet.</p>
             </div>
           )}
         </div>

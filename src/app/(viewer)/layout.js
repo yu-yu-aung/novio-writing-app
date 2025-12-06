@@ -8,7 +8,7 @@ export const metadata = {
     "Novio is a modern writing platform for creators, offering seamless content management, intuitive design, and a vibrant space to write, share, and explore stories.",
 };
 
-export default function SearchLayout({ children }) {
+export default function CreateLayout({ children }) {
   return (
     <div className="min-h-screen flex flex-col bg-amethyst-50 dark:bg-amethyst-950 text-gray-900 dark:text-gray-100">
       <Header />

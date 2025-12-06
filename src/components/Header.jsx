@@ -14,11 +14,12 @@ import {
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const Header = () => {
   const { isLoggedIn } = useAuthStore();
   const pathname = usePathname();
+  const router = useRouter(); 
 
   const [keyWord, setKeyWord] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -28,7 +29,11 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+
     console.log("Search for:", keyWord);
+    if (!keyWord.trim()) return; 
+
+    router.push(`/search?query=${keyWord}`)
     setKeyWord("");
   };
 
