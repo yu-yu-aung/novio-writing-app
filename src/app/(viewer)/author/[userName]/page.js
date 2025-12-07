@@ -16,7 +16,7 @@ import {
 import React, { use, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
-  const { userName } = use(params);
+  const { userName } = params;
 
   const [share, setShare] = useState(false);
   const [activeTab, setActiveTab] = useState("published");
