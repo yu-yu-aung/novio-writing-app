@@ -2,6 +2,7 @@
 
 import LeftContentBar from "@/components/LeftContentBar";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
+import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchChapter from "@/hooks/useFetchChapter";
 import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
@@ -29,6 +30,14 @@ const Page = ({ params }) => {
     loading: loadingFetchStory,
     error: storyFetchError,
   } = useFetchStory(storyId);
+
+  //fetch author's info using author id
+  const {
+    author,
+    loading: loadingFetchAuthor,
+    error: errorFetchAuthor,
+  } = useFetchAuthor({ userId: story?.author_id });
+  console.log("author info: ", author);
 
   if (loading)
     return (
@@ -98,6 +107,7 @@ const Page = ({ params }) => {
         storyId={storyId}
         story={story}
         chapters={chapters}
+        author={author}
         user={user}
       />
 

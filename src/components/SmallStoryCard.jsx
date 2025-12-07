@@ -18,8 +18,10 @@ const  SmallStoryCard = ({ story, storyId }) => {
 
   const router = useRouter(); 
 
+  console.log("userId");
+
   const handleClickCard = () => {
-    if ( user.id === authorId) {
+    if ( user.userId === authorId) {
       router.push(`/stories/${storyId}`);
     } else {
       router.push(`/p_stories/${storyId}`);

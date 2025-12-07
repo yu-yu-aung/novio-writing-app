@@ -244,7 +244,12 @@ const Page = ({ params }) => {
               </p>
             ) : (
               chapters.map((chapter, index) => (
-                <ChapterCard chapter={chapter} key={index} storyId={storyId} />
+                <ChapterCard
+                  chapter={chapter}
+                  key={index}
+                  storyId={storyId}
+                  story={story}
+                />
               ))
             )}
           </div>

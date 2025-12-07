@@ -13,7 +13,10 @@ export default function useFetchAuthor({ userId, userName }) {
 
   useEffect(() => {
     async function load() {
-      if (!userName && !userId) return;
+      if (!userName && !userId) {
+        setLoading(false);
+        return;
+      }
 
       setLoading(true);
 
@@ -30,6 +33,7 @@ export default function useFetchAuthor({ userId, userName }) {
       if (error) {
         console.error("Error fetching author info: ", error);
         setError(error);
+        setAuthor(null);
       } else {
         setAuthor(data);
       }
@@ -38,7 +42,7 @@ export default function useFetchAuthor({ userId, userName }) {
     }
 
     load();
-  }, [userName]);
+  }, [userName, userId]);
 
   return { author, loading, error };
 }

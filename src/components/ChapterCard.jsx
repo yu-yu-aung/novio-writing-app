@@ -1,9 +1,13 @@
+"use client"
+
+import useAuthStore from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const ChapterCard = ({ chapter, storyId }) => {
+const ChapterCard = ({ chapter, storyId, story }) => {
 
   const router = useRouter(); 
+  const {user } = useAuthStore(); 
 
   const formattedDateTime = new Date(chapter.updated_at).toLocaleString('en-US', {
     year: 'numeric',
@@ -14,8 +18,16 @@ const ChapterCard = ({ chapter, storyId }) => {
     hour12: true,
   })
 
+  console.log("story: ", story);
+
+  console.log("author id: ", story.author_id);
+  console.log("user id: ", user.userId);
   const handleClickCard = () => {
-    router.push(`/stories/${storyId}/chapters/${chapter.id}/view`);
+    if (user.userId === story?.author_id){
+      router.push(`/stories/${storyId}/chapters/${chapter.id}/view`);
+    } else {
+      router.push(`/p_stories/${storyId}/chapters/${chapter.id}`);
+    }
   }
 
   return (
@@ -33,16 +45,16 @@ const ChapterCard = ({ chapter, storyId }) => {
       </p>
 
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
+        <span className="text-[12px] bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
           Chapter {chapter.chapter_number}
         </span>
 
         <span
-            className="
+            className={`${user.userId === story?.author_id ? "" : "hidden"}
               px-3 py-1 rounded-full text-xs font-medium
-              bg-amethyst-100 text-amethyst-700 
-              dark:bg-amethyst-800 dark:text-amethyst-200
-            "
+              bg-amethyst-100 text-amethyst-700 dark:bg-amethyst-800 dark:text-amethyst-200 
+             `} 
+            
           >
             {chapter.is_published ? "Published" : "Draft"}
           </span>

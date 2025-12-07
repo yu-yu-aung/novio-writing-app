@@ -36,6 +36,8 @@ const Page = ({ params }) => {
   const authorId = story?.author_id;
 
   console.log("Author id: ", authorId);
+  console.log("story: ", story);
+  console.log("user: ", user);
 
   //fetch author's info using author id
   useEffect(() => {
@@ -175,6 +177,8 @@ const Page = ({ params }) => {
                       chapter={chapter}
                       key={index}
                       storyId={storyId}
+                      story={story}
+                      user={user}
                     />
                   ))
               )
