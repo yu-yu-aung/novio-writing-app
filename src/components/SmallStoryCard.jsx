@@ -13,21 +13,24 @@ const  SmallStoryCard = ({ story, storyId }) => {
 
   //fetch author's info using author id
   const { author, loading, error } = useFetchAuthor({userId: authorId});
-  const { user } = useAuthStore(); 
+  const { user, isLoggedIn } = useAuthStore(); 
   console.log("author info: ", author);
+
+
 
   const router = useRouter(); 
 
   console.log("userId");
 
   const handleClickCard = () => {
-    if ( user.userId === authorId) {
+    if ( user?.userId === authorId) {
       router.push(`/stories/${storyId}`);
     } else {
       router.push(`/p_stories/${storyId}`);
     }
-    
+    return;
   }
+    
 
   return (
     <div

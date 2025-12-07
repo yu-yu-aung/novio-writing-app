@@ -157,7 +157,7 @@ const Page = () => {
           share ? "flex" : "hidden"
         } fixed inset-0 z-40 items-center justify-center`}
       >
-        <ShareMoodle share={share} setShare={setShare} />
+        <ShareMoodle share={share} setShare={setShare} author={user}/>
       </div>
 
       {/* Right Content Section */}

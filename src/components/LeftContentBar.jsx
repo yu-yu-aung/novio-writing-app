@@ -31,7 +31,7 @@ const LeftContentBar = ({storyId, story, chapters, author, user}) => {
           ))
         )}
 
-        <Link href={`/stories/${storyId}/new_chapter`} className={`bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer flex ${user.userId === author?.user_id ? "" : "hidden"}`}>
+        <Link href={`/stories/${storyId}/new_chapter`} className={`bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer flex ${user?.userId === author?.user_id ? "" : "hidden"}`}>
           <Plus /> <span>Create a new chapter</span>
         </Link>
       </section>

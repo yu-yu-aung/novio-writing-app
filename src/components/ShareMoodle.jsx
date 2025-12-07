@@ -3,14 +3,13 @@ import useAuthStore from '@/store/useAuthStore'
 import { Copy, Facebook, Mail, Send, Twitter } from 'lucide-react';
 import React from 'react'
 
-const ShareMoodle = ({share, setShare}) => {
+const ShareMoodle = ({share, setShare, author}) => {
 
-  const {user} = useAuthStore(); 
   return (
     <div>
       {/* Modal for sharing user profile */}
       <div className={`fixed z-50 top-40 left-10 sm:left-20 lg:left-30 ${!share ? "hidden" : ""} bg-white rounded-xl shadow-lg p-2 sm:p-4 lg:p-6 w-[280px] sm:w-[500px] lg:w-[500px] border border-gray-200 flex flex-col items-center`}>
-        <h3 className="tex-lg sm:text-xl lg:text-xl font-semibold mb-4 text-gray-800 line-clamp-2">{user.userName}</h3>
+        <h3 className="tex-lg sm:text-xl lg:text-xl font-semibold mb-4 text-gray-800 line-clamp-2">{author?.pen_name || author?.userName}</h3>
 
         <div className="flex w-full items-center justify-between bg-gray-100 p-2 rounded mb-4">
           <p className="truncate text-gray-700 w-[300px] line-clamp-2 h-auto text-sm">{window.location.href}</p>

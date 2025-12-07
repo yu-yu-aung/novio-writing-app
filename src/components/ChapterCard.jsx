@@ -18,12 +18,12 @@ const ChapterCard = ({ chapter, storyId, story }) => {
     hour12: true,
   })
 
-  console.log("story: ", story);
+  // console.log("story: ", story);
 
-  console.log("author id: ", story.author_id);
-  console.log("user id: ", user.userId);
+  // console.log("author id: ", story.author_id);
+  // console.log("user id: ", user.userId);
   const handleClickCard = () => {
-    if (user.userId === story?.author_id){
+    if (user?.userId === story?.author_id){
       router.push(`/stories/${storyId}/chapters/${chapter.id}/view`);
     } else {
       router.push(`/p_stories/${storyId}/chapters/${chapter.id}`);
@@ -50,7 +50,7 @@ const ChapterCard = ({ chapter, storyId, story }) => {
         </span>
 
         <span
-            className={`${user.userId === story?.author_id ? "" : "hidden"}
+            className={`${user?.userId === story?.author_id ? "" : "hidden"}
               px-3 py-1 rounded-full text-xs font-medium
               bg-amethyst-100 text-amethyst-700 dark:bg-amethyst-800 dark:text-amethyst-200 
              `} 

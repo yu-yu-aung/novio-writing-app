@@ -16,7 +16,7 @@ import {
 import React, { use, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
-  const { userName } = params;
+  const { userName } = use(params);
 
   const [share, setShare] = useState(false);
   const [activeTab, setActiveTab] = useState("published");
@@ -142,7 +142,7 @@ const Page = ({ params }) => {
           share ? "flex" : "hidden"
         } fixed inset-0 z-40 items-center justify-center`}
       >
-        <ShareMoodle share={share} setShare={setShare} />
+        <ShareMoodle share={share} setShare={setShare} author={author} />
       </div>
 
       {/* Right Content Section */}
