@@ -4,7 +4,9 @@ import ChapterCard from "@/components/ChapterCard";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
+import useFetchLibrary from "@/hooks/useFetchLibrary";
 import useFetchStory from "@/hooks/useFetchStory";
+import { addStorytoLibrary, removeStoryfromLibrary } from "@/lib/library";
 import supabase from "@/lib/supabaseClient";
 
 import useAuthStore from "@/store/useAuthStore";
@@ -16,7 +18,7 @@ import { toast } from "sonner";
 const Page = ({ params }) => {
   const { storyId } = use(params);
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, isLoggedIn } = useAuthStore();
   const [author, setAuthor] = useState(null);
 
   //Fetch story
@@ -33,8 +35,16 @@ const Page = ({ params }) => {
     error: chaptersError,
   } = useFetchAllChapters(storyId);
 
-  const authorId = story?.author_id;
+  const {
+    libraryList,
+    loading: loadFetchLibrary,
+    error: errorFetchLibrary,
+  } = useFetchLibrary(user);
 
+  const authorId = story?.author_id;
+  const isInLibrary = libraryList?.some((item) => item.story_id === storyId);
+
+  console.log("Library list: ", libraryList);
   console.log("Author id: ", authorId);
   console.log("story: ", story);
   console.log("user: ", user);
@@ -64,6 +74,36 @@ const Page = ({ params }) => {
   if (!story) {
     return <div className="p-10">Story not found</div>;
   }
+
+  const handleAddLibrary = async () => {
+    if (!user || !isLoggedIn) {
+      toast.error("Please log in or sign up to add the story to your library!");
+      return;
+    }
+
+    const { data, error } = await addStorytoLibrary(story, user);
+
+    if (error) {
+      toast.error("Error adding story to the library!");
+      console.log("Error adding story to the library! ", error);
+    }
+
+    toast.success("Story added to library!");
+    router.refresh();
+  };
+
+  const handleRemoveLibrary = async () => {
+    const { data, error } = await removeStoryfromLibrary(storyId);
+
+    if (error) {
+      toast.error("Error removing story from library!");
+      console.error("Error removing story from library! ", error);
+      return;
+    }
+
+    toast.success("Story removed from the library!");
+    router.refresh();
+  };
 
   return (
     <>
@@ -135,9 +175,26 @@ const Page = ({ params }) => {
           </p>
 
           <div className="flex justify-between">
-            <button
-              onClick={() => "You clicked add to library!"}
-              className="
+            {isInLibrary ? (
+              <button
+                onClick={handleRemoveLibrary}
+                className="
+               mx-auto 
+                bg-coral-tree-600 dark:bg-coral-tree-300
+                text-white dark:text-black 
+                px-8 py-3 
+                rounded-lg 
+                shadow 
+                hover:scale-105 transition 
+                font-semibold 
+              "
+              >
+                Remove from Library
+              </button>
+            ) : (
+              <button
+                onClick={handleAddLibrary}
+                className="
                mx-auto 
                 bg-amethyst-600 dark:bg-amethyst-300 
                 text-white dark:text-black 
@@ -147,9 +204,10 @@ const Page = ({ params }) => {
                 hover:scale-105 transition 
                 font-semibold 
               "
-            >
-              Add to Library
-            </button>
+              >
+                Add to Library
+              </button>
+            )}
           </div>
         </section>
 

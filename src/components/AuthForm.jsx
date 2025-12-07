@@ -42,7 +42,12 @@ const AuthForm = ({ mode = "Log In" }) => {
       setUser(userData);
       toast.success(`${mode} successful! Welcome ${userData.penName}`);
       reset();
-      router.push("/")
+
+      //Get redirect URL 
+      const searchParams = new URLSearchParams(window.location.search); 
+      const redirectTo = searchParams.get("redirectTo") || "/"; 
+
+      router.push(redirectTo); 
     } catch (err) {
       console.error(err);
       toast.error("Unexpected error occurred!");
