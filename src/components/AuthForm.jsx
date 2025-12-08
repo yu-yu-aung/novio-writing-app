@@ -13,6 +13,8 @@ const AuthForm = ({ mode = "Log In" }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter(); 
 
+  const imageUrl = ""; 
+
   const onSubmit = async (data) => {
     const { email, password, userName, penName } = data;
     setLoading(true);
@@ -23,7 +25,7 @@ const AuthForm = ({ mode = "Log In" }) => {
       if (mode === "Log In") {
         response = await signIn(email, password);
       } else {
-        response = await signUp(email, password, userName, penName);
+        response = await signUp(email, password, userName, penName, imageUrl);
       }
 
       if (response.error) {
@@ -161,7 +163,7 @@ const AuthForm = ({ mode = "Log In" }) => {
       <button
         type="submit"
         disabled={loading}
-        className={`bg-amethyst-300 box-border border border-transparent hover:bg-amethyst-700 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none ${
+        className={`bg-amethyst-300 dark:bg-amethyst-800 box-border border border-transparent hover:bg-amethyst-700 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none ${
           loading ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >

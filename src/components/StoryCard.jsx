@@ -1,36 +1,49 @@
-import Link from 'next/link'
+import useFetchAuthor from '@/hooks/useFetchAuthor'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const StoryCard = ({story}) => {
-  return ( 
-    <div className="bg-neutral-primary-soft block max-w-sm border border-default rounded-base shadow-xs">
-      <Link href="#">
-        <img 
-          className="rounded-t-base" 
-          src={story.image} 
-          alt={story.title} 
+const StoryCard = ({ story }) => {
+  const router = useRouter();
+  const { author } = useFetchAuthor({ userId: story.author_id });
+
+  return (
+    <div
+      onClick={() => router.push(`/p_stories/${story.id}`)}
+      className="
+        group cursor-pointer 
+        bg-white dark:bg-neutral-900 
+        rounded-lg overflow-hidden 
+        border border-neutral-200 dark:border-neutral-700 
+        shadow-sm hover:shadow-md 
+        transition-all duration-300 
+        w-full max-w-xs sm:max-w-sm md:max-w-md h-full 
+      "
+    >
+      {/* IMAGE */}
+      <div className="w-full aspect-[4/3] overflow-hidden">
+        <img
+          src={story.image_url || '/placeholder.jpg'}
+          alt={story.title}
+          className="
+            w-full h-full object-cover 
+            group-hover:scale-105 transition-all duration-500
+          "
         />
-      </Link>
-      
-      <div className="p-6 text-center">
-        
-        <h5 className="mt-3 mb-6 text-xl font-semibold tracking-tight text-heading">
-          {story.title}
+      </div>
+
+      {/* CARD CONTENT */}
+      <div className="p-2 sm:p-4 lg:p-4 text-center flex flex-col">
+        <h5 className="text-sm md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 line-clamp-2">
+          {story.title} 
         </h5>
-          <h6 className="mt-3 mb-6 text-lg font-semibold tracking-tight text-heading">
-          {story.author}
+
+        <h6 className="mt-4 text-xs text-neutral-600 dark:text-neutral-300">
+          {author?.pen_name}
         </h6>
-          <h6 className="mt-3 mb-6 text-lg font-medium tracking-tight text-heading">
-          {story.category}
-        </h6>
-        <Link href="#" className="inline-flex items-center text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
-          Read Now
-        </Link>
+
       </div>
     </div>
+  );  
+};
 
-
-  )
-}
-
-export default StoryCard
+export default StoryCard;

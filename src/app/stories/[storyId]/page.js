@@ -104,7 +104,7 @@ const Page = ({ params }) => {
 
   return (
     <>
-      <SmallHeading title={`Story Dashboard for ${story.title}`} />
+      <SmallHeading title={`Story Dashboard`} />
 
       <div
         className="
@@ -171,7 +171,7 @@ const Page = ({ params }) => {
             <span className="font-bold">Status:</span> {story.status}
           </p>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between w-full">
             {story.status === "published" ? (
               <button
                 onClick={() =>
@@ -181,7 +181,7 @@ const Page = ({ params }) => {
                   )
                 }
                 className="
-                bg-red-500 dark:bg-red-300 
+                bg-coral-tree-500 dark:bg-coral-tree-400 
                 text-white dark:text-black 
                 px-6 py-2 rounded-lg 
                 shadow hover:scale-105 transition
@@ -215,8 +215,8 @@ const Page = ({ params }) => {
                 )
               }
               className="
-                bg-red-500 dark:bg-red-300 
-                text-white dark:text-black 
+                bg-red-700 
+                text-white 
                 px-6 py-2 rounded-lg 
                 shadow hover:scale-105 transition
               "

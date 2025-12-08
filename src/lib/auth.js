@@ -1,7 +1,7 @@
 import supabase from "./supabaseClient";
 
 //sign up function
-export async function signUp(email, password, userName, penName) {
+export async function signUp(email, password, userName, penName, imageUrl) {
   //Check if user_name is unique first
   const { data: checkUser } = await supabase
     .from("profile")
@@ -32,7 +32,7 @@ export async function signUp(email, password, userName, penName) {
     user_name: userName,
     email: email,
     pen_name: penName,
-    profile_image_url: imageUrl || "",
+    profile_image_url: imageUrl || "/placeholder.png",
   });
 
   if (profileInsertError) return { error: profileInsertError };
