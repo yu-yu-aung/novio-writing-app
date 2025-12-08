@@ -10,7 +10,14 @@ import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
-import { MessagesSquare, Share2, ThumbsUp } from "lucide-react";
+import {
+  Hamburger,
+  Menu,
+  MessagesSquare,
+  Share2,
+  ThumbsUp,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import React, { use, useState } from "react";
 import { toast } from "sonner";
@@ -24,6 +31,7 @@ const Page = ({ params }) => {
 
   const [showComment, setShowComment] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [showLeftBar, setShowLeftBar] = useState(false);
 
   const [share, setShare] = useState(false);
 
@@ -121,15 +129,29 @@ const Page = ({ params }) => {
         px-4 sm:px-6 lg:px-24
       "
     >
-      <LeftContentBar
-        storyId={storyId}
-        story={story}
-        chapters={chapters}
-        author={author}
-        user={user}
-      />
+      <div
+        className="hidden sm:flex 
+          sm:col-span-2 lg:col-span-2 "
+      >
+        <LeftContentBar
+          storyId={storyId}
+          story={story}
+          chapters={chapters}
+          author={author}
+          user={user}
+        />
+      </div>
 
-      <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">
+      <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll relative">
+        <div className="flex items-center gap-4 my-4">
+          <button
+            onClick={() => setShowLeftBar(!showLeftBar)}
+            className="block sm:hidden lg:hidden"
+          >
+            <Menu className="size-5" />
+          </button>
+          <h2 className="text-2xl font-bold">{story?.title}</h2>
+        </div>
         {/* ---------- Cover Image Section ---------- */}
         <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
           {chapter?.image_url && (
@@ -149,7 +171,7 @@ const Page = ({ params }) => {
           px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <ThumbsUp
-              className={`size-3 lg:size-5 sm:size-5 ${
+              className={`size-4 lg:size-5 sm:size-5 ${
                 liked ? "text-amethyst-600" : ""
               }`}
             />
@@ -168,7 +190,7 @@ const Page = ({ params }) => {
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
           px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
-            <MessagesSquare className="size-3 lg:size-5 sm:size-5" />
+            <MessagesSquare className="size-4 lg:size-5 sm:size-5" />
             <span className="font-medium">Comment</span>
           </button>
 
@@ -177,7 +199,7 @@ const Page = ({ params }) => {
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200
           px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
-            <Share2 className="size-3 lg:size-5 sm:size-5" />
+            <Share2 className="size-4 lg:size-5 sm:size-5" />
             <span className="font-medium">Share</span>
           </button>
         </div>
@@ -192,7 +214,7 @@ const Page = ({ params }) => {
 
         {/* ---------- Content Section ---------- */}
         <div className="max-w-3xl mx-auto py-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">
             <span className="text-amethyst-600 mr-2 hidden">
               {chapter.chapter_number}.
             </span>
@@ -211,6 +233,29 @@ const Page = ({ params }) => {
             setCommentText={setCommentText}
           />
         )}
+
+        {/* Left Content Bar for Mobile */}
+        <div
+          className={`w-[180px] ${
+            showLeftBar ? "translate-x-0" : "-translate-x-full"
+          } z-20 absolute left-0 top-0 min-h-screen bg-gray-50 dark:bg-gray-900`}
+          onClick={() => setShowLeftBar(false)}
+        > 
+          <div className="flex justify-between items-center p-2">
+            <h2 className="font-semibold">Content</h2>
+            <button onClick={() => setShowLeftBar(false)} className="text-end">
+              <X className="size-5"/>
+            </button>
+          </div>
+          
+          <LeftContentBar
+            storyId={storyId}
+            story={story}
+            chapters={chapters}
+            author={author}
+            user={user}
+          />
+        </div>
       </div>
     </div>
   );

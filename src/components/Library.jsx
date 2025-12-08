@@ -32,27 +32,37 @@ const Library = () => {
   }
 
   return (
-    <div className="w-full">
-      <h2 className="text-2xl font-semibold mb-6 text-neutral-900 dark:text-neutral-100">
-        Your Library
-      </h2>
+    <div className="py-10 sm:py-14 lg:py-18">
+      {
+      isLoggedIn ? (
+        <div className="w-full">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 text-neutral-900 dark:text-neutral-100 border-l-4 pl-4 border-amethyst-600">
+            Your Library
+          </h2>
 
-      <div
-        className="
-          grid 
-          grid-cols-3 
-          sm:grid-cols-4 
-          md:grid-cols-4 
-          lg:grid-cols-5
-          xl:grid-cols-5 
-          gap-5
-        "
-      >
-        {stories.map((story, index) => (
-          <StoryCard key={index} story={story} />
-        ))}
-      </div>
+          <div
+            className="
+              grid 
+              grid-cols-3 
+              sm:grid-cols-4 
+              md:grid-cols-4 
+              lg:grid-cols-5
+              xl:grid-cols-5 
+              gap-5
+            "
+          >
+            {stories.map((story, index) => (
+              <StoryCard key={index} story={story} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p></p>
+      )
+    }
     </div>
+    
+    
   );
 };
 

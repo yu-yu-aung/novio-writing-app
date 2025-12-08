@@ -33,14 +33,14 @@ const ChapterCard = ({ chapter, storyId, story }) => {
   return (
     <div 
     onClick={handleClickCard}
-      className="bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer"
+      className="bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 my-4 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer"
     >
       
-      <h3 className="text-base sm:text-xs md:text-lg font-bold  mb-2">
+      <h3 className="text-base sm:text-xs md:text-lg font-semibold  mb-2">
         {chapter.title}
       </h3>
       
-      <p className="text-xs sm:text-xs lg:text-sm text-gray-500">
+      <p className="hidden sm:block sm:text-xs lg:text-sm text-gray-500">
         Last Updated: <span className="font-medium">{formattedDateTime}</span>
       </p>
 
@@ -49,13 +49,7 @@ const ChapterCard = ({ chapter, storyId, story }) => {
           Chapter {chapter.chapter_number}
         </span>
 
-        <span
-            className={`${user?.userId === story?.author_id ? "" : "hidden"}
-              px-3 py-1 rounded-full text-xs font-medium
-              bg-amethyst-100 text-amethyst-700 dark:bg-amethyst-800 dark:text-amethyst-200 
-             `} 
-            
-          >
+        <span className="hidden px-3 py-1 rounded-full text-xs font-medium bg-amethyst-100 text-amethyst-700 dark:bg-amethyst-800 dark:text-amethyst-200">
             {chapter.is_published ? "Published" : "Draft"}
           </span>
       </div>

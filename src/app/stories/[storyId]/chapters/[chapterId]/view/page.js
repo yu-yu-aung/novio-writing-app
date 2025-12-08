@@ -8,14 +8,16 @@ import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { storyId, chapterId } = use(params);
   const { chapter, loading, error } = useFetchChapter(chapterId);
   const { user } = useAuthStore();
+  const [showLeftBar, setShowLeftBar] = useState(false);
 
   //Fetch chapters
   const {
@@ -103,15 +105,29 @@ const Page = ({ params }) => {
         px-4 sm:px-6 lg:px-24
       "
     >
-      <LeftContentBar
-        storyId={storyId}
-        story={story}
-        chapters={chapters}
-        author={author}
-        user={user}
-      />
+      <div
+        className="hidden sm:flex 
+          sm:col-span-2 lg:col-span-2 "
+      >
+        <LeftContentBar
+          storyId={storyId}
+          story={story}
+          chapters={chapters}
+          author={author}
+          user={user}
+        />
+      </div>
 
-      <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">
+      <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll relative">
+        <div className="flex items-center gap-4 my-4">
+          <button
+            onClick={() => setShowLeftBar(!showLeftBar)}
+            className="block sm:hidden lg:hidden"
+          >
+            <Menu className="size-5" />
+          </button>
+          <h2 className="text-2xl font-bold">{story?.title}</h2>
+        </div>
         {/* ---------- Cover Image Section ---------- */}
         <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
           {chapter?.image_url && (
@@ -194,6 +210,28 @@ const Page = ({ params }) => {
               </Link>
             </div>
           )}
+        </div>
+
+        {/* Left Content Bar for Mobile */}
+        <div
+          className={`w-[180px] ${
+            showLeftBar ? "translate-x-0" : "-translate-x-full"
+          } z-20 absolute left-0 top-0 min-h-screen bg-gray-50 dark:bg-gray-900`}
+          onClick={() => setShowLeftBar(false)}
+        >
+          <div className="flex justify-between items-center p-2">
+            <h2 className="font-semibold">Content</h2>
+            <button onClick={() => setShowLeftBar(false)} className="text-end">
+              <X className="size-5" />
+            </button>
+          </div>
+          <LeftContentBar
+            storyId={storyId}
+            story={story}
+            chapters={chapters}
+            author={author}
+            user={user}
+          />
         </div>
       </div>
     </div>

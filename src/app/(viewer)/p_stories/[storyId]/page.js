@@ -142,7 +142,12 @@ const Page = ({ params }) => {
           </div>
 
           <h1 className="text-2xl font-bold">{story.title}</h1>
-          <h1 className="text-xl font-bold">{author?.pen_name}</h1>
+          <Link
+            href={`/author/${author?.user_name}`}
+            className="text-xl font-bold"
+          >
+            {author?.pen_name}
+          </Link>
           <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
           <div className="flex flex-wrap justify-center gap-3 w-full">
