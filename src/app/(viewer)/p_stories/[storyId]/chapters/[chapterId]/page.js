@@ -6,20 +6,12 @@ import ShareMoodle from "@/components/ShareMoodle";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchChapter from "@/hooks/useFetchChapter";
+import { useFetchLikes } from "@/hooks/useFetchLikes";
 import useFetchStory from "@/hooks/useFetchStory";
-import { confirmAction } from "@/lib/confirmAction";
-import supabase from "@/lib/supabaseClient";
+import { addLiketoChapter, removeLikefromChapter } from "@/lib/like";
 import useAuthStore from "@/store/useAuthStore";
-import {
-  Hamburger,
-  Menu,
-  MessagesSquare,
-  Share2,
-  ThumbsUp,
-  X,
-} from "lucide-react";
-import Link from "next/link";
-import React, { use, useState } from "react";
+import { Menu, MessagesSquare, Share2, ThumbsUp, X } from "lucide-react";
+import React, { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Page = ({ params }) => {
@@ -35,8 +27,8 @@ const Page = ({ params }) => {
 
   const [share, setShare] = useState(false);
 
-  console.log("story id: ", storyId);
-  console.log("chapter id: ", chapterId);
+  // console.log("story id: ", storyId);
+  // console.log("chapter id: ", chapterId);
 
   //Fetch chapters
   const {
@@ -45,7 +37,7 @@ const Page = ({ params }) => {
     error: fetchChaptersError,
   } = useFetchAllChapters(storyId);
 
-  console.log("fetched chapters: ", chapters);
+  //console.log("fetched chapters: ", chapters);
 
   //Fetch story
   const {
@@ -54,7 +46,7 @@ const Page = ({ params }) => {
     error: storyFetchError,
   } = useFetchStory(storyId);
 
-  console.log("fetched story: ", story);
+  //console.log("fetched story: ", story);
 
   //fetch author's info using author id
   const {
@@ -62,21 +54,43 @@ const Page = ({ params }) => {
     loading: loadingFetchAuthor,
     error: errorFetchAuthor,
   } = useFetchAuthor({ userId: story?.author_id });
-  console.log("author info: ", author);
+  //console.log("author info: ", author);
 
-  if (loading)
+  //fetch likes to check if the chapter is already liked
+  const {
+    likeList,
+    error: fetchLikeError,
+    loading: fetchLikeLoading,
+  } = useFetchLikes(chapterId);
+  const isInLikeList = likeList?.some((item) => item.chapter_id === chapterId);
+
+  useEffect(() => {
+    if (isInLikeList) {
+      setLiked(true);
+    }
+  }, [fetchLikeLoading, isInLikeList]);
+
+  if (
+    loadingFetchAuthor ||
+    loadingFetchStory ||
+    loadingFetchChapters ||
+    fetchLikeLoading ||
+    loading
+  ) {
     return (
       <div className="w-full flex justify-center py-20 text-lg text-muted-foreground">
         Loading...
       </div>
     );
+  }
 
-  if (error)
+  if (error || errorFetchAuthor || fetchLikeError || storyFetchError) {
     return (
       <div className="w-full flex justify-center py-20 text-lg text-red-500">
         Something went wrong.
       </div>
     );
+  }
 
   if (!chapter)
     return (
@@ -85,13 +99,48 @@ const Page = ({ params }) => {
       </div>
     );
 
+  //console.log("user info: ", user);
+
   // --- handlers ---
-  const handleClickLikeBtn = () => {
-    if (!isLoggedIn) {
+  const handleClickLikeBtn = async () => {
+    if (!isLoggedIn || !user) {
       toast.error("Please log in or sign up to like!");
-    } else {
-      setLiked(!liked);
+      return;
     }
+
+    const { data, error } = await addLiketoChapter(
+      chapterId,
+      user?.userId,
+      author?.id,
+      storyId
+    );
+
+    if (error) {
+      toast.error("Something went wrong!");
+      console.error("Like Error: ", error);
+      return;
+    }
+
+    toast.success("You liked the chapter!");
+    console.log("You liked the chapter!");
+    setLiked(true);
+  };
+
+  const handleClickUnlikeBtn = async () => {
+    const { data, error } = await removeLikefromChapter(
+      chapterId,
+      user?.userId
+    );
+
+    if (error) {
+      toast.error("Error removing like!");
+      console.log("Error removing like: ", error);
+      return;
+    }
+
+    toast.success("You removed like!");
+    setLiked(false);
+    return;
   };
 
   const handleClickCommentBtn = () => {
@@ -166,7 +215,7 @@ const Page = ({ params }) => {
 
         <div className="flex flex-wrap justify-between sm:gap-4 lg:gap-4 sm:justify-end lg:justify-end mt-6">
           <button
-            onClick={handleClickLikeBtn}
+            onClick={liked ? handleClickUnlikeBtn : handleClickLikeBtn}
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
           px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
@@ -175,14 +224,10 @@ const Page = ({ params }) => {
                 liked ? "text-amethyst-600" : ""
               }`}
             />
-            <span className={`font-medium ${liked ? "hidden" : ""}`}>Like</span>
-            <span
-              className={`font-medium ${
-                !liked ? "hidden" : "text-amethyst-600"
-              }`}
-            >
-              Liked
-            </span>
+            {!liked && <span className="font-medium">Like</span>}
+            {liked && (
+              <span className="font-medium text-amethyst-600">Liked</span>
+            )}
           </button>
 
           <button
@@ -240,14 +285,14 @@ const Page = ({ params }) => {
             showLeftBar ? "translate-x-0" : "-translate-x-full"
           } z-20 absolute left-0 top-0 min-h-screen bg-gray-50 dark:bg-gray-900`}
           onClick={() => setShowLeftBar(false)}
-        > 
+        >
           <div className="flex justify-between items-center p-2">
             <h2 className="font-semibold">Content</h2>
             <button onClick={() => setShowLeftBar(false)} className="text-end">
-              <X className="size-5"/>
+              <X className="size-5" />
             </button>
           </div>
-          
+
           <LeftContentBar
             storyId={storyId}
             story={story}

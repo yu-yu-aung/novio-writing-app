@@ -8,7 +8,7 @@ export async function uploadStoryImage(file, userId) {
 
   const fileExt = file.name.split(".").pop();
   const filePath = `stories/${userId}/${Date.now()}.${fileExt}`;
-  console.log("Uploading to:", filePath);
+  // console.log("Uploading to:", filePath);
 
   const { error: uploadError } = await supabase.storage
     .from("story_images")
@@ -21,7 +21,7 @@ export async function uploadStoryImage(file, userId) {
 
   const { data } = supabase.storage.from("story_images").getPublicUrl(filePath);
 
-  console.log("Public URL result:", data);
+  // console.log("Public URL result:", data);
 
   return data.publicUrl;
 }

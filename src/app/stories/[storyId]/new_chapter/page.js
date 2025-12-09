@@ -4,7 +4,7 @@ import React, { use } from "react";
 const Page = ({ params }) => {
   const { storyId } = use(params);
 
-  console.log("storyId: ", storyId);
+  //console.log("storyId: ", storyId);
 
   return <NewChapterPage storyId={storyId} />;
 };

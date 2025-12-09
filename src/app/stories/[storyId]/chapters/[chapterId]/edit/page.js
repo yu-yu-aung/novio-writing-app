@@ -16,7 +16,7 @@ const Page = ({ params }) => {
   const fileInputRef = useRef(null);
   const router = useRouter();
 
-  console.log("chapter id: ", chapterId);
+  //console.log("chapter id: ", chapterId);
 
   const {
     handleSubmit,
@@ -71,7 +71,7 @@ const Page = ({ params }) => {
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
-      console.log("uploaded image: ", imageUrl);
+      //console.log("uploaded image: ", imageUrl);
 
       const { data: editedChapter, error } = await supabase
         .from("chapters")
@@ -85,7 +85,7 @@ const Page = ({ params }) => {
         .select()
         .single();
 
-      console.log("returned info: ", editedChapter);
+      //console.log("returned info: ", editedChapter);
 
       if (error) {
         console.error("Supabase Error: ", error);

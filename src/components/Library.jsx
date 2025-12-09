@@ -4,17 +4,18 @@ import useFetchLibrary from "@/hooks/useFetchLibrary";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import useAuthStore from "@/store/useAuthStore";
 import StoryCard from "./StoryCard";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Library = () => {
   const { user, isLoggedIn } = useAuthStore();
 
+  //console.log("user info: ", user);
   const {
     libraryList,
     loading: libLoading,
     error: libError,
-  } = useFetchLibrary(user);
+  } = useFetchLibrary(user?.userId);
 
   const storyIdList = libraryList?.map((item) => item.story_id) || [];
 
@@ -23,6 +24,9 @@ const Library = () => {
     loading: storyLoading,
     error: storyError,
   } = useFetchStoriesByIds(storyIdList);
+
+  // console.log("story id list: ", storyIdList);
+  // console.log("Stories in your library: ", stories);
 
   if (libLoading || storyLoading) return <p>Loading...</p>;
 

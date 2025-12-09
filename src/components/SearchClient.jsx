@@ -10,7 +10,7 @@ export default function SearchClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
-  console.log("keyWord: ", query);
+  //console.log("keyWord: ", query);
 
   const { searchResults, error, loading } = useSearchQuery(query);
 
@@ -22,12 +22,12 @@ export default function SearchClient() {
     return <p>Something went wrong!</p>;
   }
 
-  console.log("search results: ", searchResults);
+  //console.log("search results: ", searchResults);
 
   const { authors, stories } = searchResults;
 
-  console.log("Authors: ", authors);
-  console.log("Stories: ", stories);
+  // console.log("Authors: ", authors);
+  // console.log("Stories: ", stories);
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-8 lg:px-16 space-y-12">

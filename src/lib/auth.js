@@ -28,7 +28,7 @@ export async function signUp(email, password, userName, penName, imageUrl) {
   // Inserting Profile
   const { error: profileInsertError } = await supabase.from("profiles").insert({
     id: userId,
-    user_id: userId,
+    id: userId,
     user_name: userName,
     email: email,
     pen_name: penName,
@@ -46,7 +46,7 @@ export async function signUp(email, password, userName, penName, imageUrl) {
 
   if (profileFetchError) return { error: profileFetchError };
 
-  console.log("Sign Up and Profile Creation Success!");
+  //console.log("Sign Up and Profile Creation Success!");
   return { data: { auth: authData, profile: profileData }, error: null };
 }
 
@@ -69,8 +69,9 @@ export async function signIn(email, password) {
     .eq("id", userId)
     .single();
 
-  if (!profileError) {
-    console.log("Log In Success!");
+  if (profileError) {
+    //console.log("Log In Success!");
+    return { profileError };
   }
 
   return {

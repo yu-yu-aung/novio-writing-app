@@ -40,7 +40,7 @@ const Page = ({ params }) => {
         .eq("author_id", author.id);
 
       if (fetchedStories) {
-        console.log("fetched stories: ", fetchedStories);
+        //console.log("fetched stories: ", fetchedStories);
         setStories(fetchedStories);
       }
     };
@@ -48,7 +48,7 @@ const Page = ({ params }) => {
     fetchStories();
   }, [author]);
 
-  console.log("author info: ", author);
+  //console.log("author info: ", author);
 
   if (errorFetchAuthor) {
     console.log("Error Fetching Author Info: ", errorFetchAuthor);
@@ -59,13 +59,13 @@ const Page = ({ params }) => {
     return <p>Loading...</p>;
   }
 
-  console.log("fetched stories: ", stories);
+  //console.log("fetched stories: ", stories);
   const publishedStories = stories?.filter(
     (story) => story.status === "drafts"
   );
 
-  console.log("stories", stories);
-  console.log("published stories: ", publishedStories);
+  // console.log("stories", stories);
+  // console.log("published stories: ", publishedStories);
 
   if (errorFetchAuthor) {
     console.log("Error Fetching Author Info: ", errorFetchAuthor);

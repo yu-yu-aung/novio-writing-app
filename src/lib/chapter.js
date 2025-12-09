@@ -15,7 +15,7 @@ export async function saveChaptertoDB(storyId, chapter, imageUrl, user) {
     .select()
     .single();
 
-  console.log("chapter: ", data);
+  //console.log("chapter: ", data);
 
   if (error) {
     console.error("Error saving the chapter: ", error);

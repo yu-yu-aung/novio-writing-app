@@ -23,7 +23,7 @@ export default function useFetchAuthor({ userId, userName }) {
       let query = supabase.from("profiles").select("*").limit(1);
 
       if (userId) {
-        query = query.eq("user_id", userId);
+        query = query.eq("id", userId);
       } else if (userName) {
         query = query.eq("user_name", userName);
       }

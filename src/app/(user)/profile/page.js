@@ -37,12 +37,12 @@ const Page = () => {
       const { data: profile } = await supabase
         .from("profiles")
         .select("*")
-        .eq("user_id", user.userId)
+        .eq("id", user.userId)
         .single();
 
       if (profile) {
         setUser({
-          userId: profile.user_id,
+          userId: profile.id,
           userName: profile.user_name,
           penName: profile.pen_name,
           userEmail: profile.email,
@@ -56,7 +56,7 @@ const Page = () => {
   }, []);
 
   const { stories, loading, error } = useFetchAllStories(user);
-  console.log("stories", stories);
+  //console.log("stories", stories);
 
   const baseStyle =
     "mx-auto bg-brand-soft text-brand border border-brand hover:scale-110 px-4 sm:px-6 lg:px-6 py-2 rounded-lg shadow hover:scale-110 transition font-medium flex items-center gap-2";
@@ -71,7 +71,7 @@ const Page = () => {
 
   if (!user) return null;
 
-  console.log("user: ", user);
+  //console.log("user: ", user);
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
@@ -157,7 +157,7 @@ const Page = () => {
           share ? "flex" : "hidden"
         } fixed inset-0 z-40 items-center justify-center`}
       >
-        <ShareMoodle share={share} setShare={setShare} author={user}/>
+        <ShareMoodle share={share} setShare={setShare} author={user} />
       </div>
 
       {/* Right Content Section */}

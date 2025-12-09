@@ -39,15 +39,15 @@ const Page = ({ params }) => {
     libraryList,
     loading: loadFetchLibrary,
     error: errorFetchLibrary,
-  } = useFetchLibrary(user);
+  } = useFetchLibrary(user?.userId);
 
   const authorId = story?.author_id;
   const isInLibrary = libraryList?.some((item) => item.story_id === storyId);
 
-  console.log("Library list: ", libraryList);
-  console.log("Author id: ", authorId);
-  console.log("story: ", story);
-  console.log("user: ", user);
+  // console.log("Library list: ", libraryList);
+  // console.log("Author id: ", authorId);
+  // console.log("story: ", story);
+  // console.log("user: ", user);
 
   //fetch author's info using author id
   useEffect(() => {
@@ -57,11 +57,11 @@ const Page = ({ params }) => {
       const { data: authorInfo } = await supabase
         .from("profiles")
         .select("*")
-        .eq("user_id", authorId)
+        .eq("id", authorId)
         .single();
 
       if (authorInfo) {
-        console.log("author info: ", authorInfo);
+        //console.log("author info: ", authorInfo);
         setAuthor(authorInfo);
       }
     };
@@ -69,7 +69,7 @@ const Page = ({ params }) => {
     fetchAuthor();
   }, [authorId]);
 
-  console.log("fetched author: ", author);
+  //console.log("fetched author: ", author);
 
   if (!story) {
     return <div className="p-10">Story not found</div>;

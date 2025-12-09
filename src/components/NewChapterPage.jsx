@@ -33,8 +33,8 @@ const NewChapterPage = ({storyId}) => {
   //Fetch story 
   const { story, loading: loadingFetchStory, error: storyFetchError } = useFetchStory(storyId); 
 
-  console.log("chapters: ", chapters);
-  console.log("user: ", user);
+  // console.log("chapters: ", chapters);
+  // console.log("user: ", user);
   const onSubmit = async (e) => {
     e.preventDefault(); 
     if (!storyId) {
@@ -74,8 +74,8 @@ const NewChapterPage = ({storyId}) => {
     }
 
     toast.success("A new chapter created!");
-    console.log("data: ", newChapter);
-    console.log("storyid: ", storyId);
+    // console.log("data: ", newChapter);
+    // console.log("storyid: ", storyId);
     router.push(`/stories/${storyId}/chapters/${newChapter.id}/view`);
   };
 

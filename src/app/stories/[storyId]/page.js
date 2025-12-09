@@ -37,13 +37,13 @@ const Page = ({ params }) => {
   }
 
   const handleClickPublish = async (storyId) => {
-    console.log("CLICKED storyId:", storyId);
+    //console.log("CLICKED storyId:", storyId);
     const { data, error: storyError } = await supabase
       .from("stories")
       .update({ status: "published" })
       .eq("id", storyId);
 
-    console.log("SUPABASE STORY UPDATE ERROR:", storyError);
+    //console.log("SUPABASE STORY UPDATE ERROR:", storyError);
     if (storyError) {
       console.log("story error: ", storyError);
       return toast.error("Failed to publish the story!");

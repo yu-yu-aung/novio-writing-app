@@ -32,7 +32,7 @@ const Page = () => {
 
   if (!user) return null;
 
-  console.log("user: ", user);
+  //console.log("user: ", user);
 
   const onSubmit = async (data) => {
     try {
@@ -45,7 +45,7 @@ const Page = () => {
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
-      console.log("uploaded image: ", imageUrl);
+      //console.log("uploaded image: ", imageUrl);
 
       const { data: profile, error } = await supabase
         .from("profiles")
@@ -56,14 +56,14 @@ const Page = () => {
           bio: data.bio,
           profile_image_url: imageUrl,
         })
-        .eq("user_id", user.userId)
+        .eq("id", user.userId)
         .select()
         .single();
 
-      console.log("returned info: ", profile);
+      //console.log("returned info: ", profile);
 
       setUser({
-        userId: profile?.user_id,
+        userId: profile?.id,
         userName: profile?.user_name,
         penName: profile?.pen_name,
         userEmail: profile?.email,
@@ -107,7 +107,7 @@ const Page = () => {
                 onChange: (e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  console.log("image file: ", file);
+                  //console.log("image file: ", file);
                   setPreviewImage(URL.createObjectURL(file));
                 },
               })}

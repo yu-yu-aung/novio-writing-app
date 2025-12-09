@@ -51,9 +51,9 @@ const Page = () => {
       imageUrl = await uploadStoryImage(file, user?.userId);
     }
 
-    console.log("data.image: ", data.image?.[0]);
-    console.log("file: ", file);
-    console.log("image: ", imageUrl);
+    // console.log("data.image: ", data.image?.[0]);
+    // console.log("file: ", file);
+    // console.log("image: ", imageUrl);
 
     const { data: newStory, error } = await saveStorytoDB(user, data, imageUrl);
 
@@ -63,9 +63,9 @@ const Page = () => {
     }
 
     toast.success("Story created!");
-    console.log("story info: ", newStory);
-    console.log("user: ", user);
-    console.log("image: ", imageUrl);
+    // console.log("story info: ", newStory);
+    // console.log("user: ", user);
+    // console.log("image: ", imageUrl);
     router.push(`/stories/${newStory.id}`);
   };
 
@@ -91,7 +91,7 @@ const Page = () => {
                 {...register("image", {
                   onChange: (e) => {
                     const file = e.target.files?.[0];
-                    console.log("file: ", file);
+                    //console.log("file: ", file);
                     if (file) setPreviewImage(URL.createObjectURL(file));
                   },
                 })}

@@ -41,8 +41,8 @@ export default function useSearchQuery(query) {
         setError(storyError);
       }
 
-      console.log("Authors found: ", authors);
-      console.log("Stories found: ", stories);
+      // console.log("Authors found: ", authors);
+      // console.log("Stories found: ", stories);
 
       setSearchResults({
         authors,

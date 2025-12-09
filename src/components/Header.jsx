@@ -30,7 +30,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    console.log("Search for:", keyWord);
+    //console.log("Search for:", keyWord);
     if (!keyWord.trim()) return; 
 
     router.push(`/search?query=${keyWord}`)

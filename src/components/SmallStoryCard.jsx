@@ -9,18 +9,18 @@ import { useRouter } from "next/navigation";
 const  SmallStoryCard = ({ story, storyId }) => {
   const authorId = story?.author_id;
 
-  console.log("Author id: ", authorId);
+  //console.log("Author id: ", authorId);
 
   //fetch author's info using author id
   const { author, loading, error } = useFetchAuthor({userId: authorId});
   const { user, isLoggedIn } = useAuthStore(); 
-  console.log("author info: ", author);
+  //console.log("author info: ", author);
 
 
 
   const router = useRouter(); 
 
-  console.log("userId");
+  //console.log("userId");
 
   const handleClickCard = () => {
     if ( user?.userId === authorId) {
