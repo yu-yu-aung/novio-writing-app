@@ -22,7 +22,6 @@ const Page = ({ params }) => {
   const [liked, setLiked] = useState(false);
 
   const [showComment, setShowComment] = useState(false);
-  const [commentText, setCommentText] = useState("");
   const [showLeftBar, setShowLeftBar] = useState(false);
 
   const [share, setShare] = useState(false);
@@ -274,8 +273,9 @@ const Page = ({ params }) => {
         {/* ---------- Comment Section ---------- */}
         {showComment && (
           <CommentSection
-            commentText={commentText}
-            setCommentText={setCommentText}
+            chapterId={chapterId}
+            storyId={storyId}
+            authorId={author?.id}
           />
         )}
 

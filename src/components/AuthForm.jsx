@@ -24,6 +24,7 @@ const AuthForm = ({ mode = "Log In" }) => {
 
       if (mode === "Log In") {
         response = await signIn(email, password);
+
       } else {
         response = await signUp(email, password, userName, penName, imageUrl);
       }
@@ -39,6 +40,8 @@ const AuthForm = ({ mode = "Log In" }) => {
         userName: response.data?.profile?.user_name ?? userName,
         penName: response.data?.profile?.pen_name ?? penName,
         userEmail: email,
+        image: response.data?.profile?.profile_image_url,
+        bio: response.data?.profile?.bio
       };
 
       setUser(userData);

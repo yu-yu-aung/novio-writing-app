@@ -1,25 +1,51 @@
 'use client'
 
+import useFetchComments from '@/hooks/useFetchComments';
 import useAuthStore from '@/store/useAuthStore';
 import { Send } from 'lucide-react';
 import React, { useState } from 'react';
+import useFetchUsersByIds from '@/hooks/useFetchUsersByIds';
+import { addCommentToDb } from '@/lib/comment';
+import { toast } from 'sonner';
 
-const CommentSection = ({ commentText, setCommentText }) => {
-  const [comments, setComments] = useState([]);
+const CommentSection = ({ chapterId, storyId, authorId }) => {
+  const [commentText, setCommentText] = useState(""); 
   const { user } = useAuthStore();
+  console.log("current user: ", user);
 
-  const handleSendComment = () => {
+  const {commentList, loading: commentLoading, error: commentError, refetch} = useFetchComments(chapterId); 
+
+  const userIdList = commentList?.map((item) => item.user_id) || [];
+
+  const { users, error: usersError, loading: usersLoading} = useFetchUsersByIds(userIdList);
+
+  console.log("users im comment section: ", users);
+
+  const mergedComments = commentList?.map((c) => {
+    const userInfo = users?.find((u) => u.id === c.user_id)
+    return{
+      ...c, 
+      user: userInfo || {},
+    };
+  });
+
+  console.log("merged comments: ", mergedComments);
+
+
+  const handleSendComment = async () => {
     if (!commentText.trim()) return;
 
-    const newComment = {
-      text: commentText,
-      userName: user.userName || "Anonymous",
-      image: user.image,
-      penName: user.penName
-    };
+    const { data } = await addCommentToDb(chapterId,
+    user?.userId,
+    authorId,
+    storyId,
+    commentText); 
 
-    setComments([...comments, newComment]);
     setCommentText("");
+
+    toast.success("You commented!")
+
+    refetch();
   };
 
   return (
@@ -29,7 +55,7 @@ const CommentSection = ({ commentText, setCommentText }) => {
       <div className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 border rounded-2xl shadow-sm">
         {/* Avatar */}
         <img
-          src={user?.image || "/default-user.png"}
+          src={user.image}
           alt="profile"
           className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border border-gray-300"
         />
@@ -45,7 +71,7 @@ const CommentSection = ({ commentText, setCommentText }) => {
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
           />
-        </div>
+        </div> 
 
         {/* Send Button */}
         <button
@@ -62,28 +88,28 @@ const CommentSection = ({ commentText, setCommentText }) => {
       </div>
 
       {/* All Comments */}
-      {comments.length > 0 && (
+      {mergedComments?.length > 0 && (
         <div className="p-4 bg-white dark:bg-gray-800 border rounded-2xl shadow-sm space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 border-b pb-1">
             Comments
           </h2>
 
-          {comments.map((c, index) => (
+          {mergedComments?.map((c, index) => (
             <div
               key={index}
               className="flex gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-500"
             >
               <img
-                src={c.image || "/default-user.png"}
+                src={c.user?.profile_image_url || "/default-user.png"}
                 alt="profile"
                 className="w-10 h-10 rounded-full border object-cover"
               />
 
               <div>
                 <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                  {c.penName || "User"}
+                  {c.user?.pen_name || "User"}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-200 text-sm mt-1">{c.text}</p>
+                <p className="text-gray-700 dark:text-gray-200 text-sm mt-1">{c.comment_text}</p>
               </div>
             </div>
           ))}
