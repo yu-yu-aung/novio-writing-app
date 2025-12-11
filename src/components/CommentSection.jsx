@@ -1,5 +1,3 @@
-'use client'
-
 import useFetchComments from '@/hooks/useFetchComments';
 import useAuthStore from '@/store/useAuthStore';
 import { Send } from 'lucide-react';

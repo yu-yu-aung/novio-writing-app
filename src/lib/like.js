@@ -1,3 +1,5 @@
+"use client"
+
 import supabase from "./supabaseClient";
 
 export async function addLiketoChapter(chapterId, userId, authorId, storyId) {

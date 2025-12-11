@@ -5,6 +5,8 @@ import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
+import useFetchFollowerList from "@/hooks/useFetchFollowerList";
+import useFetchFollowingList from "@/hooks/useFetchFollowingList";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import {
@@ -56,7 +58,22 @@ const Page = () => {
   }, []);
 
   const { stories, loading, error } = useFetchAllStories(user);
-  //console.log("stories", stories);
+
+  const {
+    followings,
+    loading: loadingFollowing,
+    error: errorFollowing,
+  } = useFetchFollowingList(user?.userId);
+
+  const {
+    followers,
+    loading: loadingFollowers,
+    error: errorFollowers,
+  } = useFetchFollowerList(user?.userId);
+
+  const followingsList = followings?.map((item) => item.following_id) || [];
+
+  const followerList = followers?.map((item) => item.following_id) || [];
 
   const baseStyle =
     "mx-auto bg-brand-soft text-brand border border-brand hover:scale-110 px-4 sm:px-6 lg:px-6 py-2 rounded-lg shadow hover:scale-110 transition font-medium flex items-center gap-2";
@@ -108,12 +125,16 @@ const Page = () => {
         <div className="flex gap-10 mt-4">
           <div className="flex flex-col items-center">
             <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">3k Followers</span>
+            <span className="text-sm font-medium mt-1">
+              {followerList.length} Followers
+            </span>
           </div>
 
           <div className="flex flex-col items-center">
             <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">10 Followings</span>
+            <span className="text-sm font-medium mt-1">
+              {followingsList.length} Followings
+            </span>
           </div>
 
           <div className="flex flex-col items-center">

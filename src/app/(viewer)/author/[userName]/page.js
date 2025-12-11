@@ -4,16 +4,22 @@ import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
+import useFetchFollowerList from "@/hooks/useFetchFollowerList";
+import useFetchFollowingList from "@/hooks/useFetchFollowingList";
+import { followAuthor, unfollowAuthor } from "@/lib/follow";
 import supabase from "@/lib/supabaseClient";
+import useAuthStore from "@/store/useAuthStore";
 import {
   Bell,
   Book,
   Share,
+  UserCheck2,
   UserPlus2,
   UserRoundCheck,
   UserRoundPlus,
 } from "lucide-react";
 import React, { use, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { userName } = use(params);
@@ -21,6 +27,7 @@ const Page = ({ params }) => {
   const [share, setShare] = useState(false);
   const [activeTab, setActiveTab] = useState("published");
   const [stories, setStories] = useState([]);
+  const { user } = useAuthStore();
 
   if (!userName) return;
 
@@ -47,6 +54,29 @@ const Page = ({ params }) => {
 
     fetchStories();
   }, [author]);
+
+  const { followings, loading, error, refresh } = useFetchFollowingList(
+    user?.userId
+  );
+
+  const {
+    followings: authorFollowings,
+    loading: loadingAuthorFollowing,
+    error: errorAuthorFollowing,
+  } = useFetchFollowingList(author?.id);
+
+  const {
+    followers,
+    loading: loadingAuthorFollowers,
+    error: errorAuthorFollowers,
+  } = useFetchFollowerList(author?.id);
+
+  const followingList = followings?.map((item) => item.following_id) || [];
+
+  const authorFollowingsList =
+    authorFollowings?.map((item) => item.following_id) || [];
+
+  const authorFollowerList = followers?.map((item) => item.following_id) || [];
 
   //console.log("author info: ", author);
 
@@ -75,6 +105,32 @@ const Page = ({ params }) => {
   if (loadingFetchAuthor) {
     return <p>Loading...</p>;
   }
+
+  const handleFollowAuthor = async () => {
+    const { data, error } = await followAuthor(user?.userId, author?.id);
+
+    if (error) {
+      toast.error("Error following the author!");
+      return;
+    }
+
+    toast.success("Started following the author!");
+    refresh();
+    return;
+  };
+
+  const handleUnfollowAuthor = async () => {
+    const { data, error } = await unfollowAuthor(user?.userId, author?.id);
+
+    if (error) {
+      toast.error("Error unfollowing the author!");
+      return;
+    }
+
+    toast.success("Unfollowed the author!");
+    refresh();
+    return;
+  };
 
   const baseStyle =
     "mx-auto bg-brand-soft text-brand border border-brand hover:scale-110 px-4 sm:px-6 lg:px-6 py-2 rounded-lg shadow hover:scale-110 transition font-medium flex items-center gap-2";
@@ -107,12 +163,16 @@ const Page = ({ params }) => {
         <div className="flex gap-10 mt-4">
           <div className="flex flex-col items-center">
             <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">3k Followers</span>
+            <span className="text-sm font-medium mt-1">
+              {authorFollowerList.length} Followers
+            </span>
           </div>
 
           <div className="flex flex-col items-center">
             <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">10 Followings</span>
+            <span className="text-sm font-medium mt-1">
+              {authorFollowingsList.length} Followings
+            </span>
           </div>
 
           <div className="flex flex-col items-center">
@@ -125,9 +185,25 @@ const Page = ({ params }) => {
 
         {/* Buttons: Follow / Share */}
         <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <button className={baseStyle}>
-            <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
-            Follow
+          <button
+            onClick={
+              followingList.includes(author?.id)
+                ? handleUnfollowAuthor
+                : handleFollowAuthor
+            }
+            className={baseStyle}
+          >
+            {followingList.includes(author?.id) ? (
+              <UserCheck2 className="w-5 h-5 sm:w-6 sm:h-6" />
+            ) : (
+              <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
+
+            {followingList.includes(author?.id) ? (
+              <span>Following</span>
+            ) : (
+              <span>Follow</span>
+            )}
           </button>
 
           <button onClick={() => setShare(true)} className={baseStyle}>
