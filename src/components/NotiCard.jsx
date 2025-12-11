@@ -1,10 +1,16 @@
 import React from 'react'
 
-const NotiCard = ({
-  image = "/placeholder.png",
-  content = "Hellen published a new story.",
-  time = "2 hours ago"
-}) => {
+const NotiCard = ({ image, content, time}) => {
+  const formattedDateTime = new Date(time).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+
+
   return (
     <div className="flex items-center gap-3 sm:gap-4 bg-brand-soft border rounded-xl p-3 sm:p-4 hover:bg-brand-soft/80 transition">
       <div>
@@ -21,7 +27,7 @@ const NotiCard = ({
         </p>
 
         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-          {time}
+          {formattedDateTime}
         </p>
       </div>
     </div>

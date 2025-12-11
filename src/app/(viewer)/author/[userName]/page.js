@@ -7,6 +7,7 @@ import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchFollowerList from "@/hooks/useFetchFollowerList";
 import useFetchFollowingList from "@/hooks/useFetchFollowingList";
 import { followAuthor, unfollowAuthor } from "@/lib/follow";
+import { createFollowNotification } from "@/lib/notification";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import {
@@ -116,6 +117,10 @@ const Page = ({ params }) => {
 
     toast.success("Started following the author!");
     refresh();
+    const { data: notiData, error: notiError } = await createFollowNotification(
+      user?.userId,
+      author?.id
+    );
     return;
   };
 

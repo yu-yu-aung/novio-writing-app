@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import useFetchUsersByIds from '@/hooks/useFetchUsersByIds';
 import { addCommentToDb } from '@/lib/comment';
 import { toast } from 'sonner';
+import { createCommentNotification } from '@/lib/notification';
 
 const CommentSection = ({ chapterId, storyId, authorId }) => {
   const [commentText, setCommentText] = useState(""); 
@@ -42,8 +43,13 @@ const CommentSection = ({ chapterId, storyId, authorId }) => {
     setCommentText("");
 
     toast.success("You commented!")
-
+      const { data: notiData, error: notiError } = await createCommentNotification(
+          user?.userId,
+          authorId, 
+          chapterId
+        );
     refetch();
+    
   };
 
   return (

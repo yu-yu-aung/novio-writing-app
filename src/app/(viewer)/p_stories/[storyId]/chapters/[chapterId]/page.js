@@ -9,6 +9,7 @@ import useFetchChapter from "@/hooks/useFetchChapter";
 import { useFetchLikes } from "@/hooks/useFetchLikes";
 import useFetchStory from "@/hooks/useFetchStory";
 import { addLiketoChapter, removeLikefromChapter } from "@/lib/like";
+import { createLikeNotification } from "@/lib/notification";
 import useAuthStore from "@/store/useAuthStore";
 import { Menu, MessagesSquare, Share2, ThumbsUp, X } from "lucide-react";
 import React, { use, useEffect, useState } from "react";
@@ -123,6 +124,11 @@ const Page = ({ params }) => {
     toast.success("You liked the chapter!");
     console.log("You liked the chapter!");
     setLiked(true);
+    const { data: notiData, error: notiError } = await createLikeNotification(
+      user?.userId,
+      author?.id,
+      chapterId
+    );
   };
 
   const handleClickUnlikeBtn = async () => {
