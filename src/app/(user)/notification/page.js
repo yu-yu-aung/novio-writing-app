@@ -3,6 +3,8 @@
 import NotiCard from "@/components/NotiCard";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
+import useFetchChaptersByIds from "@/hooks/useFetchChaptersByIds";
+import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import useFetchUsersByIds from "@/hooks/useFetchUsersByIds";
 
 import useAuthStore from "@/store/useAuthStore";
@@ -22,11 +24,40 @@ const Page = () => {
     loading: loadingActor,
   } = useFetchUsersByIds(actorIds);
 
+  const chapterIds = notifications
+    .filter((noti) => noti.target_type === "chapter")
+    .map((noti) => noti.target_id);
+
+  const { chapters } = useFetchChaptersByIds(chapterIds);
+
+  const storyIds = chapters.map((chap) => chap.story_id);
+
+  const { stories } = useFetchStoriesByIds(storyIds);
+
   const mergedActions = notifications?.map((noti) => {
-    const actorInfo = actors?.find((actor) => actor.id === noti.actor_id);
+    const actor = actors.find((a) => a.id === noti.actor_id) || {};
+
+    let targetText = "";
+
+    if (noti.target_type === "chapter") {
+      const chapter = chapters.find((c) => c.id === noti.target_id);
+      const story = stories.find((s) => s.id === chapter?.story_id);
+      targetText = `${story?.title}: ${chapter?.title} `;
+    }
+
+    let content = "";
+    if (noti.action_type === "followed") {
+      content = `${actor.pen_name} started following you`;
+    } else if (noti.action_type === "liked") {
+      content = `${actor.pen_name} liked your story ${targetText}`;
+    } else if (noti.action_type === "commented") {
+      content = `${actor.pen_name} commented on your story ${targetText}`;
+    }
+
     return {
       ...noti,
-      actor: actorInfo || {},
+      actor,
+      content,
     };
   });
 
@@ -45,12 +76,12 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        {mergedActions?.map((noti, index) => (
+        {mergedActions?.map((noti) => (
           <NotiCard
             image={noti.actor?.profile_image_url || "/default-user.png"}
-            content={`${noti.actor?.pen_name} ${noti.action_type}`}
+            content={noti.content}
             time={noti.created_at}
-            key={index}
+            key={noti.id}
           />
         ))}
       </div>
