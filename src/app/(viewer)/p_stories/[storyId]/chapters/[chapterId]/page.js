@@ -222,7 +222,7 @@ const Page = ({ params }) => {
           <button
             onClick={liked ? handleClickUnlikeBtn : handleClickLikeBtn}
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
-          px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
+          px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <ThumbsUp
               className={`size-4 lg:size-5 sm:size-5 ${
@@ -238,7 +238,7 @@ const Page = ({ params }) => {
           <button
             onClick={handleClickCommentBtn}
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
-          px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
+          px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <MessagesSquare className="size-4 lg:size-5 sm:size-5" />
             <span className="font-medium">Comment</span>
@@ -247,7 +247,7 @@ const Page = ({ params }) => {
           <button
             onClick={handleClickShareBtn}
             className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200
-          px-2 py-1 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
+          px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <Share2 className="size-4 lg:size-5 sm:size-5" />
             <span className="font-medium">Share</span>

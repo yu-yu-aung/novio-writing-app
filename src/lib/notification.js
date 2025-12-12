@@ -47,3 +47,13 @@ export async function createCommentNotification(
   if (error) console.error("Notification error:", error);
   return data;
 }
+
+export async function markNotificationAsViewed(notificationId) {
+  const { data, error } = await supabase
+    .from("notifications")
+    .update({ is_viewed: true })
+    .eq("id", notificationId);
+
+  if (error) console.error("Error marking notification as viewed: ", error);
+  return data;
+}

@@ -6,11 +6,15 @@ import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
 import useFetchChaptersByIds from "@/hooks/useFetchChaptersByIds";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import useFetchUsersByIds from "@/hooks/useFetchUsersByIds";
+import { markNotificationAsViewed } from "@/lib/notification";
 
 import useAuthStore from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { user } = useAuthStore();
+  const router = useRouter();
+
   const {
     notifications,
     loading: loadingNoti,
@@ -37,11 +41,13 @@ const Page = () => {
   const mergedActions = notifications?.map((noti) => {
     const actor = actors.find((a) => a.id === noti.actor_id) || {};
 
-    let targetText = "";
+    let chapter,
+      story,
+      targetText = "";
 
     if (noti.target_type === "chapter") {
-      const chapter = chapters.find((c) => c.id === noti.target_id);
-      const story = stories.find((s) => s.id === chapter?.story_id);
+      chapter = chapters.find((c) => c.id === noti.target_id);
+      story = stories.find((s) => s.id === chapter?.story_id);
       targetText = `${story?.title}: ${chapter?.title} `;
     }
 
@@ -57,9 +63,21 @@ const Page = () => {
     return {
       ...noti,
       actor,
+      chapter,
+      story,
       content,
     };
   });
+
+  const handleClickNotiCard = async (noti) => {
+    const { data } = await markNotificationAsViewed(noti.id);
+
+    if (noti.target_type === "user") {
+      router.push(`/author/${noti.actor?.user_name}`);
+    } else if (noti.target_type === "chapter") {
+      router.push(`/p_stories/${noti.story?.id}/chapters/${noti.chapter?.id}`);
+    }
+  };
 
   if (!user) return;
 
@@ -82,6 +100,8 @@ const Page = () => {
             content={noti.content}
             time={noti.created_at}
             key={noti.id}
+            isViewed={noti.is_viewed}
+            onClick={() => handleClickNotiCard(noti)}
           />
         ))}
       </div>
