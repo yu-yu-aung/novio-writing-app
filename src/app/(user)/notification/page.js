@@ -3,6 +3,7 @@
 import NotiCard from "@/components/NotiCard";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
+import useFetchAnnouncementsByAuthorIds from "@/hooks/useFetchAnnouncementsByAuthorIds";
 import useFetchChaptersByIds from "@/hooks/useFetchChaptersByIds";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import useFetchUsersByIds from "@/hooks/useFetchUsersByIds";
@@ -27,6 +28,8 @@ const Page = () => {
     error: errorActor,
     loading: loadingActor,
   } = useFetchUsersByIds(actorIds);
+
+  const { announcements } = useFetchAnnouncementsByAuthorIds(actorIds);
 
   const chapterIds = notifications
     .filter((noti) => noti.target_type === "chapter")
@@ -58,6 +61,9 @@ const Page = () => {
       content = `${actor.pen_name} liked your story ${targetText}`;
     } else if (noti.action_type === "commented") {
       content = `${actor.pen_name} commented on your story ${targetText}`;
+    } else if (noti.action_type === "announcement") {
+      const announcement = announcements.find((a) => a.id === noti.target_id);
+      content = `${actor.pen_name} posed an announcement: ${announcement?.title}`;
     }
 
     return {
@@ -85,11 +91,11 @@ const Page = () => {
   const handleClickNotiCard = async (noti) => {
     const { data } = await markNotificationAsViewed(noti.id);
 
-    if (noti.target_type === "user") {
+    if (noti.target_type === "user" || "announcement") {
       router.push(`/author/${noti.actor?.user_name}`);
     } else if (noti.target_type === "chapter") {
       router.push(`/p_stories/${noti.story?.id}/chapters/${noti.chapter?.id}`);
-    }
+    } 
   };
 
   if (!user) return;

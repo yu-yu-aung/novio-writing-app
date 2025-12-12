@@ -30,5 +30,5 @@ export default function useFetchChaptersByIds(chapterIds) {
     fetchChapters();
   }, [chapterIds]);
 
-  return{chapters, error, loading}
+  return { chapters, error, loading };
 }

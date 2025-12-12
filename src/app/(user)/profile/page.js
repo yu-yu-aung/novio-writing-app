@@ -1,12 +1,15 @@
 "use client";
 
 import BookShelf from "@/components/BookShelf";
+import Library from "@/components/Library";
 import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
+import useFectchAnnouncements from "@/hooks/useFetchAnnouncements";
 import useFetchFollowerList from "@/hooks/useFetchFollowerList";
 import useFetchFollowingList from "@/hooks/useFetchFollowingList";
+import { createAnnouncement } from "@/lib/announcements";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import {
@@ -22,12 +25,13 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Page = () => {
   const { user, setUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState("published");
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [showForm, setShowForm] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
   const [share, setShare] = useState(false);
@@ -71,6 +75,13 @@ const Page = () => {
     error: errorFollowers,
   } = useFetchFollowerList(user?.userId);
 
+  const {
+    announcements,
+    error: announcementError,
+    loading: announcementLoading,
+    refresh,
+  } = useFectchAnnouncements(user?.userId);
+
   const followingsList = followings?.map((item) => item.following_id) || [];
 
   const followerList = followers?.map((item) => item.following_id) || [];
@@ -79,7 +90,15 @@ const Page = () => {
     "mx-auto bg-brand-soft text-brand border border-brand hover:scale-110 px-4 sm:px-6 lg:px-6 py-2 rounded-lg shadow hover:scale-110 transition font-medium flex items-center gap-2";
 
   const onSubmit = async (data) => {
-    console.log("You clicked Announce!", data);
+    const { data: announcement } = await createAnnouncement(
+      user.userId,
+      data.title,
+      data.description
+    );
+
+    toast.success("You made an announcement!");
+    reset();
+    refresh();
   };
 
   const handleClickSetting = () => {
@@ -207,30 +226,91 @@ const Page = () => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
-          {activeTab === "published" &&
-            stories?.map((story, index) =>
-              story.status === "published" ? (
-                <SmallStoryCard key={index} story={story} storyId={story.id} />
-              ) : null
-            )}
+          {/* Published */}
+          {activeTab === "published" && (
+            <>
+              {stories?.filter((s) => s.status === "published").length > 0 ? (
+                stories
+                  .filter((s) => s.status === "published")
+                  .map((story) => (
+                    <SmallStoryCard
+                      key={story.id}
+                      story={story}
+                      storyId={story.id}
+                    />
+                  ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                    No Published Story
+                  </p>
+                  <img
+                    src="/no_data.png"
+                    alt="No story"
+                    className="w-40 h-40 object-contain opacity-80"
+                  />
+                </div>
+              )}
+            </>
+          )}
 
-          {activeTab === "draft" &&
-            stories?.map((story, index) =>
-              story.status === "draft" ? (
-                <SmallStoryCard key={index} story={story} storyId={story.id} />
-              ) : null
-            )}
+          {/* Draft */}
+          {activeTab === "draft" && (
+            <>
+              {stories?.filter((s) => s.status === "draft").length > 0 ? (
+                stories
+                  .filter((s) => s.status === "draft")
+                  .map((story) => (
+                    <SmallStoryCard
+                      key={story.id}
+                      story={story}
+                      storyId={story.id}
+                    />
+                  ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                    No Draft
+                  </p>
+                  <img
+                    src="/no_data.png"
+                    alt="No story"
+                    className="w-40 h-40 object-contain opacity-80"
+                  />
+                </div>
+              )}
+            </>
+          )}
 
-          {activeTab === "library" && <BookShelf />}
+          {activeTab === "library" && <Library />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
               {!showForm && (
                 <>
-                  <div className="flex flex-col gap-3">
-                    <Bell className="mx-auto w-10 h-10 text-brand" />
-                    <p className="text-lg text-muted">No announcements yet.</p>
-                  </div>
+                  {announcements.length === 0 ? (
+                    <>
+                      <div className="flex flex-col gap-3">
+                        <Bell className="mx-auto w-10 h-10 text-brand" />
+                        <p className="text-lg text-muted">
+                          No announcements yet.
+                        </p>
+                      </div>
 
+                      <button
+                        onClick={() => setShowForm(true)}
+                        className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
+                      >
+                        Make an announcement!
+                      </button>
+                    </>
+                  ) : (
+                    announcements.map((a) => {
+                      <div key={a.id}>
+                        <h2>{a.title}</h2>
+                        <p>{a.content}</p>
+                      </div>;
+                    })
+                  )}
                   <button
                     onClick={() => setShowForm(true)}
                     className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
@@ -246,7 +326,24 @@ const Page = () => {
                   showForm ? "opacity-100 max-h-[400px]" : "opacity-0 max-h-0"
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-end gap-6 mt-4">
+                <div className="flex flex-col items-center gap-6 mt-4">
+                  <div className="relative w-full">
+                    <input
+                      id="title"
+                      type="text"
+                      {...register("title", { required: true })}
+                      className="block w-full py-3 px-3 text-sm text-heading bg-background-soft
+                      border-b-2 border-default focus:outline-none focus:border-brand rounded-md transition peer"
+                    />
+                    <label
+                      htmlFor="title"
+                      className="absolute left-3 top-3 text-body text-sm transition-all
+                      peer-focus:text-brand peer-focus:-top-2 peer-focus:text-xs
+                      peer-valid:-top-2 peer-valid:text-xs"
+                    >
+                      Title
+                    </label>
+                  </div>
                   <div className="relative w-full">
                     <textarea
                       id="description"

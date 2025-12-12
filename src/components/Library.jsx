@@ -36,14 +36,11 @@ const Library = () => {
   }
 
   return (
-    <div className="py-10 sm:py-14 lg:py-18">
+    <div className="py-4 sm:py-14 lg:py-18">
       {
-      isLoggedIn ? (
+      isLoggedIn && (
         <div className="w-full">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 text-neutral-900 dark:text-neutral-100 border-l-4 pl-4 border-amethyst-600">
-            Your Library
-          </h2>
-
+          
           <div
             className="
               grid 
@@ -55,13 +52,22 @@ const Library = () => {
               gap-5
             "
           >
-            {stories.map((story, index) => (
+            {stories.length > 0 ? stories.map((story, index) => (
               <StoryCard key={index} story={story} />
-            ))}
+            )) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+              No Story In Library
+            </p>
+
+            <img
+              src="/no_data.png"
+              alt="No story"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>)}
           </div>
         </div>
-      ) : (
-        <p></p>
       )
     }
     </div>
