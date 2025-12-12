@@ -69,6 +69,19 @@ const Page = () => {
     };
   });
 
+  const today = mergedActions.filter(
+    (noti) =>
+      new Date(noti.created_at).toDateString() === new Date().toDateString()
+  );
+
+  const thisWeek = mergedActions.filter((noti) => {
+    const notiDate = new Date(noti.created_at);
+    const now = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(now.getDate() - 7);
+    return notiDate < new Date(now.toDateString()) && notiDate >= weekAgo;
+  });
+
   const handleClickNotiCard = async (noti) => {
     const { data } = await markNotificationAsViewed(noti.id);
 
@@ -94,16 +107,30 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        {mergedActions?.map((noti) => (
-          <NotiCard
-            image={noti.actor?.profile_image_url || "/default-user.png"}
-            content={noti.content}
-            time={noti.created_at}
-            key={noti.id}
-            isViewed={noti.is_viewed}
-            onClick={() => handleClickNotiCard(noti)}
-          />
-        ))}
+        {today.length > 0 ? (
+          today.map((noti) => (
+            <NotiCard
+              image={noti.actor?.profile_image_url || "/default-user.jpg"}
+              content={noti.content}
+              time={noti.created_at}
+              key={noti.id}
+              isViewed={noti.is_viewed}
+              onClick={() => handleClickNotiCard(noti)}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+              No Notification!
+            </p>
+
+            <img
+              src="/no_noti.png"
+              alt="No notification"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>
+        )}
       </div>
 
       {/* This Week */}
@@ -112,9 +139,30 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        <NotiCard />
-        <NotiCard />
-        <NotiCard />
+        {thisWeek.length > 0 ? (
+          thisWeek.map((noti) => (
+            <NotiCard
+              image={noti.actor?.profile_image_url || "/default-user.jpg"}
+              content={noti.content}
+              time={noti.created_at}
+              key={noti.id}
+              isViewed={noti.is_viewed}
+              onClick={() => handleClickNotiCard(noti)}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+              No Notification!
+            </p>
+
+            <img
+              src="/no_noti.png"
+              alt="No notification"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

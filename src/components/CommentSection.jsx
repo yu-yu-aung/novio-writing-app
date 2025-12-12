@@ -104,7 +104,7 @@ const CommentSection = ({ chapterId, storyId, authorId }) => {
               className="flex gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-500"
             >
               <img
-                src={c.user?.profile_image_url || "/default-user.png"}
+                src={c.user?.profile_image_url || "/default-user.jpg"}
                 alt="profile"
                 className="w-10 h-10 rounded-full border object-cover"
               />

@@ -17,6 +17,7 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   //console.log("chapter id: ", chapterId);
+  const { chapter, loading, error } = useFetchChapter(chapterId);
 
   const {
     handleSubmit,
@@ -31,8 +32,6 @@ const Page = ({ params }) => {
       image: "",
     },
   });
-
-  const { chapter, loading, error } = useFetchChapter(chapterId);
 
   useEffect(() => {
     if (chapter) {
