@@ -22,7 +22,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
 
   //console.log("userId");
 
-  const handleClickCard = () => {
+  const handleClickCard = (storyId) => {
     if ( user?.userId === authorId) {
       router.push(`/stories/${storyId}`);
     } else {
@@ -34,7 +34,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
 
   return (
     <div
-    onClick={handleClickCard}
+    onClick={() => handleClickCard(storyId)}
       className="
         group flex flex-col md:flex-row gap-6 items-start 
         p-6 rounded-2xl w-full
