@@ -3,6 +3,7 @@
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
+import useFectchAnnouncements from "@/hooks/useFetchAnnouncements";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchFollowerList from "@/hooks/useFetchFollowerList";
 import useFetchFollowingList from "@/hooks/useFetchFollowingList";
@@ -72,6 +73,12 @@ const Page = ({ params }) => {
     error: errorAuthorFollowers,
   } = useFetchFollowerList(author?.id);
 
+  const {
+    announcements,
+    error: announcementError,
+    loading: announcementLoading,
+  } = useFectchAnnouncements(author?.id);
+
   const followingList = followings?.map((item) => item.following_id) || [];
 
   const authorFollowingsList =
@@ -92,11 +99,11 @@ const Page = ({ params }) => {
 
   //console.log("fetched stories: ", stories);
   const publishedStories = stories?.filter(
-    (story) => story.status === "drafts"
+    (story) => story.status === "published"
   );
 
-  // console.log("stories", stories);
-  // console.log("published stories: ", publishedStories);
+  console.log("stories", stories);
+  console.log("published stories: ", publishedStories);
 
   if (errorFetchAuthor) {
     console.log("Error Fetching Author Info: ", errorFetchAuthor);
@@ -161,7 +168,7 @@ const Page = ({ params }) => {
         {/* About */}
         <div className="flex flex-col items-center gap-1 text-center">
           <h2 className="text-xs sm:text-sm font-bold">About</h2>
-          <p className="text-sm text-muted">{author.bio}</p>
+          <p className="text-sm text-muted">{author?.bio}</p>
         </div>
 
         {/* Stats */}
@@ -223,7 +230,12 @@ const Page = ({ params }) => {
           share ? "flex" : "hidden"
         } fixed inset-0 z-40 items-center justify-center`}
       >
-        <ShareMoodle share={share} setShare={setShare} author={author} />
+        <ShareMoodle
+          share={share}
+          setShare={setShare}
+          author={author}
+          type="profile"
+        />
       </div>
 
       {/* Right Content Section */}
@@ -259,7 +271,33 @@ const Page = ({ params }) => {
 
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              <p className="text-lg text-muted">No announcements yet.</p>
+              {announcements?.length === 0 ? (
+                <div className="flex flex-col gap-3">
+                  <Bell className="mx-auto w-10 h-10 text-brand" />
+                  <p className="text-lg text-muted">No announcements yet.</p>
+                </div>
+              ) : (
+                <>
+                  {announcements?.map((a) => (
+                    <div
+                      key={a.id}
+                      className="w-full max-w-xl mx-auto bg-amethyst-50 dark:bg-amethyst-900 p-5 rounded-xl shadow-md border border-neutral-200 dark:border-neutral-700 hover:shadow-lg transition text-left"
+                    >
+                      {/* Title */}
+                      <div className="flex items-center justify-between w-full mb-2">
+                        <h2 className="text-lg font-semibold text-brand">
+                          {a.title}
+                        </h2>
+                      </div>
+
+                      {/* Content */}
+                      <p className="text-sm text-muted leading-relaxed">
+                        {a.content}
+                      </p>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>

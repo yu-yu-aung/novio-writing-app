@@ -6,6 +6,7 @@ import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchChapter from "@/hooks/useFetchChapter";
 import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
+import { createChapterUpdateNotification } from "@/lib/notification";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import { Menu, X } from "lucide-react";
@@ -77,6 +78,12 @@ const Page = ({ params }) => {
 
     if (storyError) return toast.error("Failed to publish the story!");
 
+    await createChapterUpdateNotification(
+      author?.id,
+      chapter.story_id,
+      chapter.id
+    );
+
     toast.success("Chapter published successfully!");
     window.location.reload();
   };
@@ -141,7 +148,7 @@ const Page = ({ params }) => {
         </div>
 
         {/* ---------- Content Section ---------- */}
-        <div className="max-w-3xl mx-auto py-12">
+        <div className="max-w-3xl mx-4 sm:mx-8 lg:mx-14 py-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
             <span className="text-amethyst-600 mr-2 hidden">
               {chapter.chapter_number}.
@@ -155,7 +162,7 @@ const Page = ({ params }) => {
 
           {/* ---------- Publish Button ---------- */}
           {user?.userId === chapter?.author_id && (
-            <div className="mt-10 flex justify-between">
+            <div className="mt-10 flex justify-between w-full">
               {chapter.is_published ? (
                 <button
                   onClick={() =>

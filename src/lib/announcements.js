@@ -46,3 +46,17 @@ export async function createAnnouncement(authorId, title, content) {
 
   return { data: announcement };
 }
+
+export async function deleteAnnouncement(rowId) {
+  const { data, error } = await supabase
+    .from("announcements")
+    .delete()
+    .eq("id", rowId);
+
+    if (error) {
+    console.log("Error deleting announcement: ", error);
+    return error;
+  }
+
+  return { data };
+}

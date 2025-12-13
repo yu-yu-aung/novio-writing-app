@@ -1,3 +1,4 @@
+import { createStoryPublishedNotifications } from "./notification";
 import supabase from "./supabaseClient";
 
 export async function saveStorytoDB(user, story, imageUrl) {
@@ -15,8 +16,6 @@ export async function saveStorytoDB(user, story, imageUrl) {
     })
     .select()
     .single();
-
-  console.log("story: ", story);
 
   if (error) {
     console.error("Error creating the story: ", error);

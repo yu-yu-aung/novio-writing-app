@@ -6,6 +6,7 @@ import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
 import useFetchAnnouncementsByAuthorIds from "@/hooks/useFetchAnnouncementsByAuthorIds";
 import useFetchChaptersByIds from "@/hooks/useFetchChaptersByIds";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
+import useFetchStory from "@/hooks/useFetchStory";
 import useFetchUsersByIds from "@/hooks/useFetchUsersByIds";
 import { markNotificationAsViewed } from "@/lib/notification";
 
@@ -28,8 +29,10 @@ const Page = () => {
     error: errorActor,
     loading: loadingActor,
   } = useFetchUsersByIds(actorIds);
+  console.log("actor id list: ", actorIds);
 
   const { announcements } = useFetchAnnouncementsByAuthorIds(actorIds);
+  console.log("announcements: ", announcements);
 
   const chapterIds = notifications
     .filter((noti) => noti.target_type === "chapter")
@@ -37,9 +40,18 @@ const Page = () => {
 
   const { chapters } = useFetchChaptersByIds(chapterIds);
 
-  const storyIds = chapters.map((chap) => chap.story_id);
+  const storyIdsFromChapters = chapters.map((chap) => chap.story_id);
+
+  const storyIdsFromNoti = notifications
+    .filter((n) => n.target_type === "story")
+    .map((n) => n.target_id);
+
+  const storyIdsSet = new Set([...storyIdsFromChapters, ...storyIdsFromNoti]);
+  const storyIds = Array.from(storyIdsSet);
+  console.log("story id list: ", storyIds);
 
   const { stories } = useFetchStoriesByIds(storyIds);
+  console.log("stories list: ", stories);
 
   const mergedActions = notifications?.map((noti) => {
     const actor = actors.find((a) => a.id === noti.actor_id) || {};
@@ -63,7 +75,19 @@ const Page = () => {
       content = `${actor.pen_name} commented on your story ${targetText}`;
     } else if (noti.action_type === "announcement") {
       const announcement = announcements.find((a) => a.id === noti.target_id);
-      content = `${actor.pen_name} posed an announcement: ${announcement?.title}`;
+      content = announcement
+        ? `${actor.pen_name} posed an announcement: ${announcement?.title}`
+        : undefined;
+    } else if (noti.action_type === "published_story") {
+      story = stories.find((s) => s.id === noti.target_id);
+      console.log("story info: ", story);
+      content = story
+        ? `${actor.pen_name} published a new story "${story?.title}"`
+        : undefined;
+    } else if (noti.action_type === "updated_chapter") {
+      content = chapter
+        ? `${actor.pen_name} published a new chapter: ${chapter?.title} in the story: ${story?.title}`
+        : undefined;
     }
 
     return {
@@ -91,11 +115,15 @@ const Page = () => {
   const handleClickNotiCard = async (noti) => {
     const { data } = await markNotificationAsViewed(noti.id);
 
-    if (noti.target_type === "user" || "announcement") {
+    if (noti.target_type === "user") {
+      router.push(`/author/${noti.actor?.user_name}`);
+    } else if (noti.target_type === "announcement") {
       router.push(`/author/${noti.actor?.user_name}`);
     } else if (noti.target_type === "chapter") {
       router.push(`/p_stories/${noti.story?.id}/chapters/${noti.chapter?.id}`);
-    } 
+    } else if (noti.target_type === "story") {
+      router.push(`/p_stories/${noti.target_id}`);
+    }
   };
 
   if (!user) return;
@@ -114,16 +142,19 @@ const Page = () => {
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
         {today.length > 0 ? (
-          today.map((noti) => (
-            <NotiCard
-              image={noti.actor?.profile_image_url || "/default-user.jpg"}
-              content={noti.content}
-              time={noti.created_at}
-              key={noti.id}
-              isViewed={noti.is_viewed}
-              onClick={() => handleClickNotiCard(noti)}
-            />
-          ))
+          today.map((noti) => {
+            if (!noti.content) return null;
+            return (
+              <NotiCard
+                image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                content={noti.content}
+                time={noti.created_at}
+                key={noti.id}
+                isViewed={noti.is_viewed}
+                onClick={() => handleClickNotiCard(noti)}
+              />
+            );
+          })
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
@@ -146,16 +177,19 @@ const Page = () => {
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
         {thisWeek.length > 0 ? (
-          thisWeek.map((noti) => (
-            <NotiCard
-              image={noti.actor?.profile_image_url || "/default-user.jpg"}
-              content={noti.content}
-              time={noti.created_at}
-              key={noti.id}
-              isViewed={noti.is_viewed}
-              onClick={() => handleClickNotiCard(noti)}
-            />
-          ))
+          thisWeek.map((noti) => {
+            if (!noti.content) return null;
+            return (
+              <NotiCard
+                image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                content={noti.content}
+                time={noti.created_at}
+                key={noti.id}
+                isViewed={noti.is_viewed}
+                onClick={() => handleClickNotiCard(noti)}
+              />
+            );
+          })
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">

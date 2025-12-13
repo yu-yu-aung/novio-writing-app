@@ -25,6 +25,7 @@ const Page = () => {
     formState: { errors },
   } = useForm();
 
+  console.log("user info: ", user);
   const { stories, loading, error } = useFetchAllStories(user);
 
   const handlePublishClick = () => {
@@ -51,9 +52,11 @@ const Page = () => {
       imageUrl = await uploadStoryImage(file, user?.userId);
     }
 
-    // console.log("data.image: ", data.image?.[0]);
-    // console.log("file: ", file);
-    // console.log("image: ", imageUrl);
+    console.log("data.image: ", data.image?.[0]);
+    console.log("file: ", file);
+    console.log("image: ", imageUrl);
+    console.log("user info: ", user);
+    console.log("data: ", data);
 
     const { data: newStory, error } = await saveStorytoDB(user, data, imageUrl);
 
@@ -66,7 +69,7 @@ const Page = () => {
     // console.log("story info: ", newStory);
     // console.log("user: ", user);
     // console.log("image: ", imageUrl);
-    router.push(`/stories/${newStory.id}`);
+    router.push(`/stories/${newStory?.id}`);
   };
 
   return (
@@ -236,7 +239,7 @@ const Page = () => {
         {clickPublish &&
           stories?.map((story) =>
             story.status === "published" ? (
-              <SmallStoryCard key={story.id} story={story} />
+              <SmallStoryCard key={story.id} story={story} storyId={story.id} />
             ) : null
           )}
 
@@ -244,7 +247,7 @@ const Page = () => {
         {clickDraft &&
           stories?.map((story) =>
             story.status === "draft" ? (
-              <SmallStoryCard key={story.id} story={story} />
+              <SmallStoryCard key={story.id} story={story} storyId={story.id} />
             ) : null
           )}
       </section>

@@ -7,9 +7,11 @@ import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useFectchAnnouncements from "@/hooks/useFetchAnnouncements";
+import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchFollowerList from "@/hooks/useFetchFollowerList";
 import useFetchFollowingList from "@/hooks/useFetchFollowingList";
-import { createAnnouncement } from "@/lib/announcements";
+import { createAnnouncement, deleteAnnouncement } from "@/lib/announcements";
+import { confirmAction } from "@/lib/confirmAction";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
 import {
@@ -21,6 +23,8 @@ import {
   Settings,
   Pencil,
   Share,
+  Trash,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -63,6 +67,8 @@ const Page = () => {
 
   const { stories, loading, error } = useFetchAllStories(user);
 
+  const {author} = useFetchAuthor({userId: user?.userId})
+
   const {
     followings,
     loading: loadingFollowing,
@@ -82,6 +88,8 @@ const Page = () => {
     refresh,
   } = useFectchAnnouncements(user?.userId);
 
+  console.log("Announcements: ", announcements);
+
   const followingsList = followings?.map((item) => item.following_id) || [];
 
   const followerList = followers?.map((item) => item.following_id) || [];
@@ -98,7 +106,22 @@ const Page = () => {
 
     toast.success("You made an announcement!");
     reset();
+    setShowForm(false);
     refresh();
+  };
+
+  const handleClickDelete = async (a) => {
+    const { data, error } = await deleteAnnouncement(a.id);
+
+    if (error) {
+      toast.error("Error deleting announcement!");
+      console.log("announcement delete error: ", error);
+      return;
+    }
+
+    toast.success("Announcement deleted!");
+    refresh();
+    return;
   };
 
   const handleClickSetting = () => {
@@ -197,7 +220,12 @@ const Page = () => {
           share ? "flex" : "hidden"
         } fixed inset-0 z-40 items-center justify-center`}
       >
-        <ShareMoodle share={share} setShare={setShare} author={user} />
+        <ShareMoodle
+          share={share}
+          setShare={setShare}
+          author={author}
+          type="profile"
+        />
       </div>
 
       {/* Right Content Section */}
@@ -285,40 +313,64 @@ const Page = () => {
           {activeTab === "library" && <Library />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              {!showForm && (
-                <>
-                  {announcements.length === 0 ? (
-                    <>
-                      <div className="flex flex-col gap-3">
-                        <Bell className="mx-auto w-10 h-10 text-brand" />
-                        <p className="text-lg text-muted">
-                          No announcements yet.
+              {!showForm &&
+                (announcements?.length === 0 ? (
+                  <>
+                    <div className="flex flex-col gap-3">
+                      <Bell className="mx-auto w-10 h-10 text-brand" />
+                      <p className="text-lg text-muted">
+                        No announcements yet.
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setShowForm(true)}
+                      className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
+                    >
+                      Make an announcement!
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {announcements?.map((a) => (
+                      <div
+                        key={a.id}
+                        className="w-full max-w-xl mx-auto bg-amethyst-50 dark:bg-amethyst-900 p-5 rounded-xl shadow-md border border-neutral-200 dark:border-neutral-700 hover:shadow-lg transition text-left"
+                      >
+                        {/* Title + delete button row */}
+                        <div className="flex items-center justify-between w-full mb-2">
+                          <h2 className="text-lg font-semibold text-brand">
+                            {a.title}
+                          </h2>
+
+                          <button
+                            onClick={() =>
+                              confirmAction(
+                                () => handleClickDelete(a),
+                                "Are you sure you want to delete the announcement?"
+                              )
+                            }
+                            className="text-red-600 rounded-lg p-2 hover:scale-105 transition"
+                          >
+                            <Trash2 />
+                          </button>
+                        </div>
+
+                        {/* Content */}
+                        <p className="text-sm text-muted leading-relaxed">
+                          {a.content}
                         </p>
                       </div>
+                    ))}
 
-                      <button
-                        onClick={() => setShowForm(true)}
-                        className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
-                      >
-                        Make an announcement!
-                      </button>
-                    </>
-                  ) : (
-                    announcements.map((a) => {
-                      <div key={a.id}>
-                        <h2>{a.title}</h2>
-                        <p>{a.content}</p>
-                      </div>;
-                    })
-                  )}
-                  <button
-                    onClick={() => setShowForm(true)}
-                    className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
-                  >
-                    Make an announcement!
-                  </button>
-                </>
-              )}
+                    <button
+                      onClick={() => setShowForm(true)}
+                      className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium"
+                    >
+                      Make an announcement!
+                    </button>
+                  </>
+                ))}
 
               <form
                 onSubmit={handleSubmit(onSubmit)}

@@ -55,7 +55,7 @@ const Library = () => {
             {stories.length > 0 ? stories.map((story, index) => (
               <StoryCard key={index} story={story} />
             )) : (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
             <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
               No Story In Library
             </p>

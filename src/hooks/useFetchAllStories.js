@@ -15,7 +15,7 @@ export default function useFetchAllStories(user) {
       const { data, error } = await supabase
         .from("stories")
         .select("*")
-        .eq("author_id", user.userId)
+        .eq("author_id", user?.userId)
         .order("created_at", { ascending: true });
 
       if (error) {

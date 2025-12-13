@@ -1,22 +1,56 @@
 'use client'
 import useAuthStore from '@/store/useAuthStore'
 import { Copy, Facebook, Mail, Send, Twitter } from 'lucide-react';
-import React from 'react'
+import React, { useMemo } from 'react'
 
 
-const ShareMoodle = ({share, setShare, author}) => {
+const ShareMoodle = ({share, setShare, type, author, story, chapter}) => {
+  const {user } = useAuthStore();
+
+  const shareUrl = useMemo(() => {
+    if (!user) return ''; 
+
+    if (type === 'profile' && author){ 
+      if (author.id === user.userId){
+        return `${window.location.origin}/author/${author.user_name}`;
+      }
+      return window.location.href
+    }
+
+    if (type === 'story' && story){
+      if(story.author_id === user.userId){
+        return `${window.location.origin}/p_stories/${story.id}`; 
+      }
+      return window.location.href
+    }
+
+    if (type === 'chapter' && chapter){
+      if(chapter.author_id === user.userId){
+        return `${window.location.origin}/p_stories/${story.id}/chapters/${chapter.id}`; 
+      }
+      return window.location.href
+    }
+
+    return window.location.href
+  }, [type, author, story, user, chapter])
+
+  if (!share) return null;
 
   return (
     <div>
       {/* Modal for sharing user profile */}
       <div className={`fixed z-50 top-40 left-10 sm:left-20 lg:left-30 ${!share ? "hidden" : ""} bg-white rounded-xl shadow-lg p-2 sm:p-4 lg:p-6 w-[280px] sm:w-[500px] lg:w-[500px] border border-gray-200 flex flex-col items-center`}>
-        <h3 className="tex-lg sm:text-xl lg:text-xl font-semibold mb-4 text-gray-800 line-clamp-2">{author?.pen_name || author?.userName}</h3>
+        <h3 
+          className="tex-lg sm:text-xl lg:text-xl font-semibold mb-4 text-gray-800 line-clamp-2"
+        >
+          {type === 'profile' ? author?.pen_name : story?.title}
+        </h3>
 
         <div className="flex w-full items-center justify-between bg-gray-100 p-2 rounded mb-4">
-          <p className="truncate text-gray-700 w-[300px] line-clamp-2 h-auto text-sm">{window.location.href}</p>
+          <p className="truncate text-gray-700 w-[300px] line-clamp-2 h-auto text-sm">{shareUrl}</p>
           <button  
             onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
+              navigator.clipboard.writeText(shareUrl);
               toast.success("Link copied to clipboard")
               setShare(false); 
               }
@@ -40,7 +74,7 @@ const ShareMoodle = ({share, setShare, author}) => {
           <button 
             onClick={() => {
               window.open(
-                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, 
+                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, 
                 "_blank"
               )
               setShare(false); 
@@ -53,7 +87,7 @@ const ShareMoodle = ({share, setShare, author}) => {
           <button 
             onClick={() => {
               window.open(
-                `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(user.title)}`, 
+                `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`, 
                 "_blank"
               )
               setShare(false); 
@@ -65,10 +99,7 @@ const ShareMoodle = ({share, setShare, author}) => {
           </button>
           <button 
             onClick={() => {
-              window.open(
-                `https://mail.googlt.com/mail/?view=cm&fs=1&su=${encodeURIComponent(user.title)}&body=${encodeURIComponent(window.location.href)}`, 
-                "_blank"
-              )
+              window.open(`mailto:?body=${encodeURIComponent(shareUrl)}`)
               setShare(false); 
             }}
             className="flex items-center justify-center gap-2 p-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
@@ -79,7 +110,7 @@ const ShareMoodle = ({share, setShare, author}) => {
           <button 
             onClick={() => {
               window.open(
-                `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(user.title)}`, 
+                `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`, 
                 "_blank"
               )
             setShare(false); 

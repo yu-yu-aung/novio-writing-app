@@ -87,7 +87,7 @@ export default function SearchClient() {
                 />
 
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                     {author.pen_name}
                   </h3>
                   <p className="text-xs text-muted-foreground">Author</p>

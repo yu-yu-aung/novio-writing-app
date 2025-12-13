@@ -5,6 +5,7 @@ import SmallHeading from "@/components/SmallHeading";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchStory from "@/hooks/useFetchStory";
 import { confirmAction } from "@/lib/confirmAction";
+import { createStoryPublishedNotifications } from "@/lib/notification";
 import { deleteStory } from "@/lib/story";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
@@ -38,6 +39,12 @@ const Page = ({ params }) => {
 
   const handleClickPublish = async (storyId) => {
     //console.log("CLICKED storyId:", storyId);
+
+    if (chapters?.length === 0) {
+      toast.error("Your story is empty. Please create a chapter to publish!");
+      return;
+    }
+
     const { data, error: storyError } = await supabase
       .from("stories")
       .update({ status: "published" })
@@ -60,8 +67,10 @@ const Page = ({ params }) => {
       );
     }
 
-    // console.log("story error: ", storyError);
-    // console.log("updated story: ", data);
+    console.log("user info: ", user);
+    console.log("story id: ", storyId);
+
+    await createStoryPublishedNotifications(user?.userId, storyId);
     toast.success("Story published successfully!");
     //window.location.reload();
     router.refresh();
@@ -89,8 +98,6 @@ const Page = ({ params }) => {
       );
     }
 
-    // console.log("story error: ", storyError);
-    // console.log("updated story: ", data);
     toast.success("Story unpublished successfully!");
     //window.location.reload();
     router.refresh();
