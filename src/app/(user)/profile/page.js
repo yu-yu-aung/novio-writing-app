@@ -67,7 +67,7 @@ const Page = () => {
 
   const { stories, loading, error } = useFetchAllStories(user);
 
-  const {author} = useFetchAuthor({userId: user?.userId})
+  const { author } = useFetchAuthor({ userId: user?.userId });
 
   const {
     followings,
@@ -88,7 +88,7 @@ const Page = () => {
     refresh,
   } = useFectchAnnouncements(user?.userId);
 
-  console.log("Announcements: ", announcements);
+  // console.log("Announcements: ", announcements);
 
   const followingsList = followings?.map((item) => item.following_id) || [];
 
@@ -310,7 +310,7 @@ const Page = () => {
             </>
           )}
 
-          {activeTab === "library" && <Library />}
+          {activeTab === "library" && <Library type="profile" />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
               {!showForm &&

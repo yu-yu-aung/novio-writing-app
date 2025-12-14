@@ -8,7 +8,7 @@ export default function Home() {
       <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 text-neutral-900 dark:text-neutral-100 border-l-4 pl-4 border-amethyst-600">
         Your Library
       </h2>
-      <Library />
+      <Library type="home" />
     </div>
   );
 }

@@ -4,13 +4,14 @@ import useFetchLibrary from "@/hooks/useFetchLibrary";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import useAuthStore from "@/store/useAuthStore";
 import StoryCard from "./StoryCard";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
+import React from "react";
+import { toast } from "sonner";;
+import { useRouter } from "next/navigation";
 
-const Library = () => {
+const Library = ({type = "home"}) => {
   const { user, isLoggedIn } = useAuthStore();
+  const router = useRouter(); 
 
-  //console.log("user info: ", user);
   const {
     libraryList,
     loading: libLoading,
@@ -38,24 +39,32 @@ const Library = () => {
   return (
     <div className="py-4 sm:py-14 lg:py-18">
       {
-      isLoggedIn && (
-        <div className="w-full">
-          
+      isLoggedIn && stories.length > 0 ? (
+        <div className="w-full flex flex-col items-center gap-4">
           <div
-            className="
+            className={`
               grid 
               grid-cols-3 
               sm:grid-cols-4 
               md:grid-cols-4 
-              lg:grid-cols-5
-              xl:grid-cols-5 
+              ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-4"}
               gap-5
-            "
+            `}
           >
-            {stories.length > 0 ? stories.map((story, index) => (
-              <StoryCard key={index} story={story} />
-            )) : (
-              <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+              {stories.map((story, index) => (
+                <StoryCard key={index} story={story} />
+            ))} 
+            
+          </div>
+          <button 
+              onClick={() => router.push("/bookshelf/create_bookshelf") }
+              className="mx-auto bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-6 py-2 rounded-lg shadow hover:scale-105 transition font-medium text-xs sm:text-sm lg:text-sm"
+            >
+              Create a bookshelf
+            </button>
+        </div> )
+         : (
+            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
             <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
               No Story In Library
             </p>
@@ -66,10 +75,6 @@ const Library = () => {
               className="w-40 h-40 object-contain opacity-80"
             />
           </div>)}
-          </div>
-        </div>
-      )
-    }
     </div>
     
     

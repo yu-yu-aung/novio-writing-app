@@ -4,7 +4,7 @@ export async function addStorytoLibrary(story, user) {
   const { data, error } = await supabase
     .from("library")
     .insert({
-      id: user.userId,
+      user_id: user.userId,
       story_id: story.id,
     })
     .select()

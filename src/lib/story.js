@@ -1,4 +1,4 @@
-import { createStoryPublishedNotifications } from "./notification";
+
 import supabase from "./supabaseClient";
 
 export async function saveStorytoDB(user, story, imageUrl) {

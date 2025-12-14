@@ -236,20 +236,60 @@ const Page = () => {
         </div>
 
         {/* Published */}
-        {clickPublish &&
-          stories?.map((story) =>
-            story.status === "published" ? (
-              <SmallStoryCard key={story.id} story={story} storyId={story.id} />
-            ) : null
-          )}
+        {clickPublish && (
+          <>
+            {stories?.filter((s) => s.status === "published").length > 0 ? (
+              stories
+                .filter((s) => s.status === "published")
+                .map((story) => (
+                  <SmallStoryCard
+                    key={story.id}
+                    story={story}
+                    storyId={story.id}
+                  />
+                ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                  No Published Story
+                </p>
+                <img
+                  src="/no_data.png"
+                  alt="No story"
+                  className="w-40 h-40 object-contain opacity-80"
+                />
+              </div>
+            )}
+          </>
+        )}
 
         {/* Drafts */}
-        {clickDraft &&
-          stories?.map((story) =>
-            story.status === "draft" ? (
-              <SmallStoryCard key={story.id} story={story} storyId={story.id} />
-            ) : null
-          )}
+        {clickDraft && (
+          <>
+            {stories?.filter((s) => s.status === "draft").length > 0 ? (
+              stories
+                .filter((s) => s.status === "draft")
+                .map((story) => (
+                  <SmallStoryCard
+                    key={story.id}
+                    story={story}
+                    storyId={story.id}
+                  />
+                ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                  No Draft
+                </p>
+                <img
+                  src="/no_data.png"
+                  alt="No story"
+                  className="w-40 h-40 object-contain opacity-80"
+                />
+              </div>
+            )}
+          </>
+        )}
       </section>
     </div>
   );
