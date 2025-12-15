@@ -36,8 +36,8 @@ const  SmallStoryCard = ({ story, storyId }) => {
     <div
     onClick={() => handleClickCard(storyId)}
       className="
-        group flex flex-col md:flex-row gap-6 items-start 
-        p-6 rounded-2xl w-full
+        group flex gap-6 items-start 
+        p-3 sm:p-6 rounded-lg max-w-[400px] max-h-[220px]
         bg-white dark:bg-amethyst-950 
         shadow-sm hover:shadow-md transition-shadow
         border border-transparent dark:border-amethyst-800
@@ -49,7 +49,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
         src={story?.image_url}
         alt={story?.title}
         className="
-          w-full md:w-36 h-56 object-cover rounded-xl 
+          w-[120px] md:w-36 h-42 object-cover rounded-lg 
           shadow-sm 
           group-hover:scale-[1.02] transition-transform
         "
@@ -65,7 +65,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
           </h3>
 
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {author?.pen_name || "Loading..."}
+            {story?.author?.pen_name || "Loading..."}
           </p>
 
           <div className="flex items-center gap-2 text-yellow-500 text-sm mt-1">
@@ -81,7 +81,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
           <Link
             href="/stories/create_story"
             className="
-              px-4 py-2 rounded-lg text-sm font-medium
+              px-4 py-2 rounded-lg text-xs sm:text-sm font-medium
               border border-brand text-brand bg-brand-soft
               hover:bg-brand-light transition
             "

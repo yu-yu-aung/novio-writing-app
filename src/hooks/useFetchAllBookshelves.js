@@ -1,9 +1,8 @@
 import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
 
-export default function useFetchAllStories(user) {
-  const [stories, setStories] = useState(null);
+export default function useFetchAllBookshelves(user) {
+  const [bookshelves, setBookshelves] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,16 +12,16 @@ export default function useFetchAllStories(user) {
     async function load() {
       setLoading(true);
       const { data, error } = await supabase
-        .from("stories")
+        .from("bookshelves")
         .select("*")
-        .eq("author_id", user?.userId)
+        .eq("user_id", user?.userId)
         .order("created_at", { ascending: true });
 
       if (error) {
-        console.log("Error fetching stories: ", error);
+        console.log("Error fetching bookshelves: ", error);
         setError(error);
       } else {
-        setStories(data || []);
+        setBookshelves(data || []);
       }
 
       setLoading(false);
@@ -31,5 +30,5 @@ export default function useFetchAllStories(user) {
     load();
   }, [user]);
 
-  return { stories, loading, error };
+  return { bookshelves, loading, error };
 }

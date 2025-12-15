@@ -16,7 +16,23 @@ export default function useFetchStory(storyId) {
 
       const { data, error } = await supabase
         .from("stories")
-        .select("*")
+        .select(
+          `
+            id, 
+            title, 
+            description, 
+            total_views, 
+            tags,
+            category,
+            genre, 
+            status, 
+            image_url, 
+            author: profiles(
+              id, 
+              pen_name
+            )
+          `
+        )
         .eq("id", storyId)
         .single();
 

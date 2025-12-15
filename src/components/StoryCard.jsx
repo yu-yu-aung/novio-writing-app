@@ -4,8 +4,8 @@ import React from 'react'
 
 const StoryCard = ({ story }) => {
   const router = useRouter();
-  const { author } = useFetchAuthor({ userId: story.author_id });
-
+  // const { author } = useFetchAuthor({ userId: story.author_id });
+  console.log("story: ", story);
   return (
     <div
       onClick={() => router.push(`/p_stories/${story.id}`)}
@@ -38,7 +38,7 @@ const StoryCard = ({ story }) => {
         </h5>
 
         <h6 className="mt-4 text-xs text-neutral-600 dark:text-neutral-300">
-          {author?.pen_name}
+          {story?.author?.pen_name}
         </h6>
 
       </div>
