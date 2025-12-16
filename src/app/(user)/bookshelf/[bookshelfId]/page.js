@@ -8,22 +8,41 @@ import useFetchBookshelfItems from "@/hooks/useFetchBookshelfItems";
 import useFetchLibrary from "@/hooks/useFetchLibrary";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
 import { saveItemtoBookshelf } from "@/lib/bookShelfItem";
+import { confirmAction } from "@/lib/confirmAction";
+import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { bookshelfId } = use(params);
-  const { bookshelf } = useFetchBookshelf(bookshelfId);
+  const { bookshelf, refresh: refreshShelf } = useFetchBookshelf(bookshelfId);
   const { user } = useAuthStore();
   const [showLibrary, setShowLibrary] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { libraryList } = useFetchLibrary(user?.userId);
   const storyIdList = libraryList?.map((item) => item.story_id) || [];
+
   const { stories } = useFetchStoriesByIds(storyIdList);
   const { items, refresh } = useFetchBookshelfItems(bookshelfId);
 
+  console.log("bookshelf info: ", bookshelf);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const handleClickAdd = async (story) => {
+    const alreadyExists = items?.some((item) => item.story.id === story.id);
+
+    if (alreadyExists) {
+      toast.warning("Story already existed in the bookshelf!");
+      return;
+    }
+
     const { itemError } = await saveItemtoBookshelf(
       story?.id,
       bookshelfId,
@@ -37,6 +56,36 @@ const Page = ({ params }) => {
 
     toast.success("Story added to bookshelf!");
     refresh();
+  };
+
+  const handleClickPublic = async (bookshelfId) => {
+    const { data, error: publicError } = await supabase
+      .from("bookshelves")
+      .update({ is_public: true })
+      .eq("id", bookshelfId);
+
+    if (publicError) {
+      console.log("Error making public: ", publicError);
+      return toast.error("Error changing privacy to public!");
+    }
+
+    toast.success("Your bookshelf is public now!");
+    refreshShelf();
+  };
+
+  const handleClickPrivate = async (bookshelfId) => {
+    const { data, error: privateError } = await supabase
+      .from("bookshelves")
+      .update({ is_public: false })
+      .eq("id", bookshelfId);
+
+    if (privateError) {
+      console.log("Error making private: ", privateError);
+      return toast.error("Error changing privacy to private!");
+    }
+
+    toast.success("Your bookshelf is private now!");
+    refreshShelf();
   };
 
   return (
@@ -70,10 +119,10 @@ const Page = ({ params }) => {
           </p>
         </div>
       )}
-
-      <button
-        onClick={() => setShowLibrary((prev) => !prev)}
-        className="
+      <div className="flex justify-between w-full">
+        <button
+          onClick={() => setShowLibrary((prev) => !prev)}
+          className="
           bg-amethyst-600 dark:bg-amethyst-300
           text-white dark:text-black
           px-4 py-2
@@ -81,9 +130,41 @@ const Page = ({ params }) => {
           shadow-sm
           hover:scale-105 transition
         "
-      >
-        {showLibrary ? "Close Library" : "Add from Library"}
-      </button>
+        >
+          {showLibrary ? "Close Library" : "Add from Library"}
+        </button>
+
+        <button
+          onClick={
+            bookshelf?.is_public
+              ? () =>
+                  confirmAction(
+                    () => handleClickPrivate(bookshelfId),
+                    "Are you sure you want to make the bookshelf private? Only you can access your private bookshelf."
+                  )
+              : () =>
+                  confirmAction(
+                    () => handleClickPublic(bookshelfId),
+                    "Are you sure you want to make the bookshelf public? Everyone can access your public bookshelf."
+                  )
+          }
+          className="
+          bg-amethyst-600 dark:bg-amethyst-300
+          text-white dark:text-black
+          px-4 py-2
+          rounded-lg font-medium
+          shadow-sm
+          hover:scale-105 transition
+        "
+        >
+          {bookshelf?.is_public === true ? "Make Private" : "Make Public"}
+        </button>
+        {/* {bookshelf?.is_public === true ? (
+
+        )
+
+        } */}
+      </div>
 
       {/* Library Section */}
       {showLibrary && (
@@ -98,34 +179,39 @@ const Page = ({ params }) => {
               gap-6
             "
           >
-            {stories?.map((story) => (
-              <div
-                key={story.id}
-                className="
-                  bg-background-soft
-                  border border-default/40
-                  rounded-xl
-                  p-4
-                  flex flex-col
-                "
-              >
-                <StoryCard story={story} />
+            {stories?.map((story) => {
+              const isAdded = items?.some((item) => item.story.id === story.id);
 
-                <button
-                  onClick={() => handleClickAdd(story)}
+              return (
+                <div
+                  key={story.id}
                   className="
-                    mt-4
-                    bg-coral-tree-300 dark:bg-coral-tree-800
-                    text-heading
-                    py-2 rounded-lg
-                    font-medium
-                    hover:scale-105 transition
+                    bg-background-soft
+                    border border-default/40
+                    rounded-xl
+                    p-4
+                    flex flex-col
                   "
                 >
-                  Add
-                </button>
-              </div>
-            ))}
+                  <StoryCard story={story} />
+
+                  <button
+                    disabled={isAdded}
+                    onClick={() => handleClickAdd(story)}
+                    className={`
+                      mt-4 py-2 rounded-lg font-medium transition 
+                      ${
+                        isAdded
+                          ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                          : "bg-coral-tree-700 hover:scale-105 text-gray-100"
+                      }
+                    `}
+                  >
+                    {isAdded ? "Added" : "Add"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

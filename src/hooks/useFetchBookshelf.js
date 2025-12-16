@@ -1,37 +1,38 @@
 "use client";
 
 import supabase from "@/lib/supabaseClient";
-import { useEffect, useState } from "react";
+import { refresh } from "next/cache";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useFetchBookshelf(bookshelfId) {
   const [bookshelf, setBookshelf] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function load() {
-      if (!bookshelfId) return;
+  const loadShelf = useCallback(async () => {
+    if (!bookshelfId) return;
 
-      setLoading(true);
+    setLoading(true);
 
-      const { data, error } = await supabase
-        .from("bookshelves")
-        .select("*")
-        .eq("id", bookshelfId)
-        .single();
+    const { data, error } = await supabase
+      .from("bookshelves")
+      .select("*")
+      .eq("id", bookshelfId)
+      .single();
 
-      if (error) {
-        console.error("Error fetching bookshelf: ", error);
-        setError(error);
-      } else {
-        setBookshelf(data);
-      }
-
-      setLoading(false);
+    if (error) {
+      console.error("Error fetching bookshelf: ", error);
+      setError(error);
+    } else {
+      setBookshelf(data);
     }
 
-    load();
+    setLoading(false);
   }, [bookshelfId]);
 
-  return { bookshelf, loading, error };
+  useEffect(() => {
+    loadShelf();
+  }, [loadShelf]);
+
+  return { bookshelf, loading, error, refresh: loadShelf };
 }

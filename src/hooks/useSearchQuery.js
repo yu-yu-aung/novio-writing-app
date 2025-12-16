@@ -7,6 +7,7 @@ export default function useSearchQuery(query) {
   const [searchResults, setSearchResults] = useState({
     authors: [],
     stories: [],
+    bookshelves: [],
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,12 +42,22 @@ export default function useSearchQuery(query) {
         setError(storyError);
       }
 
+      //Search for bookshelves
+      const { data: bookshelves, error: shelfError } = await supabase
+        .from("bookshelves")
+        .select("*")
+        .eq("is_public", true)
+        .or(
+          `shelf_name.ilike.%${query}%,category.ilike.%${query}%,description.ilike.%${query}%`
+        );
+
       // console.log("Authors found: ", authors);
       // console.log("Stories found: ", stories);
 
       setSearchResults({
         authors,
         stories,
+        bookshelves
       });
 
       setLoading(false);

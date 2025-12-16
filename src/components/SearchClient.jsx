@@ -22,9 +22,9 @@ export default function SearchClient() {
     return <p>Something went wrong!</p>;
   }
 
-  //console.log("search results: ", searchResults);
+  console.log("search results: ", searchResults);
 
-  const { authors, stories } = searchResults;
+  const { authors, stories, bookshelves } = searchResults;
 
   // console.log("Authors: ", authors);
   // console.log("Stories: ", stories);
@@ -66,7 +66,17 @@ export default function SearchClient() {
         </h2>
 
         {authors?.length === 0 && (
-          <p className="text-muted-foreground text-sm">No user found!</p>
+          <div className="flex flex-col items-center justify-center py-4 text-center">
+            <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
+              No author found!
+            </p>
+
+            <img
+              src="/no_data.png"
+              alt="No author"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>
         )}
 
         {/* Author Cards */}
@@ -91,6 +101,48 @@ export default function SearchClient() {
                     {author.pen_name}
                   </h3>
                   <p className="text-xs text-muted-foreground">Author</p>
+                </div>
+              </Link>
+            ))}
+        </div>
+      </section>
+
+      {/* Bookshelves */}
+      <section className="space-y-4">
+        <h2 className="text-xl sm:text-2xl font-semibold text-amethyst-700 dark:text-amethyst-300">
+          Bookshelves Related to "{query}"
+        </h2>
+
+        {bookshelves?.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-4 text-center">
+            <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
+              No bookshelf found!
+            </p>
+
+            <img
+              src="/no_data.png"
+              alt="No bookshelf"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>
+        )}
+
+        {/* Bookshelves Cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {bookshelves?.length !== 0 &&
+            bookshelves?.map((bookshelf, index) => (
+              <Link
+                href={`/p_bookshelves/${bookshelf.id}`}
+                key={index}
+                className="flex items-center gap-4 p-4 bg-amethyst-100 dark:bg-amethyst-900/30 
+                rounded-xl border border-amethyst-200 dark:border-amethyst-700 shadow-sm
+                hover:shadow-md transition"
+              >
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
+                    {bookshelf.shelf_name}
+                  </h3>
                 </div>
               </Link>
             ))}

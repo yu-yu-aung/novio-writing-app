@@ -12,7 +12,7 @@ const  SmallStoryCard = ({ story, storyId }) => {
   //console.log("Author id: ", authorId);
 
   //fetch author's info using author id
-  const { author, loading, error } = useFetchAuthor({userId: authorId});
+  //const { author, loading, error } = useFetchAuthor({userId: authorId});
   const { user, isLoggedIn } = useAuthStore(); 
   //console.log("author info: ", author);
 

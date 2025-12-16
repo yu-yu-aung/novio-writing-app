@@ -89,8 +89,7 @@ const Page = ({ params }) => {
 
     const { error: chapterError } = await supabase
       .from("chapters")
-      .update({ is_published: false })
-      .eq("story_id", storyId);
+      .update({ is_published: false });
 
     if (chapterError) {
       return toast.error(
@@ -282,5 +281,4 @@ const Page = ({ params }) => {
     </>
   );
 };
-
 export default Page;
