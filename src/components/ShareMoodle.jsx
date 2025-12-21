@@ -2,6 +2,7 @@
 import useAuthStore from '@/store/useAuthStore'
 import { Copy, Facebook, Mail, Send, Twitter } from 'lucide-react';
 import React, { useMemo } from 'react'
+import { toast } from 'sonner';
 
 
 const ShareMoodle = ({share, setShare, type, author, story, chapter}) => {
@@ -18,7 +19,7 @@ const ShareMoodle = ({share, setShare, type, author, story, chapter}) => {
     }
 
     if (type === 'story' && story){
-      if(story.author_id === user.userId){
+      if(story.author.id === user.userId){
         return `${window.location.origin}/p_stories/${story.id}`; 
       }
       return window.location.href

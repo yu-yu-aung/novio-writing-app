@@ -49,11 +49,11 @@ const Page = ({ params }) => {
   //console.log("fetched story: ", story);
 
   //fetch author's info using author id
-  const {
-    author,
-    loading: loadingFetchAuthor,
-    error: errorFetchAuthor,
-  } = useFetchAuthor({ userId: story?.author_id });
+  // const {
+  //   author,
+  //   loading: loadingFetchAuthor,
+  //   error: errorFetchAuthor,
+  // } = useFetchAuthor({ userId: story?.author_id });
   //console.log("author info: ", author);
 
   //fetch likes to check if the chapter is already liked
@@ -71,7 +71,6 @@ const Page = ({ params }) => {
   }, [fetchLikeLoading, isInLikeList]);
 
   if (
-    loadingFetchAuthor ||
     loadingFetchStory ||
     loadingFetchChapters ||
     fetchLikeLoading ||
@@ -84,7 +83,7 @@ const Page = ({ params }) => {
     );
   }
 
-  if (error || errorFetchAuthor || fetchLikeError || storyFetchError) {
+  if (error || fetchLikeError || storyFetchError) {
     return (
       <div className="w-full flex justify-center py-20 text-lg text-red-500">
         Something went wrong.
@@ -111,7 +110,7 @@ const Page = ({ params }) => {
     const { data, error } = await addLiketoChapter(
       chapterId,
       user?.userId,
-      author?.id,
+      story?.author?.id,
       storyId
     );
 
@@ -126,7 +125,7 @@ const Page = ({ params }) => {
     setLiked(true);
     const { data: notiData, error: notiError } = await createLikeNotification(
       user?.userId,
-      author?.id,
+      story?.author?.id,
       chapterId
     );
   };
@@ -191,7 +190,7 @@ const Page = ({ params }) => {
           storyId={storyId}
           story={story}
           chapters={chapters}
-          author={author}
+          author={story?.author}
           user={user}
         />
       </div>
@@ -221,7 +220,7 @@ const Page = ({ params }) => {
         <div className="flex flex-wrap justify-between sm:gap-4 lg:gap-4 sm:justify-end lg:justify-end mt-6">
           <button
             onClick={liked ? handleClickUnlikeBtn : handleClickLikeBtn}
-            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
+            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600 
           px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <ThumbsUp
@@ -237,7 +236,7 @@ const Page = ({ params }) => {
 
           <button
             onClick={handleClickCommentBtn}
-            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 
+            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600
           px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <MessagesSquare className="size-4 lg:size-5 sm:size-5" />
@@ -246,7 +245,7 @@ const Page = ({ params }) => {
 
           <button
             onClick={handleClickShareBtn}
-            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200
+            className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600
           px-4 py-2 sm:px-4 lg:px-4 sm:py-2 lg:py-2 rounded-full transition shadow-sm active:scale-95 text-xs sm:text-sm lg:text-sm"
           >
             <Share2 className="size-4 lg:size-5 sm:size-5" />
@@ -265,7 +264,7 @@ const Page = ({ params }) => {
             type="chapter"
             story={story}
             chapter={chapter}
-            author={author}
+            author={story?.author}
           />
         </div>
 
@@ -288,7 +287,7 @@ const Page = ({ params }) => {
           <CommentSection
             chapterId={chapterId}
             storyId={storyId}
-            authorId={author?.id}
+            authorId={story?.author?.id}
           />
         )}
 
@@ -297,7 +296,10 @@ const Page = ({ params }) => {
           className={`w-[180px] ${
             showLeftBar ? "translate-x-0" : "-translate-x-full"
           } z-20 absolute left-0 top-0 min-h-screen bg-gray-50 dark:bg-gray-900`}
-          onClick={() => setShowLeftBar(false)}
+          onClick={(e) => {
+            setShowLeftBar(false);
+            e.stopPropagation();
+          }}
         >
           <div className="flex justify-between items-center p-2">
             <h2 className="font-semibold">Content</h2>
@@ -310,7 +312,7 @@ const Page = ({ params }) => {
             storyId={storyId}
             story={story}
             chapters={chapters}
-            author={author}
+            author={story?.author}
             user={user}
           />
         </div>

@@ -207,13 +207,21 @@ const Page = () => {
       </section>
 
       {/* Setting Drawer */}
-      <div
-        className={`w-[260px] sm:w-[320px] lg:w-[360px] z-30 h-full absolute left-0 top-0 shadow-xl shadow-gray-100 dark:shadow-gray-800 transition-transform duration-300 ${
-          showSetting ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <SettingDrawer setShowSetting={setShowSetting} />
-      </div>
+      {showSetting && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40"
+          onClick={() => setShowSetting(false)}
+        >
+          <div
+            className={`absolute left-0 top-0 h-full w-[260px] sm:w-[320px] lg:w-[360px]
+        bg-background-soft shadow-xl transition-transform duration-300
+        translate-x-0`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SettingDrawer setShowSetting={setShowSetting} />
+          </div>
+        </div>
+      )}
 
       <div
         className={`${

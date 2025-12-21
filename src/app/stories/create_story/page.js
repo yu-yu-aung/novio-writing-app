@@ -16,6 +16,7 @@ const Page = () => {
   const [clickPublish, setClickPublish] = useState(true);
   const [clickDraft, setClickDraft] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [creating, setCreating] = useState(false);
 
   const router = useRouter();
   const { user, isLoggedIn } = useAuthStore();
@@ -25,7 +26,7 @@ const Page = () => {
     formState: { errors },
   } = useForm();
 
-  console.log("user info: ", user);
+  //console.log("user info: ", user);
   const { stories, loading, error } = useFetchAllStories(user);
 
   const handlePublishClick = () => {
@@ -43,6 +44,8 @@ const Page = () => {
       toast.error("Please log in or sign up to create a story");
       return;
     }
+
+    setCreating(true);
 
     const file = data.image?.[0];
 
@@ -66,9 +69,7 @@ const Page = () => {
     }
 
     toast.success("Story created!");
-    // console.log("story info: ", newStory);
-    // console.log("user: ", user);
-    // console.log("image: ", imageUrl);
+    setCreating(false);
     router.push(`/stories/${newStory?.id}`);
   };
 
@@ -201,6 +202,7 @@ const Page = () => {
             {/* Next Button */}
             <button
               type="submit"
+              disabled={creating}
               className="bg-coral-tree-200 dark:bg-coral-tree-800 hover:scale-110 rounded px-5 py-3 mt-2 shadow transition"
             >
               Next

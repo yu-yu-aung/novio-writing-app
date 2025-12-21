@@ -29,7 +29,8 @@ export default function useFetchStory(storyId) {
             image_url, 
             author: profiles(
               id, 
-              pen_name
+              pen_name, 
+              user_name
             )
           `
         )

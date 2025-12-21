@@ -14,7 +14,24 @@ export default function useFetchStoriesByIds(storyIds) {
     const fetchStories = async () => {
       const { data, error } = await supabase
         .from("stories")
-        .select("*")
+        .select(
+          `
+            id, 
+            title, 
+            description, 
+            total_views, 
+            tags,
+            category,
+            genre, 
+            status, 
+            image_url, 
+            author: profiles(
+              id, 
+              pen_name, 
+              user_name
+            )
+          `
+        )
         .in("id", storyIds);
 
       if (error) {
@@ -30,5 +47,5 @@ export default function useFetchStoriesByIds(storyIds) {
     fetchStories();
   }, [storyIds]);
 
-  return{stories, error, loading}
+  return { stories, error, loading };
 }

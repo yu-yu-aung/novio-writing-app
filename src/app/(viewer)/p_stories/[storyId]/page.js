@@ -41,7 +41,7 @@ const Page = ({ params }) => {
     error: errorFetchLibrary,
   } = useFetchLibrary(user?.userId);
 
-  const authorId = story?.author_id;
+  //const authorId = story?.author_id;
   const isInLibrary = libraryList?.some((item) => item.story_id === storyId);
 
   // console.log("Library list: ", libraryList);
@@ -50,24 +50,24 @@ const Page = ({ params }) => {
   // console.log("user: ", user);
 
   //fetch author's info using author id
-  useEffect(() => {
-    if (!authorId) return;
+  // useEffect(() => {
+  //   if (!authorId) return;
 
-    const fetchAuthor = async () => {
-      const { data: authorInfo } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", authorId)
-        .single();
+  //   const fetchAuthor = async () => {
+  //     const { data: authorInfo } = await supabase
+  //       .from("profiles")
+  //       .select("*")
+  //       .eq("id", authorId)
+  //       .single();
 
-      if (authorInfo) {
-        //console.log("author info: ", authorInfo);
-        setAuthor(authorInfo);
-      }
-    };
+  //     if (authorInfo) {
+  //       //console.log("author info: ", authorInfo);
+  //       setAuthor(authorInfo);
+  //     }
+  //   };
 
-    fetchAuthor();
-  }, [authorId]);
+  //   fetchAuthor();
+  // }, [authorId]);
 
   //console.log("fetched author: ", author);
 
@@ -143,10 +143,10 @@ const Page = ({ params }) => {
 
           <h1 className="text-2xl font-bold">{story.title}</h1>
           <Link
-            href={`/author/${author?.user_name}`}
+            href={`/author/${story?.author?.user_name}`}
             className="text-xl font-bold"
           >
-            {author?.pen_name}
+            {story?.author?.pen_name}
           </Link>
           <h3 className="text-lg text-text-secondary">{story.category}</h3>
 

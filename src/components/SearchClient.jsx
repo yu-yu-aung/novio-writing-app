@@ -3,12 +3,15 @@
 import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import useSearchQuery from "@/hooks/useSearchQuery";
+import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SearchClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
+  const {user, isLoggedIn} = useAuthStore(); 
+  const router = useRouter(); 
 
   //console.log("keyWord: ", query);
 
@@ -74,7 +77,7 @@ export default function SearchClient() {
             <img
               src="/no_data.png"
               alt="No author"
-              className="w-40 h-40 object-contain opacity-80"
+              className="w-40 h-40 lg:w-80 lg:h-80 object-contain opacity-80"
             />
           </div>
         )}
@@ -113,40 +116,56 @@ export default function SearchClient() {
           Bookshelves Related to "{query}"
         </h2>
 
-        {bookshelves?.length === 0 && (
+        {isLoggedIn ? (
+          <>
+            {bookshelves?.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-4 text-center">
+                <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
+                  No bookshelf found!
+                </p>
+
+                <img
+                  src="/no_data.png"
+                  alt="No bookshelf"
+                  className="w-40 h-40 object-contain opacity-80"
+                />
+              </div>
+            )}
+
+            {/* Bookshelves Cards */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {bookshelves?.length !== 0 &&
+                bookshelves?.map((bookshelf, index) => (
+                  <Link
+                    href={`/p_bookshelves/${bookshelf.id}`}
+                    key={index}
+                    className="flex items-center gap-4 p-4 bg-amethyst-100 dark:bg-amethyst-900/30 
+                    rounded-xl border border-amethyst-200 dark:border-amethyst-700 shadow-sm
+                    hover:shadow-md transition"
+                  >
+
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
+                        {bookshelf.shelf_name}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          </>          
+        ) :  (
           <div className="flex flex-col items-center justify-center py-4 text-center">
-            <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
-              No bookshelf found!
-            </p>
-
             <img
-              src="/no_data.png"
-              alt="No bookshelf"
-              className="w-40 h-40 object-contain opacity-80"
+              src="/oops.png"
+              alt="oops"
+              className="w-40 h-40 lg:w-80 lg:h-80 object-contain opacity-80"
             />
+            <p className="font-semibold text-lg text-gray-700 dark:text-gray-300">
+              Please <span className="text-amethyst-600 underline" onClick={() => router.push("/log_in")}>log in</span> or <span className="text-amethyst-600 underline" onClick={() => router.push("/sign_up")}>sign up</span> to view bookshelves!
+            </p>
           </div>
+          
         )}
-
-        {/* Bookshelves Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {bookshelves?.length !== 0 &&
-            bookshelves?.map((bookshelf, index) => (
-              <Link
-                href={`/p_bookshelves/${bookshelf.id}`}
-                key={index}
-                className="flex items-center gap-4 p-4 bg-amethyst-100 dark:bg-amethyst-900/30 
-                rounded-xl border border-amethyst-200 dark:border-amethyst-700 shadow-sm
-                hover:shadow-md transition"
-              >
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
-                    {bookshelf.shelf_name}
-                  </h3>
-                </div>
-              </Link>
-            ))}
-        </div>
       </section>
     </div>
   );

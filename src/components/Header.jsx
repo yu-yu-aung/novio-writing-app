@@ -15,11 +15,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
 import { usePathname, useRouter } from "next/navigation";
+import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
 
 const Header = () => {
-  const { isLoggedIn } = useAuthStore();
+  const {user, isLoggedIn } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter(); 
+  const {notifications} = useFetchAllNotifications(user); 
 
   const [keyWord, setKeyWord] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -41,6 +43,9 @@ const Header = () => {
     pathname === path
       ? "text-coral-tree-700 dark:text-amethyst-300 font-bold"
       : "text-amethyst-900 dark:text-amethyst-100";
+
+  const unreadNoti = notifications.filter((noti) => noti.is_viewed === false ); 
+  console.log("unread noti: ", unreadNoti);
 
   return (
     <header className="bg-amethyst-100 dark:bg-amethyst-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-40">
@@ -147,11 +152,15 @@ const Header = () => {
                 className={`
                   flex items-center gap-1 p-2 font-medium transition
                   hover:text-coral-tree-700 dark:hover:text-amethyst-300
-                  ${isActive("/notification")}
+                  ${isActive("/notification")} relative
                 `}
               >
                 <Bell className="size-6 sm:hidden" />
                 <span className="hidden sm:block sm:text-lg lg:text-xl">Notification</span>
+                {
+                  unreadNoti.length > 0 && 
+                  <span className="absolute text-white bg-red-600 py-1 px-2 text-xs rounded-full top-0 right-0">{unreadNoti.length}</span>
+                }   
               </Link>
             </>
           ) : (

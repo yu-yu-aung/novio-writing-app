@@ -29,10 +29,10 @@ const Page = () => {
     error: errorActor,
     loading: loadingActor,
   } = useFetchUsersByIds(actorIds);
-  console.log("actor id list: ", actorIds);
+  //console.log("actor id list: ", actorIds);
 
   const { announcements } = useFetchAnnouncementsByAuthorIds(actorIds);
-  console.log("announcements: ", announcements);
+  //console.log("announcements: ", announcements);
 
   const chapterIds = notifications
     .filter((noti) => noti.target_type === "chapter")
@@ -48,10 +48,10 @@ const Page = () => {
 
   const storyIdsSet = new Set([...storyIdsFromChapters, ...storyIdsFromNoti]);
   const storyIds = Array.from(storyIdsSet);
-  console.log("story id list: ", storyIds);
+  //console.log("story id list: ", storyIds);
 
   const { stories } = useFetchStoriesByIds(storyIds);
-  console.log("stories list: ", stories);
+  //console.log("stories list: ", stories);
 
   const mergedActions = notifications?.map((noti) => {
     const actor = actors.find((a) => a.id === noti.actor_id) || {};
@@ -112,6 +112,17 @@ const Page = () => {
     return notiDate < new Date(now.toDateString()) && notiDate >= weekAgo;
   });
 
+  const earlier = mergedActions.filter((noti) => {
+    const notiDate = new Date(noti.created_at);
+    const now = new Date();
+
+    const weekAgo = new Date();
+    weekAgo.setDate(now.getDate() - 7);
+
+    return notiDate < weekAgo;
+  });
+
+
   const handleClickNotiCard = async (noti) => {
     const { data } = await markNotificationAsViewed(noti.id);
 
@@ -170,7 +181,7 @@ const Page = () => {
         )}
       </div>
 
-      {/* This Week */}
+      {/* Earlier */}
       <h2 className="font-bold text-lg sm:text-xl mt-8 mb-3 self-start lg:self-center w-full max-w-3xl">
         This Week
       </h2>
@@ -178,6 +189,40 @@ const Page = () => {
       <div className="flex flex-col gap-4 w-full max-w-3xl">
         {thisWeek.length > 0 ? (
           thisWeek.map((noti) => {
+            if (!noti.content) return null;
+            return (
+              <NotiCard
+                image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                content={noti.content}
+                time={noti.created_at}
+                key={noti.id}
+                isViewed={noti.is_viewed}
+                onClick={() => handleClickNotiCard(noti)}
+              />
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+              No Notification!
+            </p>
+
+            <img
+              src="/no_noti.png"
+              alt="No notification"
+              className="w-40 h-40 object-contain opacity-80"
+            />
+          </div>
+        )}
+      </div>
+
+      <h2 className="font-bold text-lg sm:text-xl mt-8 mb-3 self-start lg:self-center w-full max-w-3xl">
+        Earlier
+      </h2>
+
+      <div className="flex flex-col gap-4 w-full max-w-3xl">
+        {earlier.length > 0 ? (
+          earlier.map((noti) => {
             if (!noti.content) return null;
             return (
               <NotiCard
