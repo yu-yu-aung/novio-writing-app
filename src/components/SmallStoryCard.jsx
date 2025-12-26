@@ -7,9 +7,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const  SmallStoryCard = ({ story, storyId }) => {
-  const authorId = story?.author_id;
+  const authorId = story?.author?.id;
+  console.log("story", story);
 
-  //console.log("Author id: ", authorId);
+  //console.log("Author id: ", authorId, typeof authorId);
 
   //fetch author's info using author id
   //const { author, loading, error } = useFetchAuthor({userId: authorId});
@@ -20,12 +21,14 @@ const  SmallStoryCard = ({ story, storyId }) => {
 
   const router = useRouter(); 
 
-  //console.log("userId");
-
+  
   const handleClickCard = (storyId) => {
+  //   console.log("userId", user?.userId, typeof user?.userId);
+  // console.log("author id", authorId, typeof authorId);
+  // console.log("equal?", user?.userId === authorId);
     if ( user?.userId === authorId) {
       router.push(`/stories/${storyId}`);
-    } else {
+    } else if (user?.userId != authorId) {
       router.push(`/p_stories/${storyId}`);
     }
     return;

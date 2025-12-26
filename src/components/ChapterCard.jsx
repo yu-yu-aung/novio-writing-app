@@ -23,7 +23,7 @@ const ChapterCard = ({ chapter, storyId, story }) => {
   // console.log("author id: ", story.author_id);
   // console.log("user id: ", user.userId);
   const handleClickCard = () => {
-    if (user?.userId === story?.author_id){
+    if (user?.userId === story?.author?.id){
       router.push(`/stories/${storyId}/chapters/${chapter.id}/view`);
     } else {
       router.push(`/p_stories/${storyId}/chapters/${chapter.id}`);
@@ -36,7 +36,7 @@ const ChapterCard = ({ chapter, storyId, story }) => {
       className="bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 my-4 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer"
     >
       
-      <h3 className="text-base sm:text-xs md:text-lg font-semibold  mb-2">
+      <h3 className="text-xs sm:text-xs md:text-lg font-semibold  mb-2">
         {chapter.title}
       </h3>
       

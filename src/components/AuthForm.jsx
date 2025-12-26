@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const AuthForm = ({ mode = "Log In" }) => {
-  const setUser = useAuthStore((state) => state.setUser);
+  const { user, setUser } = useAuthStore(); 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter(); 

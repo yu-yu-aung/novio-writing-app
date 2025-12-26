@@ -48,6 +48,46 @@ const SettingDrawer = ({ setShowSetting }) => {
     );  
   };
 
+  const handleDeleteAccount = async () => {
+    const toastId = toast(
+      <div className='flex flex-col gap-2'>
+        <p className='font-semibold text-red-600'>This action is permanent. Are you sure you want to delete your account?</p>
+        <div className='flex gap-2 justify-end'>
+          <button 
+            onClick={() => toast.dismiss(toastId)}
+            className='px-3 py-1 bg-gray-300 rounded'
+          >
+            Cancel
+          </button>
+          <button
+            onClick= { async () => {
+              toast.dismiss(toastId); 
+
+              try {
+                const res = await fetch("/api/delete-account", {
+                  method: "POST", 
+                  headers: { "Content-Type": "application/json"}, 
+                  body: JSON.stringify({ userId: useAuthStore.getState().user.id}),
+                }); 
+
+                if (!res.ok) throw new Error("Delete failed"); 
+
+                logOut(); 
+                toast.success("Account deleted"); 
+                router.push("/");
+              } catch {
+                toast.error("Failed to delete account!")
+              }
+            }}
+            className='px-3 py-1 bg-red-700 text-white rounded'
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const drawerButtonStyle =
     "flex items-center gap-2 w-full px-4 sm:px-6 py-2 rounded-lg transition font-medium cursor-pointer hover:bg-amethyst-200 dark:hover:bg-amethyst-700";
 
@@ -81,10 +121,13 @@ const SettingDrawer = ({ setShowSetting }) => {
       </button>
 
       {/* Delete Account */}
-      <div className={drawerButtonStyle + ' text-red-800 dark:text-red-600'}>
+      <button 
+        onClick={handleDeleteAccount}
+        className={drawerButtonStyle + ' text-red-800 dark:text-red-600'}
+      >
         <Trash2 className='size-5' />
         <span>Delete Account</span>
-      </div>
+      </button>
 
       {/* Footer / Optional */}
       <div className='mt-auto text-xs text-muted text-center'>

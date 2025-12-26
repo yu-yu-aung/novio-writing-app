@@ -14,7 +14,24 @@ export default function useFetchAllStories(user) {
       setLoading(true);
       const { data, error } = await supabase
         .from("stories")
-        .select("*")
+        .select(
+          `
+            id, 
+            title, 
+            description, 
+            total_views, 
+            tags,
+            category,
+            genre, 
+            status, 
+            image_url, 
+            author: profiles(
+              id, 
+              pen_name, 
+              user_name
+            )
+          `
+        )
         .eq("author_id", user?.userId)
         .order("created_at", { ascending: true });
 

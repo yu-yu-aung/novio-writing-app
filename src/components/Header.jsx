@@ -45,7 +45,7 @@ const Header = () => {
       : "text-amethyst-900 dark:text-amethyst-100";
 
   const unreadNoti = notifications.filter((noti) => noti.is_viewed === false ); 
-  console.log("unread noti: ", unreadNoti);
+  //console.log("unread noti: ", unreadNoti);
 
   return (
     <header className="bg-amethyst-100 dark:bg-amethyst-900 text-amethyst-900 dark:text-amethyst-100 shadow-md py-2 px-4 sm:px-8 lg:px-24 sticky top-0 z-40">

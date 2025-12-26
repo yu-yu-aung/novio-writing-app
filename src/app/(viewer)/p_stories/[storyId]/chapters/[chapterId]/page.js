@@ -292,30 +292,38 @@ const Page = ({ params }) => {
         )}
 
         {/* Left Content Bar for Mobile */}
-        <div
-          className={`w-[180px] ${
-            showLeftBar ? "translate-x-0" : "-translate-x-full"
-          } z-20 absolute left-0 top-0 min-h-screen bg-gray-50 dark:bg-gray-900`}
-          onClick={(e) => {
-            setShowLeftBar(false);
-            e.stopPropagation();
-          }}
-        >
-          <div className="flex justify-between items-center p-2">
-            <h2 className="font-semibold">Content</h2>
-            <button onClick={() => setShowLeftBar(false)} className="text-end">
-              <X className="size-5" />
-            </button>
-          </div>
+        {showLeftBar && (
+          <div
+            className="fixed inset-0 z-20 bg-black/40"
+            onClick={() => setShowLeftBar(false)}
+          >
+            <div
+              className={`w-[180px] 
+               z-20 absolute left-0 top-20 min-h-screen bg-gray-50 dark:bg-gray-900 p-4`}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <div className="flex justify-between items-center px-2 py-2 mt-4 border-b border-gray-400">
+                <h2 className="font-semibold py-">Content</h2>
+                <button
+                  onClick={() => setShowLeftBar(false)}
+                  className="text-end"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
 
-          <LeftContentBar
-            storyId={storyId}
-            story={story}
-            chapters={chapters}
-            author={story?.author}
-            user={user}
-          />
-        </div>
+              <LeftContentBar
+                storyId={storyId}
+                story={story}
+                chapters={chapters}
+                author={story?.author}
+                user={user}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

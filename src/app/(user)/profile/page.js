@@ -32,7 +32,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const Page = () => {
-  const { user, setUser } = useAuthStore();
+  const { user, hasHydrated } = useAuthStore();
   const [activeTab, setActiveTab] = useState("published");
 
   const { register, handleSubmit, reset } = useForm();
@@ -40,30 +40,7 @@ const Page = () => {
   const [showSetting, setShowSetting] = useState(false);
   const [share, setShare] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user) return;
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.userId)
-        .single();
-
-      if (profile) {
-        setUser({
-          userId: profile.id,
-          userName: profile.user_name,
-          penName: profile.pen_name,
-          userEmail: profile.email,
-          bio: profile.bio,
-          image: profile.profile_image_url,
-        });
-      }
-    };
-
-    fetchUser();
-  }, []);
+  console.log("user info: ", user);
 
   const { stories, loading, error } = useFetchAllStories(user);
 
@@ -87,6 +64,9 @@ const Page = () => {
     loading: announcementLoading,
     refresh,
   } = useFectchAnnouncements(user?.userId);
+
+  if (!hasHydrated) return null;
+  if (!user) return null;
 
   // console.log("Announcements: ", announcements);
 
@@ -128,8 +108,6 @@ const Page = () => {
     setShowSetting(!showSetting);
   };
 
-  if (!user) return null;
-
   //console.log("user: ", user);
 
   return (
@@ -139,8 +117,8 @@ const Page = () => {
         {/* Profile Image */}
         <div className="relative group">
           <img
-            src={user.image}
-            alt={`Profile picture of ${user.userName}`}
+            src={author?.profile_image_url}
+            alt={`Profile picture of ${author?.pen_name}`}
             className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
           />
           <div className="absolute bottom-2 right-2 bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black rounded-full p-2 shadow cursor-pointer hover:scale-110 transition">
@@ -152,15 +130,15 @@ const Page = () => {
 
         {/* User Info */}
         <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold">{user.penName}</h2>
-          <p className="text-sm text-muted">{user.userName}</p>
-          <p className="text-sm text-body">{user.userEmail}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold">{author?.pen_name}</h2>
+          <p className="text-sm text-muted">{author?.user_name}</p>
+          <p className="text-sm text-body">{author?.email}</p>
         </div>
 
         {/* About */}
         <div className="flex flex-col items-center gap-1 text-center">
           <h2 className="text-xs sm:text-sm font-bold">About</h2>
-          <p className="text-sm text-muted">{user.bio}</p>
+          <p className="text-sm text-muted">{author?.bio}</p>
         </div>
 
         {/* Stats */}

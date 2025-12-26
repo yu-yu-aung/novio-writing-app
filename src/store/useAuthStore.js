@@ -4,8 +4,8 @@ const useAuthStore = create()(
   persist(
     (set) => ({
       isLoggedIn: false,
-
       user: null,
+      hasHydrated: false,
 
       setUser: (userData) =>
         set({
@@ -18,9 +18,14 @@ const useAuthStore = create()(
           isLoggedIn: false,
           user: null,
         }),
+
+      setHasHydrated: () => set({ hasHydrated: true }),
     }),
     {
       name: "auth-storage",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated();
+      },
     }
   )
 );

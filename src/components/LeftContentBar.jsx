@@ -12,7 +12,7 @@ const LeftContentBar = ({storyId, story, chapters, author, user}) => {
           sm:col-span-2 lg:col-span-2 
           flex-col 
           gap-6 
-          py-6 pr-6 sm:py-16 lg:py-20 
+          py-4 sm:py-16 lg:py-20 
           bg-background-soft
         "
       >

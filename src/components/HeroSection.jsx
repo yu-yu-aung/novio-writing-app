@@ -2,21 +2,22 @@
 
 import useAuthStore from '@/store/useAuthStore'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const HeroSection = () => {
   const { isLoggedIn } = useAuthStore()
+  const [ mounted, setMounted ] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null; 
 
   return (
-    <section className="relative w-full bg-amethyst-50 dark:bg-amethyst-950 overflow-hidden">
+    <section className=" w-full bg-amethyst-50 dark:bg-amethyst-950 overflow-hidden py-10 sm:py-12 lg:py-18">
       <div
-        className="
-          max-w-7xl mx-auto
-          px-4 sm:px-6 lg:px-8
-          py-12 sm:py-16 lg:py-24
-          grid grid-cols-1 lg:grid-cols-2
-          gap-12 items-center
-        "
+        className="max-w-7xl mx-auto  grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
       >
         {/* Text Content */}
         <div className="flex flex-col gap-6 sm:gap-8 text-center lg:text-left">
@@ -43,7 +44,7 @@ const HeroSection = () => {
               className="
                 inline-flex w-fit mx-auto lg:mx-0
                 items-center justify-center
-                px-6 sm:px-8 py-3 sm:py-4
+                 py-3 sm:py-4
                 rounded-full
                 bg-coral-tree-700 text-white
                 text-sm sm:text-base lg:text-lg

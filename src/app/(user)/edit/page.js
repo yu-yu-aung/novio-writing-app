@@ -1,40 +1,52 @@
 "use client";
 
 import SmallHeading from "@/components/SmallHeading";
+import useFetchAuthor from "@/hooks/useFetchAuthor";
 import supabase from "@/lib/supabaseClient";
 import { uploadProfileImage } from "@/lib/upload";
 import useAuthStore from "@/store/useAuthStore";
 import { Pen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const Page = () => {
   const { user, setUser } = useAuthStore();
   const [previewImage, setPreviewImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  console.log("original user info: ", user);
+
+  const { author } = useFetchAuthor({ userId: user?.userId });
 
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      userName: user?.userName || "",
-      penName: user?.penName || "",
-      email: user?.userEmail || "",
-      bio: user?.bio || "",
-    },
-  });
+  } = useForm();
 
-  if (!user) return null;
+  console.log("user old data: ", author);
+  useEffect(() => {
+    if (!author) return;
+    if (author) {
+      reset({
+        userName: user.userName || "",
+        penName: user.penName || "",
+        bio: user.bio || "",
+      });
+    }
+  }, [author, reset]);
 
-  //console.log("user: ", user);
+  if (!author) return null;
 
   const onSubmit = async (data) => {
+    if (!data) return null;
+    console.log("data : ", data);
+    setLoading(true);
+
     try {
       const file = data.image?.[0];
       let imageUrl = user.image;
@@ -45,22 +57,31 @@ const Page = () => {
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
-      //console.log("uploaded image: ", imageUrl);
+      console.log("uploaded image: ", imageUrl);
 
-      const { data: profile, error } = await supabase
+      const {
+        data: profile,
+        error,
+        loading,
+      } = await supabase
         .from("profiles")
         .update({
-          user_name: data.userName,
-          pen_name: data.penName,
-          email: data.email,
-          bio: data.bio,
-          profile_image_url: imageUrl,
+          user_name: data?.userName || user?.userName,
+          pen_name: data?.penName || user?.penName,
+          bio: data?.bio || user?.bio,
+          profile_image_url: imageUrl || user?.image,
         })
-        .eq("id", user.userId)
-        .select()
+        .eq("id", user?.userId)
+        .select("*")
         .single();
 
-      //console.log("returned info: ", profile);
+      console.log("returned info: ", profile);
+
+      if (error) {
+        console.error("Supabase Error: ", error);
+        toast.error("Error updating profile!");
+        return;
+      }
 
       setUser({
         userId: profile?.id,
@@ -71,19 +92,14 @@ const Page = () => {
         image: profile?.profile_image_url,
       });
 
-      //console.log("updated info: ", user);
-
-      if (error) {
-        console.error("Supabase Error: ", error);
-        toast.error("Error updating profile!");
-        return;
-      }
-
+      console.log("updated info: ", user);
+      setLoading(false);
       toast.success("Profile updated!");
       router.push("/profile");
     } catch (err) {
       console.error(err);
       toast.error("Unexpected error!");
+      setLoading(false);
     }
   };
 
@@ -171,18 +187,6 @@ const Page = () => {
             </label>
           </div>
 
-          {/* Email */}
-          <div className="relative mb-6 group">
-            <input
-              type="email"
-              {...register("email")}
-              className="block w-full py-3 px-1 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition peer"
-            />
-            <label className="absolute left-1 top-3 text-body text-sm transition-all peer-focus:text-brand peer-focus:-top-3 peer-focus:text-xs peer-valid:-top-3 peer-valid:text-xs">
-              Email
-            </label>
-          </div>
-
           {/* Bio */}
           <div className="relative mb-6 group">
             <textarea
@@ -206,7 +210,12 @@ const Page = () => {
             <button
               type="button"
               onClick={() => {
-                reset();
+                reset({
+                  userName: user.userName || "",
+                  penName: user.penName || "",
+                  email: user.userEmail || "",
+                  bio: user.bio || "",
+                });
                 setPreviewImage(null);
               }}
               className="bg-coral-tree-100 dark:bg-coral-tree-600 hover:scale-110 rounded px-5 py-3 mt-2 shadow transition"
