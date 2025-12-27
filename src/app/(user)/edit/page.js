@@ -44,7 +44,7 @@ const Page = () => {
 
   const onSubmit = async (data) => {
     if (!data) return null;
-    console.log("data : ", data);
+    //console.log("data : ", data);
     setLoading(true);
 
     try {
@@ -57,7 +57,7 @@ const Page = () => {
         if (uploadedUrl) imageUrl = uploadedUrl;
       }
 
-      console.log("uploaded image: ", imageUrl);
+      //console.log("uploaded image: ", imageUrl);
 
       const {
         data: profile,
@@ -75,7 +75,7 @@ const Page = () => {
         .select("*")
         .single();
 
-      console.log("returned info: ", profile);
+      //console.log("returned info: ", profile);
 
       if (error) {
         console.error("Supabase Error: ", error);

@@ -32,7 +32,24 @@ export default function useSearchQuery(query) {
       //Search for stories
       const { data: stories, error: storyError } = await supabase
         .from("stories_with_tags_text")
-        .select("*")
+        .select(
+          `
+            id, 
+            title, 
+            description, 
+            total_views, 
+            tags,
+            category,
+            genre, 
+            status, 
+            image_url, 
+            author: profiles(
+              id, 
+              pen_name, 
+              user_name
+            )
+          `
+        )
         .or(
           `title.ilike.%${query}%,description.ilike.%${query}%,genre.ilike.%${query}%,category.ilike.%${query}%,tags_text.ilike.%${query}%`
         );
@@ -57,7 +74,7 @@ export default function useSearchQuery(query) {
       setSearchResults({
         authors,
         stories,
-        bookshelves
+        bookshelves,
       });
 
       setLoading(false);

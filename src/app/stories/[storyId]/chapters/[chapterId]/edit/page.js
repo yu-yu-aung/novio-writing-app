@@ -17,7 +17,7 @@ const Page = ({ params }) => {
   const router = useRouter();
 
   //console.log("chapter id: ", chapterId);
-  const { chapter, loading, error } = useFetchChapter(chapterId);
+  const { chapter, loading, error, refresh } = useFetchChapter(chapterId);
 
   const {
     handleSubmit,
@@ -60,6 +60,7 @@ const Page = ({ params }) => {
   }
 
   const onSubmit = async (data) => {
+    console.log("data: ", data);
     try {
       //const file = data.image?.[0];
       let imageUrl = chapter.image_url;
@@ -84,7 +85,7 @@ const Page = ({ params }) => {
         .select()
         .single();
 
-      //console.log("returned info: ", editedChapter);
+      console.log("returned info: ", editedChapter);
 
       if (error) {
         console.error("Supabase Error: ", error);
@@ -93,6 +94,7 @@ const Page = ({ params }) => {
       }
 
       toast.success("Changes Saved!");
+      refresh();
       router.push(`/stories/${storyId}/chapters/${editedChapter.id}/view`);
     } catch (err) {
       console.error(err);

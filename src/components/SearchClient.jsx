@@ -6,11 +6,13 @@ import useSearchQuery from "@/hooks/useSearchQuery";
 import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function SearchClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const {user, isLoggedIn} = useAuthStore(); 
+  const [activeTab, setActiveTab] = useState("stories"); 
   const router = useRouter(); 
 
   //console.log("keyWord: ", query);
@@ -36,40 +38,70 @@ export default function SearchClient() {
     <div className="min-h-screen py-10 px-4 sm:px-8 lg:px-16 space-y-12">
       <SmallHeading title={`Search Results for "${query}"`} />
 
+      <div className="flex gap-6 border-b border-default pb-3 overflow-x-auto">
+        {[
+          { key: 'stories' , label: "Stories"}, 
+          { key: 'authors', label: "Authors"}, 
+          { key: 'bookshelves', label: "Bookshelves"}
+        ].map((tab) => (
+          <button 
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`p-2 font-semibold text-lg whitespace-nowrap transition ${
+              activeTab === tab.key
+                ? "text-brand bg-amethyst-200 dark:bg-amethyst-800"
+                : "text-muted hover:text-heading"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+
       {/* STORIES */}
+
       <section className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-semibold text-amethyst-700 dark:text-amethyst-300">
-          Stories Related to "{query}"
-        </h2>
+        {
+          activeTab === "stories" && (
+            <>
+              {stories?.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-4 sm:py-10 text-center">
+                  <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
+                    No story found!
+                  </p>
 
-        {stories?.length === 0 && (
-          <p className="text-muted-foreground text-sm">No story found!</p>
-        )}
-
-        {/* Story List */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {stories?.length !== 0 &&
-            stories?.map(
-              (story, index) =>
-                story.status === "published" && (
-                  <SmallStoryCard
-                    story={story}
-                    storyId={story.id}
-                    key={index}
+                  <img
+                    src="/no_data.png"
+                    alt="No story"
+                    className="w-40 h-40 lg:w-80 lg:h-80 object-contain opacity-80"
                   />
-                )
-            )}
-        </div>
-      </section>
+                </div>
+              )}
 
-      {/* AUTHORS */}
-      <section className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-semibold text-amethyst-700 dark:text-amethyst-300">
-          Profiles Related to "{query}"
-        </h2>
+              {/* Story List */}
+              <div className="grid gap-6 lg:grid-cols-3">
+                {stories?.length !== 0 &&
+                  stories?.map(
+                    (story, index) =>
+                      story.status === "published" && (
+                        <SmallStoryCard
+                          story={story}
+                          storyId={story.id}
+                          key={index}
+                        />
+                      )
+                  )}
+              </div>
+            </>
+          )
+        }
 
-        {authors?.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-4 text-center">
+        {
+          activeTab === 'authors' && (
+            <>
+              {authors?.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-4 sm:py-10 text-center">
             <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
               No author found!
             </p>
@@ -83,7 +115,7 @@ export default function SearchClient() {
         )}
 
         {/* Author Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 py-4">
           {authors?.length !== 0 &&
             authors?.map((author, index) => (
               <Link
@@ -108,18 +140,17 @@ export default function SearchClient() {
               </Link>
             ))}
         </div>
-      </section>
+            </>
+          )
+        }
 
-      {/* Bookshelves */}
-      <section className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-semibold text-amethyst-700 dark:text-amethyst-300">
-          Bookshelves Related to "{query}"
-        </h2>
-
-        {isLoggedIn ? (
+        {
+          activeTab === 'bookshelves' && (
+            <>
+              {isLoggedIn ? (
           <>
             {bookshelves?.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-4 text-center">
+              <div className="flex flex-col items-center justify-center py-4 sm:py-10 text-center">
                 <p className="font-semibold text-lg text-gray-700 dark:text-gray-300 mb-4">
                   No bookshelf found!
                 </p>
@@ -166,7 +197,11 @@ export default function SearchClient() {
           </div>
           
         )}
+            </>
+          )
+        }
       </section>
+
     </div>
   );
 }

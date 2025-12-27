@@ -7,7 +7,10 @@ import useFetchBookshelf from "@/hooks/useFetchBookshelf";
 import useFetchBookshelfItems from "@/hooks/useFetchBookshelfItems";
 import useFetchLibrary from "@/hooks/useFetchLibrary";
 import useFetchStoriesByIds from "@/hooks/useFetchStoriesByIds";
-import { saveItemtoBookshelf } from "@/lib/bookShelfItem";
+import {
+  deleteItemFromBookshelf,
+  saveItemtoBookshelf,
+} from "@/lib/bookShelfItem";
 import { confirmAction } from "@/lib/confirmAction";
 import supabase from "@/lib/supabaseClient";
 import useAuthStore from "@/store/useAuthStore";
@@ -88,6 +91,19 @@ const Page = ({ params }) => {
     refreshShelf();
   };
 
+  const handleClickRemove = async (id) => {
+    const { error: removeError } = await deleteItemFromBookshelf(id);
+
+    if (removeError) {
+      console.log("Error removing book from bookahelf: ", removeError);
+      toast.error("Error removing book from bookshelf!");
+      return;
+    }
+
+    toast.success("Story removed from bookshelf");
+    refresh();
+  };
+
   return (
     <div className="px-4 sm:px-8 lg:px-24 py-10 max-w-[1400px] mx-auto flex flex-col items-center">
       {/* Header */}
@@ -104,7 +120,23 @@ const Page = ({ params }) => {
           "
         >
           {items.map((item) => (
-            <StoryCard key={item.id} story={item.story} />
+            <div
+              key={item.id}
+              className="bg-background-soft flex flex-col relative"
+            >
+              <StoryCard story={item.story} />
+              <button
+                onClick={() =>
+                  confirmAction(
+                    () => handleClickRemove(item.id),
+                    "Are you sure you want to remove the story from the bookshelf?"
+                  )
+                }
+                className="bg-coral-tree-700 hover:scale-105 text-gray-100 absolute inline p-2 text-xs rounded-xl right-2 top-2"
+              >
+                Remove
+              </button>
+            </div>
           ))}
         </div>
       ) : (
@@ -119,7 +151,7 @@ const Page = ({ params }) => {
           </p>
         </div>
       )}
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full gap-12">
         <button
           onClick={() => setShowLibrary((prev) => !prev)}
           className="

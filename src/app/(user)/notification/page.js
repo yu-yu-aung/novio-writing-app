@@ -139,8 +139,8 @@ const Page = () => {
 
   if (!user) return;
 
-  console.log("Noti : ", notifications);
-  console.log("merged noti: ", mergedActions);
+  //console.log("Noti : ", notifications);
+  //console.log("merged noti: ", mergedActions);
 
   return (
     <div className="px-4 sm:px-8 lg:px-24 flex flex-col items-center pb-10">

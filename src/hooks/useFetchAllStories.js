@@ -2,13 +2,13 @@ import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { set } from "react-hook-form";
 
-export default function useFetchAllStories(user) {
+export default function useFetchAllStories(userId) {
   const [stories, setStories] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user?.userId) return;
+    if (!userId) return;
 
     async function load() {
       setLoading(true);
@@ -32,7 +32,7 @@ export default function useFetchAllStories(user) {
             )
           `
         )
-        .eq("author_id", user?.userId)
+        .eq("author_id", userId)
         .order("created_at", { ascending: true });
 
       if (error) {
@@ -46,7 +46,7 @@ export default function useFetchAllStories(user) {
     }
 
     load();
-  }, [user]);
+  }, [userId]);
 
   return { stories, loading, error };
 }

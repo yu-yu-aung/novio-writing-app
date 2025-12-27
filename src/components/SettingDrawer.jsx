@@ -106,10 +106,10 @@ const SettingDrawer = ({ setShowSetting }) => {
 
 
       {/* Language */}
-      <div className={drawerButtonStyle}>
+      {/* <div className={drawerButtonStyle}>
         <Languages className='size-5' />
         <span>Change Language</span>
-      </div>
+      </div> */}
 
       {/* Log Out */}
       <button 

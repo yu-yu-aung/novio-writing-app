@@ -40,9 +40,9 @@ const Page = () => {
   const [showSetting, setShowSetting] = useState(false);
   const [share, setShare] = useState(false);
 
-  console.log("user info: ", user);
+  //console.log("user info: ", user);
 
-  const { stories, loading, error } = useFetchAllStories(user);
+  const { stories, loading, error } = useFetchAllStories(user?.userId);
 
   const { author } = useFetchAuthor({ userId: user?.userId });
 
@@ -95,7 +95,7 @@ const Page = () => {
 
     if (error) {
       toast.error("Error deleting announcement!");
-      console.log("announcement delete error: ", error);
+      //console.log("announcement delete error: ", error);
       return;
     }
 
@@ -113,7 +113,7 @@ const Page = () => {
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
-      <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b sm:border-r sm:border-b-transparent lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
+      <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
         {/* Profile Image */}
         <div className="relative group">
           <img
@@ -227,9 +227,9 @@ const Page = () => {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`pb-2 font-semibold text-lg whitespace-nowrap transition ${
+              className={`p-2 font-semibold text-lg whitespace-nowrap transition ${
                 activeTab === tab.key
-                  ? "text-brand border-b-2 border-brand"
+                  ? "text-brand bg-amethyst-200 dark:bg-amethyst-800"
                   : "text-muted hover:text-heading"
               }`}
             >

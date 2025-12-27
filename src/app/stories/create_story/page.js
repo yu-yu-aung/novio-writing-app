@@ -27,7 +27,7 @@ const Page = () => {
   } = useForm();
 
   //console.log("user info: ", user);
-  const { stories, loading, error } = useFetchAllStories(user);
+  const { stories, loading, error } = useFetchAllStories(user?.userId);
 
   const handlePublishClick = () => {
     setClickPublish(true);

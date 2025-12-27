@@ -64,7 +64,7 @@ const Library = ({ type = "home" }) => {
               grid-cols-2
               sm:grid-cols-3
               md:grid-cols-4
-              ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-4"}
+              ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}
             `}
           >
             {stories.map((story, index) => (
@@ -104,7 +104,7 @@ const Library = ({ type = "home" }) => {
                           grid-cols-2
                           sm:grid-cols-3
                           md:grid-cols-4
-                          ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-4"}
+                          ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}
                         `}
                       >
                         {shelfItemsLoading ? (

@@ -28,7 +28,6 @@ const Page = ({ params }) => {
 
   const [share, setShare] = useState(false);
   const [activeTab, setActiveTab] = useState("published");
-  const [stories, setStories] = useState([]);
   const { user } = useAuthStore();
 
   if (!userName) return;
@@ -39,23 +38,7 @@ const Page = ({ params }) => {
     loading: loadingFetchAuthor,
   } = useFetchAuthor({ userName: userName });
 
-  useEffect(() => {
-    if (!author) return;
-
-    const fetchStories = async () => {
-      const { data: fetchedStories } = await supabase
-        .from("stories")
-        .select("*")
-        .eq("author_id", author.id);
-
-      if (fetchedStories) {
-        //console.log("fetched stories: ", fetchedStories);
-        setStories(fetchedStories);
-      }
-    };
-
-    fetchStories();
-  }, [author]);
+  const { stories } = useFetchAllStories(author?.id);  
 
   const { followings, loading, error, refresh } = useFetchFollowingList(
     user?.userId
@@ -87,15 +70,6 @@ const Page = ({ params }) => {
   const authorFollowerList = followers?.map((item) => item.following_id) || [];
 
   //console.log("author info: ", author);
-
-  if (errorFetchAuthor) {
-    console.log("Error Fetching Author Info: ", errorFetchAuthor);
-    return <p>Can't view author's profile!</p>;
-  }
-
-  if (loadingFetchAuthor) {
-    return <p>Loading...</p>;
-  }
 
   //console.log("fetched stories: ", stories);
   const publishedStories = stories?.filter(
