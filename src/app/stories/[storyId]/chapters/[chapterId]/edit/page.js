@@ -1,5 +1,6 @@
 "use client";
 
+import SmallHeading from "@/components/SmallHeading";
 import useFetchChapter from "@/hooks/useFetchChapter";
 import supabase from "@/lib/supabaseClient";
 import { uploadChapterImage } from "@/lib/upload";
@@ -15,6 +16,7 @@ const Page = ({ params }) => {
   const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
   const router = useRouter();
+  const didInit = useRef(false);
 
   //console.log("chapter id: ", chapterId);
   const { chapter, loading, error, refresh } = useFetchChapter(chapterId);
@@ -34,25 +36,22 @@ const Page = ({ params }) => {
   });
 
   useEffect(() => {
-    if (chapter) {
+    if (chapter && !didInit.current) {
       reset({
         chapterNumber: chapter.chapter_number,
         title: chapter.title,
         content: chapter.content,
         image: chapter.image_url,
       });
+
+      setPreviewImage(chapter.image_url);
+      didInit.current = true;
     }
   }, [chapter, reset]);
 
-  useEffect(() => {
-    if (chapter?.image_url) {
-      setPreviewImage(chapter.image_url);
-    }
-  }, [chapter]);
-
   if (error) {
-    console.log("Error Fetching chapter: ", error);
-    return <p>Cannot Edit Chapter!</p>;
+    //console.log("Error Fetching chapter: ", error);
+    return toast.error("Error editing chapter!");
   }
 
   if (loading) {
@@ -60,10 +59,10 @@ const Page = ({ params }) => {
   }
 
   const onSubmit = async (data) => {
-    console.log("data: ", data);
+    //console.log("data: ", data);
     try {
       //const file = data.image?.[0];
-      let imageUrl = chapter.image_url;
+      let imageUrl = previewImage;
 
       // Upload new image if provided
       if (imageFile) {
@@ -85,10 +84,8 @@ const Page = ({ params }) => {
         .select()
         .single();
 
-      console.log("returned info: ", editedChapter);
-
       if (error) {
-        console.error("Supabase Error: ", error);
+        //console.error("Supabase Error: ", error);
         toast.error("Error editing chapter!");
         return;
       }
@@ -97,7 +94,7 @@ const Page = ({ params }) => {
       refresh();
       router.push(`/stories/${storyId}/chapters/${editedChapter.id}/view`);
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       toast.error("Unexpected error!");
     }
   };
@@ -115,7 +112,7 @@ const Page = ({ params }) => {
     >
       {/* FORM */}
       <div className="col-span-7 sm:col-span-5 lg:col-span-5 flex flex-col gap-6 p-6 overflow-scroll">
-        <h2 className="text-xl font-semibold">Edit</h2>
+        <SmallHeading title="Edit chapter" />
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {/* Image Upload */}

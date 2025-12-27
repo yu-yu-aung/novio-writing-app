@@ -318,7 +318,6 @@ const Page = ({ params }) => {
                 storyId={storyId}
                 story={story}
                 chapters={chapters}
-                author={story?.author}
                 user={user}
               />
             </div>

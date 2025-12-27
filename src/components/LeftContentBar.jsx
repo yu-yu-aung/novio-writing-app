@@ -4,7 +4,7 @@ import React from 'react'
 import ChapterCard from './ChapterCard'
 import { Plus } from 'lucide-react'
 
-const LeftContentBar = ({storyId, story, chapters, author, user}) => {
+const LeftContentBar = ({storyId, story, chapters, user}) => {
   return (
     <section
         className=" 
@@ -19,7 +19,7 @@ const LeftContentBar = ({storyId, story, chapters, author, user}) => {
         <div className="flex flex-col space-y-4 items-center justify-between">
           <img src={story?.image_url} alt="Story Cover Image" />
           <Link href={`/p_stories/${storyId}`} className="text-sm font-bold">{story?.title}</Link>
-          <Link href={`/author/${author?.user_name}`} className='text-xs font-semibold' >{author?.pen_name}</Link>
+          <Link href={`/author/${story?.author?.user_name}`} className='text-xs font-semibold' >{story?.author?.pen_name}</Link>
         </div>
 
         {!chapters || chapters.length === 0 ? (
@@ -30,7 +30,7 @@ const LeftContentBar = ({storyId, story, chapters, author, user}) => {
           ))
         )}
 
-        <Link href={`/stories/${storyId}/new_chapter`} className={`bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer flex ${user?.userId === author?.id ? "" : "hidden"}`}>
+        <Link href={`/stories/${storyId}/new_chapter`} className={`bg-white dark:bg-gray-800 border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out hover:scale-[1.02] transform cursor-pointer flex ${user?.userId === story?.author?.id ? "" : "hidden"}`}>
           <Plus /> <span>Create a new chapter</span>
         </Link>
     </section>
