@@ -49,9 +49,8 @@ const SettingDrawer = ({ setShowSetting }) => {
     );  
   };
 
-  const handleDeleteAccount = async (user) => {
+  const handleDeleteAccount = async () => {
     setShowSetting(false);
-    console.log("user : ", user);
     const toastId = toast(
       <div className='flex flex-col gap-2'>
         <p className='font-semibold text-red-600'>This action is permanent. Are you sure you want to delete your account?</p>
@@ -125,7 +124,7 @@ const SettingDrawer = ({ setShowSetting }) => {
 
       {/* Delete Account */}
       <button 
-        onClick={() => handleDeleteAccount(user)}
+        onClick={handleDeleteAccount}
         className={drawerButtonStyle + ' text-red-800 dark:text-red-600'}
       >
         <Trash2 className='size-5' />

@@ -15,7 +15,7 @@ const HeroSection = () => {
   if (!mounted) return null; 
 
   return (
-    <section className=" w-full bg-amethyst-50 dark:bg-amethyst-950 overflow-hidden py-10 sm:py-12 lg:py-18">
+    <section className=" w-full bg-amethyst-50 dark:bg-amethyst-950 overflow-hidden py-10 sm:py-12 lg:py-18 px-12">
       <div
         className="max-w-7xl mx-auto  grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
       >
@@ -28,7 +28,7 @@ const HeroSection = () => {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl lg:text-2xl font-medium text-gray-700 dark:text-gray-300">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800 dark:text-gray-200">
             Free to create. Free to savour.
           </p>
 
