@@ -19,16 +19,36 @@ import {
   UserPlus2,
   UserRoundCheck,
   UserRoundPlus,
+  X,
 } from "lucide-react";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { userName } = use(params);
 
+  const { user } = useAuthStore();
+
   const [share, setShare] = useState(false);
   const [activeTab, setActiveTab] = useState("published");
-  const { user } = useAuthStore();
+  const [showUnfollowBtn, setShowUnfollowBtn] = useState(false);
+
+  const unfollowRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        showUnfollowBtn &&
+        unfollowRef.current &&
+        !unfollowRef.current.contains(e.target)
+      ) {
+        setShowUnfollowBtn(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showUnfollowBtn]);
 
   if (!userName) return;
 
@@ -38,7 +58,7 @@ const Page = ({ params }) => {
     loading: loadingFetchAuthor,
   } = useFetchAuthor({ userName: userName });
 
-  const { stories } = useFetchAllStories(author?.id);  
+  const { stories } = useFetchAllStories(author?.id);
 
   const { followings, loading, error, refresh } = useFetchFollowingList(
     user?.userId
@@ -171,26 +191,53 @@ const Page = ({ params }) => {
 
         {/* Buttons: Follow / Share */}
         <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <button
-            onClick={
-              followingList.includes(author?.id)
-                ? handleUnfollowAuthor
-                : handleFollowAuthor
-            }
-            className={baseStyle}
-          >
-            {followingList.includes(author?.id) ? (
-              <UserCheck2 className="w-5 h-5 sm:w-6 sm:h-6" />
-            ) : (
-              <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
-            )}
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (followingList.includes(author?.id)) {
+                  setShowUnfollowBtn(true);
+                } else {
+                  handleFollowAuthor();
+                }
+              }}
+              className={`${baseStyle}`}
+            >
+              {followingList.includes(author?.id) ? (
+                <UserCheck2 className="w-5 h-5 sm:w-6 sm:h-6" />
+              ) : (
+                <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
+              )}
 
-            {followingList.includes(author?.id) ? (
-              <span>Following</span>
-            ) : (
-              <span>Follow</span>
-            )}
-          </button>
+              {followingList.includes(author?.id) ? (
+                <span>Following</span>
+              ) : (
+                <span>Follow</span>
+              )}
+            </button>
+            <div
+              ref={unfollowRef}
+              className={`text-red-600 absolute right-0 -top-12 flex bg-gray-200 items-center justify-between p-2 rounded-lg ${
+                showUnfollowBtn ? "" : "hidden"
+              }`}
+            >
+              <button
+                onClick={() => setShowUnfollowBtn(false)}
+                className="p-1 hover:bg-gray-300 rounded"
+              >
+                <X className="size-4" />
+              </button>
+              <button
+                onClick={async () => {
+                  await handleUnfollowAuthor();
+                  setShowUnfollowBtn(false);
+                }}
+                className="text-red-600 text-sm font-medium"
+              >
+                Unfollow
+              </button>
+            </div>
+          </div>
 
           <button onClick={() => setShare(true)} className={baseStyle}>
             <Share className="w-5 h-5 sm:w-6 sm:h-6" />

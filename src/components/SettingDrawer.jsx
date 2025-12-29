@@ -10,12 +10,13 @@ import { toast } from 'sonner';
 
 const SettingDrawer = ({ setShowSetting }) => {
 
-  const { logOut } = useAuthStore(); 
+  const { user, logOut } = useAuthStore(); 
   const router = useRouter(); 
 
   const handleClickX = () => setShowSetting(false);
 
   const handleLogOut = async () => {
+    setShowSetting(false);
     const toastId = toast(
         <div className="flex flex-col gap-2">
           <p>Are you sure you want to log out?</p>
@@ -48,7 +49,9 @@ const SettingDrawer = ({ setShowSetting }) => {
     );  
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = async (user) => {
+    setShowSetting(false);
+    console.log("user : ", user);
     const toastId = toast(
       <div className='flex flex-col gap-2'>
         <p className='font-semibold text-red-600'>This action is permanent. Are you sure you want to delete your account?</p>
@@ -67,7 +70,7 @@ const SettingDrawer = ({ setShowSetting }) => {
                 const res = await fetch("/api/delete-account", {
                   method: "POST", 
                   headers: { "Content-Type": "application/json"}, 
-                  body: JSON.stringify({ userId: useAuthStore.getState().user.id}),
+                  body: JSON.stringify({ userId: useAuthStore.getState().user.userId}),
                 }); 
 
                 if (!res.ok) throw new Error("Delete failed"); 
@@ -122,7 +125,7 @@ const SettingDrawer = ({ setShowSetting }) => {
 
       {/* Delete Account */}
       <button 
-        onClick={handleDeleteAccount}
+        onClick={() => handleDeleteAccount(user)}
         className={drawerButtonStyle + ' text-red-800 dark:text-red-600'}
       >
         <Trash2 className='size-5' />

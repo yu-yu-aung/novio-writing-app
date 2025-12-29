@@ -33,8 +33,8 @@ const HeroSection = () => {
           </p>
 
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto lg:mx-0">
-            Read captivating stories, write your own worlds, and build your
-            personal library — all in one place.
+            Read captivating stories, create your own fiction worlds, and build your
+            personal library. All in one place!
           </p>
 
           {/* CTA */}
@@ -43,7 +43,7 @@ const HeroSection = () => {
               href="/sign_up"
               className="
                 inline-flex w-fit mx-auto lg:mx-0
-                items-center justify-center
+                items-center justify-center px-4
                  py-3 sm:py-4
                 rounded-full
                 bg-coral-tree-700 text-white
