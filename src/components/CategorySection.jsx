@@ -23,14 +23,14 @@ const CategorySection = () => {
   ];
 
   return (
-  <section className="max-w-7xl mx-auto px-4 py-10 sm:py-16">
+  <section className="max-w-7xl mx-auto px-4 py-10 sm:py-16 border-b-2 border-amethyst-200 dark:border-amethyst-850">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-xl sm:text-3xl font-bold text-amethyst-800 dark:text-amethyst-300 mb-4">
+        <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold text-amethyst-800 dark:text-amethyst-200 mb-4">
           Various Categories
         </h2>
         <p className="text-sm sm:text-lg text-gray-800 dark:text-gray-200 mt-1 mb-10">
-          Explore various categories, explore different worlds ✨
+          Explore various categories, explore different worlds 
         </p>
       </div>
 

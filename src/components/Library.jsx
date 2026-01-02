@@ -66,7 +66,8 @@ const Library = ({ type = "home" }) => {
               md:grid-cols-4
               ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}
             `}
-          >
+          > 
+            {}
             {stories.map((story, index) => (
               <StoryCard key={index} story={story} />
             ))}

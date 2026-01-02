@@ -1,6 +1,28 @@
+"use client"
+
+import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 
 const MainFooter = () => {
+  const {isLoggedIn} = useAuthStore(); 
+
+  const footerCategories = [
+    { label: "Articles", value: "article" },
+    { label: "Poems", value: "poetry" },
+    { label: "Short Stories", value: "short-story" },
+    { label: "Journals", value: "journal" },
+    { label: "Essays", value: "essay" },
+  ];
+
+  const footerGenres = [
+    { label: "Romance", value: "romance" },
+    { label: "Fantasy", value: "fantasy" },
+    { label: "Horror", value: "horror" },
+    { label: "Drama", value: "drama" },
+    { label: "Sci-Fi", value: "science fiction" },
+  ];
+
+
   return (
     <footer className="
       bg-amethyst-100 dark:bg-amethyst-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700
@@ -8,7 +30,7 @@ const MainFooter = () => {
       px-4 sm:px-8 lg:px-24 py-10
     ">
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 sm:grid-col-1 lg:grid-cols-4 gap-10">
 
         {/* Brand */}
         <div>
@@ -21,15 +43,21 @@ const MainFooter = () => {
           </p>
         </div>
 
-        {/* Categories */}
-        <div>
+        <div className="flex justify-between lg:col-span-3">
+          {/* Categories */}
+        <div >
           <h3 className="font-semibold text-lg mb-3">Categories</h3>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Articles</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Poems</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Short Stories</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Journals</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Essays</Link></li>
+             {footerCategories.map((c) => (
+              <li key={c.value}>
+                <Link
+                  href={`/search?category=${encodeURIComponent(c.value)}`}
+                  className="hover:text-amethyst-500 transition"
+                >
+                  {c.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -37,11 +65,16 @@ const MainFooter = () => {
         <div>
           <h3 className="font-semibold text-lg mb-3">Genres</h3>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Romance</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Fantasy</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Horror</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Drama</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Sci-Fi</Link></li>
+             {footerGenres.map((g) => (
+              <li key={g.value}>
+                <Link
+                  href={`/search?genre=${encodeURIComponent(g.value)}`}
+                  className="hover:text-amethyst-500 transition"
+                >
+                  {g.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -49,12 +82,14 @@ const MainFooter = () => {
         <div>
           <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li><Link className="hover:text-amethyst-500 transition" href="/profile">Your Profile</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Help Center</Link></li>
+            <li><Link className="hover:text-amethyst-500 transition" href={`${isLoggedIn ? "/profile" : "/sign_up"}`}>Your Profile</Link></li>
+            {/* <li><Link className="hover:text-amethyst-500 transition" href="#">Help Center</Link></li>
             <li><Link className="hover:text-amethyst-500 transition" href="#">Privacy Policy</Link></li>
-            <li><Link className="hover:text-amethyst-500 transition" href="#">Terms & Conditions</Link></li>
+            <li><Link className="hover:text-amethyst-500 transition" href="#">Terms & Conditions</Link></li> */}
           </ul>
         </div>
+        </div>
+        
 
       </div>
 

@@ -6,7 +6,7 @@ import { Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const  SmallStoryCard = ({ story, storyId }) => {
+const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
   const authorId = story?.author?.id;
   console.log("story", story);
 
@@ -78,7 +78,9 @@ const  SmallStoryCard = ({ story, storyId }) => {
         </div>
 
         {/* Bottom Buttons */}
-        <div className="flex justify-between items-center mt-4">
+        {
+          type === "user" && (
+            <div className="flex justify-between items-center mt-4">
 
           {/* Edit Button */}
           <Link
@@ -104,6 +106,9 @@ const  SmallStoryCard = ({ story, storyId }) => {
           </span>
 
         </div>
+          )
+        }
+        
 
       </div>
     </div>

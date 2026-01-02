@@ -74,14 +74,7 @@ const Header = () => {
 
               <input
                 type="search"
-                className="
-                  block w-full rounded-lg p-2 sm:p-3 pl-2 sm:pl-10
-                  text-xs sm:text-sm
-                  text-gray-900 dark:text-gray-100
-                  bg-amethyst-100 dark:bg-amethyst-850
-                  border border-gray-300 dark:border-gray-600
-                  focus:outline-none transition
-                "
+                className="block w-full rounded-lg p-2 sm:p-3 pl-2 sm:pl-10 text-xs sm:text-sm text-gray-900 dark:text-gray-100 bg-amethyst-100 dark:bg-amethyst-850 border border-gray-300 dark:border-gray-600 focus:outline-none transition"
                 placeholder="Explore stories"
                 value={keyWord}
                 onChange={(e) => setKeyWord(e.target.value)}
@@ -90,14 +83,7 @@ const Header = () => {
 
               <button
                 type="submit"
-                className="
-                  absolute right-1 bottom-1 sm:bottom-2
-                  px-2 py-1 sm:px-3 sm:py-1.5
-                  rounded-lg text-sm transition
-                  text-black dark:text-white
-                  bg-transparent sm:bg-amethyst-300 sm:hover:bg-amethyst-400
-                  sm:dark:bg-amethyst-700 sm:dark:hover:bg-amethyst-800
-                "
+                className="absolute right-1 bottom-1 sm:bottom-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-sm transition text-black dark:text-white bg-transparent sm:bg-amethyst-300 sm:hover:bg-amethyst-400 sm:dark:bg-amethyst-700 sm:dark:hover:bg-amethyst-800"
               >
                 <Search className="size-4 sm:hidden text-amethyst-900 dark:text-amethyst-400" />
                 <span className="hidden sm:block">Search</span>
@@ -111,55 +97,39 @@ const Header = () => {
 
           <Link
             href="/"
-            className={`
-              flex items-center gap-1 p-2 font-medium transition
-              hover:text-coral-tree-700 dark:hover:text-amethyst-300
-              ${isActive("/")}
-            `}
+            className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/")}`}
           >
             <HomeIcon className="size-6 sm:hidden" />
-            <span className="hidden sm:block sm:text-lg lg:text-xl">Home</span>
+            <span className="text-sm sm:text-lg lg:text-xl">Home</span>
           </Link>
 
           <Link
             href="/stories/create_story"
-            className={`
-              flex items-center gap-1 p-2 font-medium transition
-              hover:text-coral-tree-700 dark:hover:text-amethyst-300
-              ${isActive("/create_story")}
-            `}
+            className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/create_story")}`}
           >
             <PencilLine className="size-6 sm:hidden" />
-            <span className="hidden sm:block sm:text-lg lg:text-xl">Create</span>
+            <span className="text-sm sm:text-lg lg:text-xl">Create</span>
           </Link>
 
           {isLoggedIn ? (
             <>
               <Link
                 href="/profile"
-                className={`
-                  flex items-center gap-1 p-2 font-medium transition
-                  hover:text-coral-tree-700 dark:hover:text-amethyst-300
-                  ${isActive("/profile")}
-                `}
+                className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/profile")}`}
               >
                 <User2 className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-xl">Profile</span>
+                <span className="text-sm sm:text-lg lg:text-xl">Profile</span>
               </Link>
 
               <Link
                 href="/notification"
-                className={`
-                  flex items-center gap-1 p-2 font-medium transition
-                  hover:text-coral-tree-700 dark:hover:text-amethyst-300
-                  ${isActive("/notification")} relative
-                `}
+                className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition${isActive("/notification")} relative`}
               >
                 <Bell className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-xl">Notification</span>
+                <span className="text-sm sm:text-lg lg:text-xl">Notification</span>
                 {
                   unreadNoti.length > 0 && 
-                  <span className="absolute text-white bg-red-600 py-1 px-2 text-xs rounded-full top-0 right-0">{unreadNoti.length}</span>
+                  <span className="absolute text-white bg-red-600 py-1 px-2 text-xs rounded-full top-0 right-10 sm:right-0 lg:right-0">{unreadNoti.length}</span>
                 }   
               </Link>
             </>
@@ -170,7 +140,7 @@ const Header = () => {
                 className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/sign_up")}`}
               >
                 <DoorOpen className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-xl">Register</span>
+                <span className="text-sm sm:text-lg lg:text-xl">Register</span>
               </Link>
 
               {/* LOGIN */}
@@ -179,7 +149,7 @@ const Header = () => {
                 className={`p-2 text-lg font-medium hover:text-coral-tree-700 dark:hover:text-amethyst-300 transition ${isActive("/log_in")}`}
               >
                 <LogIn className="size-6 sm:hidden" />
-                <span className="hidden sm:block sm:text-lg lg:text-xl">Log In</span>
+                <span className="text-sm sm:text-lg lg:text-xl">Log In</span>
               </Link>
             </>
           )}

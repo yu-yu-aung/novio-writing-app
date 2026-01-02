@@ -3,6 +3,7 @@
 import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import StoryCard from "@/components/StoryCard";
+import StoryCardSkeleton from "@/components/StoryCardSkeleton";
 import useFetchBookshelf from "@/hooks/useFetchBookshelf";
 import useFetchBookshelfItems from "@/hooks/useFetchBookshelfItems";
 import useFetchLibrary from "@/hooks/useFetchLibrary";
@@ -27,8 +28,12 @@ const Page = ({ params }) => {
   const { libraryList } = useFetchLibrary(user?.userId);
   const storyIdList = libraryList?.map((item) => item.story_id) || [];
 
-  const { stories } = useFetchStoriesByIds(storyIdList);
-  const { items, refresh } = useFetchBookshelfItems(bookshelfId);
+  const { stories, loading: storyLoading } = useFetchStoriesByIds(storyIdList);
+  const {
+    items,
+    refresh,
+    loading: itemLoading,
+  } = useFetchBookshelfItems(bookshelfId);
 
   console.log("bookshelf info: ", bookshelf);
 
@@ -109,48 +114,48 @@ const Page = ({ params }) => {
       {/* Header */}
       <SmallHeading title={bookshelf?.shelf_name} />
 
-      {/* Bookshelf Items */}
-      {items?.length > 0 ? (
-        <div
-          className="
-            grid grid-cols-2
-            sm:grid-cols-3
-            lg:grid-cols-5
-            gap-6 mb-8
-          "
-        >
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-background-soft flex flex-col relative"
-            >
-              <StoryCard story={item.story} />
-              <button
-                onClick={() =>
-                  confirmAction(
-                    () => handleClickRemove(item.id),
-                    "Are you sure you want to remove the story from the bookshelf?"
-                  )
-                }
-                className="bg-coral-tree-700 hover:scale-105 text-gray-100 absolute inline p-2 text-xs rounded-xl right-2 top-2"
+      {(storyLoading || itemLoading) &&
+        Array.from({ length: 6 }).map((_, index) => (
+          <StoryCardSkeleton key={index} />
+        ))}
+
+      {!storyLoading &&
+        !itemLoading &&
+        (items?.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="bg-background-soft flex flex-col relative"
               >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-20 text-center mb-8">
-          <img
-            src="/no_data.png"
-            alt="No story"
-            className="w-36 h-36 opacity-80 mb-4"
-          />
-          <p className="text-xl font-semibold text-muted">
-            No stories in this bookshelf
-          </p>
-        </div>
-      )}
+                <StoryCard story={item.story} />
+                <button
+                  onClick={() =>
+                    confirmAction(
+                      () => handleClickRemove(item.id),
+                      "Are you sure you want to remove the story from the bookshelf?"
+                    )
+                  }
+                  className="bg-coral-tree-700 hover:scale-105 text-gray-100 absolute inline p-2 text-xs rounded-xl right-2 top-2"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 text-center mb-8">
+            <img
+              src="/no_data.png"
+              alt="No story"
+              className="w-36 h-36 opacity-80 mb-4"
+            />
+            <p className="text-xl font-semibold text-muted">
+              No stories in this bookshelf
+            </p>
+          </div>
+        ))}
+
       <div className="flex justify-between w-full gap-12">
         <button
           onClick={() => setShowLibrary((prev) => !prev)}
@@ -217,13 +222,7 @@ const Page = ({ params }) => {
               return (
                 <div
                   key={story.id}
-                  className="
-                    bg-background-soft
-                    border border-default/40
-                    rounded-xl
-                    p-4
-                    flex flex-col
-                  "
+                  className="bg-background-soft border border-default/40 rounded-xl p-4 flex flex-col"
                 >
                   <StoryCard story={story} />
 

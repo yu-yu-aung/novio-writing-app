@@ -286,7 +286,7 @@ const Page = ({ params }) => {
           {activeTab === "published" &&
             stories?.map((story, index) =>
               story.status === "published" ? (
-                <SmallStoryCard key={index} story={story} storyId={story.id} />
+                <SmallStoryCard key={index} story={story} storyId={story.id} type="viewer"/>
               ) : null
             )}
 

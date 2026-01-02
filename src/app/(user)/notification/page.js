@@ -1,6 +1,7 @@
 "use client";
 
 import NotiCard from "@/components/NotiCard";
+import NotiCardSkeleton from "@/components/NotiCardSkeleton";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAllNotifications from "@/hooks/useFetchAllNotifications";
 import useFetchAnnouncementsByAuthorIds from "@/hooks/useFetchAnnouncementsByAuthorIds";
@@ -122,7 +123,6 @@ const Page = () => {
     return notiDate < weekAgo;
   });
 
-
   const handleClickNotiCard = async (noti) => {
     const { data } = await markNotificationAsViewed(noti.id);
 
@@ -152,33 +152,40 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        {today.length > 0 ? (
-          today.map((noti) => {
-            if (!noti.content) return null;
-            return (
-              <NotiCard
-                image={noti.actor?.profile_image_url || "/default-user.jpg"}
-                content={noti.content}
-                time={noti.created_at}
-                key={noti.id}
-                isViewed={noti.is_viewed}
-                onClick={() => handleClickNotiCard(noti)}
-              />
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
-              No Notification!
-            </p>
+        {(loadingActor || loadingNoti) &&
+          Array.from({ length: 5 }).map((_, index) => (
+            <NotiCardSkeleton key={index} />
+          ))}
 
-            <img
-              src="/no_noti.png"
-              alt="No notification"
-              className="w-40 h-40 object-contain opacity-80"
-            />
-          </div>
-        )}
+        {!loadingActor &&
+          !loadingNoti &&
+          (today.length > 0 ? (
+            today.map((noti) => {
+              if (!noti.content) return null;
+              return (
+                <NotiCard
+                  image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                  content={noti.content}
+                  time={noti.created_at}
+                  key={noti.id}
+                  isViewed={noti.is_viewed}
+                  onClick={() => handleClickNotiCard(noti)}
+                />
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                No Notification!
+              </p>
+
+              <img
+                src="/no_noti.png"
+                alt="No notification"
+                className="w-40 h-40 object-contain opacity-80"
+              />
+            </div>
+          ))}
       </div>
 
       {/* Earlier */}
@@ -187,33 +194,40 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        {thisWeek.length > 0 ? (
-          thisWeek.map((noti) => {
-            if (!noti.content) return null;
-            return (
-              <NotiCard
-                image={noti.actor?.profile_image_url || "/default-user.jpg"}
-                content={noti.content}
-                time={noti.created_at}
-                key={noti.id}
-                isViewed={noti.is_viewed}
-                onClick={() => handleClickNotiCard(noti)}
-              />
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
-              No Notification!
-            </p>
+        {(loadingActor || loadingNoti) &&
+          Array.from({ length: 5 }).map((_, index) => (
+            <NotiCardSkeleton key={index} />
+          ))}
 
-            <img
-              src="/no_noti.png"
-              alt="No notification"
-              className="w-40 h-40 object-contain opacity-80"
-            />
-          </div>
-        )}
+        {!loadingActor &&
+          !loadingNoti &&
+          (thisWeek.length > 0 ? (
+            thisWeek.map((noti) => {
+              if (!noti.content) return null;
+              return (
+                <NotiCard
+                  image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                  content={noti.content}
+                  time={noti.created_at}
+                  key={noti.id}
+                  isViewed={noti.is_viewed}
+                  onClick={() => handleClickNotiCard(noti)}
+                />
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                No Notification!
+              </p>
+
+              <img
+                src="/no_noti.png"
+                alt="No notification"
+                className="w-40 h-40 object-contain opacity-80"
+              />
+            </div>
+          ))}
       </div>
 
       <h2 className="font-bold text-lg sm:text-xl mt-8 mb-3 self-start lg:self-center w-full max-w-3xl">
@@ -221,33 +235,40 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col gap-4 w-full max-w-3xl">
-        {earlier.length > 0 ? (
-          earlier.map((noti) => {
-            if (!noti.content) return null;
-            return (
-              <NotiCard
-                image={noti.actor?.profile_image_url || "/default-user.jpg"}
-                content={noti.content}
-                time={noti.created_at}
-                key={noti.id}
-                isViewed={noti.is_viewed}
-                onClick={() => handleClickNotiCard(noti)}
-              />
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
-              No Notification!
-            </p>
+        {(loadingActor || loadingNoti) &&
+          Array.from({ length: 5 }).map((_, index) => (
+            <NotiCardSkeleton key={index} />
+          ))}
 
-            <img
-              src="/no_noti.png"
-              alt="No notification"
-              className="w-40 h-40 object-contain opacity-80"
-            />
-          </div>
-        )}
+        {!loadingActor &&
+          !loadingNoti &&
+          (earlier.length > 0 ? (
+            earlier.map((noti) => {
+              if (!noti.content) return null;
+              return (
+                <NotiCard
+                  image={noti.actor?.profile_image_url || "/default-user.jpg"}
+                  content={noti.content}
+                  time={noti.created_at}
+                  key={noti.id}
+                  isViewed={noti.is_viewed}
+                  onClick={() => handleClickNotiCard(noti)}
+                />
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                No Notification!
+              </p>
+
+              <img
+                src="/no_noti.png"
+                alt="No notification"
+                className="w-40 h-40 object-contain opacity-80"
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

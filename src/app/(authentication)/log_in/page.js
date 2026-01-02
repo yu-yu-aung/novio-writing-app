@@ -9,7 +9,7 @@ const Page = () => {
         <SmallHeading title="Welcome Back!" />
         <AuthForm mode="Log In" />
         <div className="mt-4 text-center text-sm text-gray-600">
-          <p>
+          <p className="text-gray-800 dark:text-gray-200 text-sm">
             New here?{" "}
             <Link href="/sign_up" className="text-blue-600 hover:underline">
               Sign Up Here

@@ -10,7 +10,7 @@ const Page = () => {
         <SmallHeading title="Sign Up Now!" />
         <AuthForm mode="Sign Up" />
         <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-300">
-          <p>
+          <p className="text-gray-800 dark:text-gray-200 text-sm">
             Already have an account?{" "}
             <Link href="/log_in" className="text-blue-600 hover:underline">
               Log In Here

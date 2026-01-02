@@ -5,7 +5,7 @@ const Features = () => {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       {/* Header */}
       <div className="text-center mb-12 px-4 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amethyst-800 dark:text-amethyst-300">
+        <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold text-amethyst-800 dark:text-amethyst-200">
           Features We Offer for You
         </h2>
         <p className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mt-4">

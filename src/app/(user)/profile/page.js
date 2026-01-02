@@ -42,9 +42,9 @@ const Page = () => {
 
   //console.log("user info: ", user);
 
-  const { stories, loading, error } = useFetchAllStories(user?.userId);
+  const { stories, loadin: storyLoading , error } = useFetchAllStories(user?.userId);
 
-  const { author } = useFetchAuthor({ userId: user?.userId });
+  const { author, loading: authorLoading } = useFetchAuthor({ userId: user?.userId });
 
   const {
     followings,
@@ -145,16 +145,30 @@ const Page = () => {
         <div className="flex gap-10 mt-4">
           <div className="flex flex-col items-center">
             <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
+            {loadingFollowers ? (
+              <span className="text-sm font-medium mt-1 text-gray-600">
+              Loading
+            </span>
+            ) : (
+              <span className="text-sm font-medium mt-1">
               {followerList.length} Followers
             </span>
+            ) }
+            
           </div>
 
           <div className="flex flex-col items-center">
             <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
+            {loadingFollowing ? (
+              <span className="text-sm font-medium mt-1 text-gray-600">
+              Loading
+            </span>
+            ) : (
+              <span className="text-sm font-medium mt-1">
               {followingsList.length} Followings
             </span>
+            )}
+            
           </div>
 
           <div className="flex flex-col items-center">
@@ -240,6 +254,7 @@ const Page = () => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
+
           {/* Published */}
           {activeTab === "published" && (
             <>
