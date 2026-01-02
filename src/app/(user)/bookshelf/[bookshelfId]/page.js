@@ -216,20 +216,29 @@ const Page = ({ params }) => {
               gap-6
             "
           >
-            {stories?.map((story) => {
-              const isAdded = items?.some((item) => item.story.id === story.id);
+            {(storyLoading || itemLoading) &&
+              Array.from({ length: 6 }).map((_, index) => (
+                <StoryCardSkeleton key={index} />
+              ))}
 
-              return (
-                <div
-                  key={story.id}
-                  className="bg-background-soft border border-default/40 rounded-xl p-4 flex flex-col"
-                >
-                  <StoryCard story={story} />
+            {!storyLoading &&
+              !itemLoading &&
+              stories?.map((story) => {
+                const isAdded = items?.some(
+                  (item) => item.story.id === story.id
+                );
 
-                  <button
-                    disabled={isAdded}
-                    onClick={() => handleClickAdd(story)}
-                    className={`
+                return (
+                  <div
+                    key={story.id}
+                    className="bg-background-soft border border-default/40 rounded-xl p-4 flex flex-col"
+                  >
+                    <StoryCard story={story} />
+
+                    <button
+                      disabled={isAdded}
+                      onClick={() => handleClickAdd(story)}
+                      className={`
                       mt-4 py-2 rounded-lg font-medium transition 
                       ${
                         isAdded
@@ -237,12 +246,12 @@ const Page = ({ params }) => {
                           : "bg-coral-tree-700 hover:scale-105 text-gray-100"
                       }
                     `}
-                  >
-                    {isAdded ? "Added" : "Add"}
-                  </button>
-                </div>
-              );
-            })}
+                    >
+                      {isAdded ? "Added" : "Add"}
+                    </button>
+                  </div>
+                );
+              })}
           </div>
         </div>
       )}

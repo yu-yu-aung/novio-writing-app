@@ -11,6 +11,7 @@ import useFetchAllBookshelves from "@/hooks/useFetchAllBookshelves";
 import useFetchAllBookshelfItemsByIds from "@/hooks/useFetchAllBookshelfItemsByIds";
 import useFetchBookshelfItems from "@/hooks/useFetchBookshelfItems";
 import Link from "next/link";
+import StoryCardSkeleton from "./StoryCardSkeleton";
 
 const Library = ({ type = "home" }) => {
   const { user, isLoggedIn } = useAuthStore();
@@ -40,8 +41,6 @@ const Library = ({ type = "home" }) => {
     setActiveShelfId((prev) => (prev === shelfId ? null : shelfId));
   };
 
-  if (libLoading || storyLoading) return <p className="py-20 text-center">Loading...</p>;
-
   if (libError || storyError) {
     toast.error("Error connecting the library!");
     return null;
@@ -59,18 +58,20 @@ const Library = ({ type = "home" }) => {
         <div className="space-y-16">
           {/* Library Stories */}
           <div
-            className={`
-              grid gap-5
-              grid-cols-2
-              sm:grid-cols-3
-              md:grid-cols-4
-              ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}
-            `}
+            className={`grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}`}
           > 
-            {}
-            {stories.map((story, index) => (
-              <StoryCard key={index} story={story} />
-            ))}
+            
+            {(libLoading || storyLoading) && 
+              Array.from({length: 6}).map((_, index) => (
+                <StoryCardSkeleton key={index}/>
+              ))
+            }
+
+            {!libLoading && !storyLoading && (
+              stories.map((story, index) => (
+                <StoryCard key={index} story={story} />
+              ))
+            )}
           </div>
 
           {/* Bookshelves */}
@@ -84,12 +85,7 @@ const Library = ({ type = "home" }) => {
                 <div key={shelf.id} className="space-y-6">
                   <button
                     onClick={() => handleClickShelf(shelf.id)}
-                    className="
-                      flex items-center gap-2
-                      text-base sm:text-lg font-medium
-                      text-neutral-900 dark:text-neutral-100
-                      hover:text-amethyst-600 transition
-                    "
+                    className="flex items-center gap-2 text-base sm:text-lg font-medium text-neutral-900 dark:text-neutral-100 hover:text-amethyst-600 transition"
                   >
                     <span>{shelf.shelf_name}</span>
                     <span className="text-sm opacity-60">
@@ -100,16 +96,12 @@ const Library = ({ type = "home" }) => {
                   {activeShelfId === shelf.id && (
                     <div className="space-y-6 pl-2">
                       <div
-                        className={`
-                          grid gap-5
-                          grid-cols-2
-                          sm:grid-cols-3
-                          md:grid-cols-4
-                          ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}
-                        `}
+                        className={`grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 ${type === "home" ? "lg:grid-cols-5" : "lg:grid-cols-3"}`}
                       >
                         {shelfItemsLoading ? (
-                          <p>Loading...</p>
+                          Array.from({length: 6}).map((_, index) => (
+                          <StoryCardSkeleton key={index}/>
+                        ))
                         ) : shelfItems.length > 0 ? (
                           shelfItems.map((item) => (
                             <StoryCard key={item.id} story={item.story} />

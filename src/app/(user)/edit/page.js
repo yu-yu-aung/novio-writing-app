@@ -202,12 +202,14 @@ const Page = () => {
           {/*Buttons */}
           <div className="flex justify-between">
             <button
+              disabled={loading}
               type="submit"
               className="bg-amethyst-300 dark:bg-amethyst-600 hover:scale-110 rounded px-5 py-3 mt-2 shadow transition"
             >
               Save
             </button>
             <button
+              disabled={loading}
               type="button"
               onClick={() => {
                 reset({

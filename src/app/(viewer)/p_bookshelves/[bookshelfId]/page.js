@@ -2,6 +2,7 @@
 
 import SmallHeading from "@/components/SmallHeading";
 import StoryCard from "@/components/StoryCard";
+import StoryCardSkeleton from "@/components/StoryCardSkeleton";
 import useFetchBookshelf from "@/hooks/useFetchBookshelf";
 import useFetchBookshelfItems from "@/hooks/useFetchBookshelfItems";
 import useFetchLibrary from "@/hooks/useFetchLibrary";
@@ -10,11 +11,10 @@ import React, { use, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
   const { bookshelfId } = use(params);
-  const { bookshelf} = useFetchBookshelf(bookshelfId);
+  const { bookshelf } = useFetchBookshelf(bookshelfId);
   const [mounted, setMounted] = useState(false);
 
-
-  const { items} = useFetchBookshelfItems(bookshelfId);
+  const { items, loading: itemLoading } = useFetchBookshelfItems(bookshelfId);
 
   useEffect(() => {
     setMounted(true);
@@ -27,15 +27,15 @@ const Page = ({ params }) => {
       {/* Header */}
       <SmallHeading title={bookshelf?.shelf_name} />
 
+      {itemLoading &&
+        Array.from({ length: 6 }).map((_, index) => (
+          <StoryCardSkeleton key={index} />
+        ))}
+
       {/* Bookshelf Items */}
-      {items?.length > 0 ? (
+      { !itemLoading && items?.length > 0 ? (
         <div
-          className="
-            grid grid-cols-2
-            sm:grid-cols-3
-            lg:grid-cols-5
-            gap-6 mb-8
-          "
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8"
         >
           {items.map((item) => (
             <StoryCard key={item.id} story={item.story} />

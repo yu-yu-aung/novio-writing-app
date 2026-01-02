@@ -5,6 +5,7 @@ import Library from "@/components/Library";
 import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
+import SmallStoryCardSkeleton from "@/components/SmallStoryCardSkeleton";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useFectchAnnouncements from "@/hooks/useFetchAnnouncements";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
@@ -42,9 +43,15 @@ const Page = () => {
 
   //console.log("user info: ", user);
 
-  const { stories, loadin: storyLoading , error } = useFetchAllStories(user?.userId);
+  const {
+    stories,
+    loading: storyLoading,
+    error,
+  } = useFetchAllStories(user?.userId);
 
-  const { author, loading: authorLoading } = useFetchAuthor({ userId: user?.userId });
+  const { author, loading: authorLoading } = useFetchAuthor({
+    userId: user?.userId,
+  });
 
   const {
     followings,
@@ -114,88 +121,94 @@ const Page = () => {
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
       <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
-        {/* Profile Image */}
-        <div className="relative group">
-          <img
-            src={author?.profile_image_url}
-            alt={`Profile picture of ${author?.pen_name}`}
-            className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
-          />
-          <div className="absolute bottom-2 right-2 bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black rounded-full p-2 shadow cursor-pointer hover:scale-110 transition">
-            <Link href={"/edit"}>
-              <Pen className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Link>
-          </div>
-        </div>
 
-        {/* User Info */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold">{author?.pen_name}</h2>
-          <p className="text-sm text-muted">{author?.user_name}</p>
-          <p className="text-sm text-body">{author?.email}</p>
-        </div>
+        {authorLoading && <ProfileSectionSkeleton />}
 
-        {/* About */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-xs sm:text-sm font-bold">About</h2>
-          <p className="text-sm text-muted">{author?.bio}</p>
-        </div>
+        {!authorLoading && (
+          <>
+            <div className="relative group">
+              <img
+                src={author?.profile_image_url}
+                alt={`Profile picture of ${author?.pen_name}`}
+                className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
+              />
+              <div className="absolute bottom-2 right-2 bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black rounded-full p-2 shadow cursor-pointer hover:scale-110 transition">
+                <Link href={"/edit"}>
+                  <Pen className="w-5 h-5 sm:w-6 sm:h-6" />
+                </Link>
+              </div>
+            </div>
 
-        {/* Stats */}
-        <div className="flex gap-10 mt-4">
-          <div className="flex flex-col items-center">
-            <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            {loadingFollowers ? (
-              <span className="text-sm font-medium mt-1 text-gray-600">
-              Loading
-            </span>
-            ) : (
-              <span className="text-sm font-medium mt-1">
-              {followerList.length} Followers
-            </span>
-            ) }
-            
-          </div>
+            {/* User Info */}
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                {author?.pen_name}
+              </h2>
+              <p className="text-sm text-muted">{author?.user_name}</p>
+              <p className="text-sm text-body">{author?.email}</p>
+            </div>
 
-          <div className="flex flex-col items-center">
-            <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            {loadingFollowing ? (
-              <span className="text-sm font-medium mt-1 text-gray-600">
-              Loading
-            </span>
-            ) : (
-              <span className="text-sm font-medium mt-1">
-              {followingsList.length} Followings
-            </span>
-            )}
-            
-          </div>
+            {/* About */}
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h2 className="text-xs sm:text-sm font-bold">About</h2>
+              <p className="text-sm text-muted">{author?.bio}</p>
+            </div>
 
-          <div className="flex flex-col items-center">
-            <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
-              {stories?.length} stories
-            </span>
-          </div>
-        </div>
+            {/* Stats */}
+            <div className="flex gap-10 mt-4">
+              <div className="flex flex-col items-center">
+                <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                {loadingFollowers ? (
+                  <span className="text-sm font-medium mt-1 text-gray-600">
+                    Loading
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium mt-1">
+                    {followerList.length} Followers
+                  </span>
+                )}
+              </div>
 
-        {/* Buttons: Edit / Share / Settings */}
-        <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <Link href={"/edit"} className={baseStyle}>
-            <Pencil className="size-4 sm:size-6" />
-            <span>Edit </span>
-          </Link>
+              <div className="flex flex-col items-center">
+                <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                {loadingFollowing ? (
+                  <span className="text-sm font-medium mt-1 text-gray-600">
+                    Loading
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium mt-1">
+                    {followingsList.length} Followings
+                  </span>
+                )}
+              </div>
 
-          <button onClick={() => setShare(true)} className={baseStyle}>
-            <Share className="w-5 h-5 sm:w-6 sm:h-6" />
-            Share
-          </button>
+              <div className="flex flex-col items-center">
+                <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                <span className="text-sm font-medium mt-1">
+                  {stories?.length} stories
+                </span>
+              </div>
+            </div>
 
-          <button onClick={handleClickSetting} className={baseStyle}>
-            <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
-            Settings
-          </button>
-        </div>
+            {/* Buttons: Edit / Share / Settings */}
+            <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
+              <Link href={"/edit"} className={baseStyle}>
+                <Pencil className="size-4 sm:size-6" />
+                <span>Edit </span>
+              </Link>
+
+              <button onClick={() => setShare(true)} className={baseStyle}>
+                <Share className="w-5 h-5 sm:w-6 sm:h-6" />
+                Share
+              </button>
+
+              <button onClick={handleClickSetting} className={baseStyle}>
+                <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+                Settings
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       {/* Setting Drawer */}
@@ -205,9 +218,7 @@ const Page = () => {
           onClick={() => setShowSetting(false)}
         >
           <div
-            className={`absolute left-0 top-0 h-full w-[260px] sm:w-[320px] lg:w-[360px]
-        bg-background-soft shadow-xl transition-transform duration-300
-        translate-x-0`}
+            className={`absolute left-0 top-0 h-full w-[260px] sm:w-[320px] lg:w-[360px] bg-background-soft shadow-xl transition-transform duration-300 translate-x-0`}
             onClick={(e) => e.stopPropagation()}
           >
             <SettingDrawer setShowSetting={setShowSetting} />
@@ -230,6 +241,7 @@ const Page = () => {
 
       {/* Right Content Section */}
       <section className="lg:col-span-4 px-6 lg:px-12 py-8 sm:py-16 lg:py-20 flex flex-col gap-10">
+
         {/* Tabs */}
         <div className="flex gap-6 border-b border-default pb-3 overflow-x-auto">
           {[
@@ -254,9 +266,13 @@ const Page = () => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
+          {storyLoading &&
+            Array.from({ length: 4 }).map((_, index) => (
+              <SmallStoryCardSkeleton type="user" key={index} />
+            ))}
 
           {/* Published */}
-          {activeTab === "published" && (
+          {!storyLoading && activeTab === "published" && (
             <>
               {stories?.filter((s) => s.status === "published").length > 0 ? (
                 stories
@@ -284,7 +300,7 @@ const Page = () => {
           )}
 
           {/* Draft */}
-          {activeTab === "draft" && (
+          {!storyLoading && activeTab === "draft" && (
             <>
               {stories?.filter((s) => s.status === "draft").length > 0 ? (
                 stories
@@ -314,7 +330,22 @@ const Page = () => {
           {activeTab === "library" && <Library type="profile" />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              {!showForm &&
+              
+              {/* Skeleton loader for announcement loading */}
+              {announcementLoading && (
+                <div className="flex flex-col gap-6 text-center py-10 animate-pulse">
+                  {/* Icon placeholder */}
+                  <div className="mx-auto w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700" />
+
+                  {/* Text lines */}
+                  <div className="flex flex-col gap-3 items-center">
+                    <div className="h-5 w-56 bg-gray-200 dark:bg-gray-600 rounded" />
+                    <div className="h-4 w-40 bg-gray-200 dark:bg-gray-600 rounded" />
+                  </div>
+                </div>
+              )}
+              
+              {!announcementLoading && !showForm &&
                 (announcements?.length === 0 ? (
                   <>
                     <div className="flex flex-col gap-3">

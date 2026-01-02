@@ -74,25 +74,11 @@ const Page = () => {
               id="category"
               type="text"
               {...register("category")}
-              className="
-                peer w-full
-                py-3 px-3
-                text-sm text-heading
-                bg-transparent
-                border-b-2 border-default
-                focus:outline-none focus:border-brand
-                transition
-              "
+              className="peer w-full py-3 px-3 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition"
             />
             <label
               htmlFor="category"
-              className="
-                absolute left-3 top-3
-                text-body text-sm
-                transition-all
-                peer-focus:-top-2 peer-focus:text-xs peer-focus:text-brand
-                peer-valid:-top-2 peer-valid:text-xs
-              "
+              className="absolute left-3 top-3 text-body text-sm transition-all peer-focus:-top-2 peer-focus:text-xs peer-focus:text-brand peer-valid:-top-2 peer-valid:text-xs"
             >
               Category
             </label>
@@ -104,25 +90,11 @@ const Page = () => {
               id="description"
               rows={4}
               {...register("description")}
-              className="
-                peer w-full
-                py-3 px-3
-                text-sm text-heading
-                bg-transparent
-                border-b-2 border-default
-                focus:outline-none focus:border-brand
-                transition resize-none
-              "
+              className="peer w-full py-3 px-3 text-sm text-heading bg-transparent border-b-2 border-default focus:outline-none focus:border-brand transition resize-none"
             />
             <label
               htmlFor="description"
-              className="
-                absolute left-3 top-3
-                text-body text-sm
-                transition-all
-                peer-focus:-top-2 peer-focus:text-xs peer-focus:text-brand
-                peer-valid:-top-2 peer-valid:text-xs
-              "
+              className="absolute left-3 top-3 text-body text-sm transition-all peer-focus:-top-2 peer-focus:text-xs peer-focus:text-brand peer-valid:-top-2 peer-valid:text-xs"
             >
               Description
             </label>
@@ -131,17 +103,7 @@ const Page = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="
-              mt-4
-              w-full
-              bg-coral-tree-300 dark:bg-coral-tree-800
-              text-heading font-semibold
-              py-3 rounded-xl
-              shadow-sm
-              hover:shadow-md hover:scale-[1.02]
-              active:scale-[0.98]
-              transition
-            "
+            className="mt-4 w-full bg-coral-tree-300 dark:bg-coral-tree-800 text-heading font-semibold py-3 rounded-xl shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition"
           >
             Create Bookshelf
           </button>

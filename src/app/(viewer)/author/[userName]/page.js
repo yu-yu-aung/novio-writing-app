@@ -2,6 +2,7 @@
 
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
+import SmallStoryCardSkeleton from "@/components/SmallStoryCardSkeleton";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
 import useFectchAnnouncements from "@/hooks/useFetchAnnouncements";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
@@ -58,7 +59,7 @@ const Page = ({ params }) => {
     loading: loadingFetchAuthor,
   } = useFetchAuthor({ userName: userName });
 
-  const { stories } = useFetchAllStories(author?.id);
+  const { stories, loading: storyLoading } = useFetchAllStories(author?.id);
 
   const { followings, loading, error, refresh } = useFetchFollowingList(
     user?.userId
@@ -96,8 +97,8 @@ const Page = ({ params }) => {
     (story) => story.status === "published"
   );
 
-  console.log("stories", stories);
-  console.log("published stories: ", publishedStories);
+  // console.log("stories", stories);
+  // console.log("published stories: ", publishedStories);
 
   if (errorFetchAuthor) {
     console.log("Error Fetching Author Info: ", errorFetchAuthor);
@@ -145,105 +146,124 @@ const Page = ({ params }) => {
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
       <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b sm:border-r sm:border-b-transparent lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
-        {/* Profile Image */}
-        <div className=" group">
-          <img
-            src={author?.profile_image_url}
-            alt={`Profile picture of ${author?.user_name}`}
-            className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
-          />
-        </div>
+        {loadingFetchAuthor && <ProfileSectionSkeleton />}
 
-        {/* User Info */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold">{author?.pen_name}</h2>
-        </div>
+        {!loadingFetchAuthor && (
+          <>
+            <div className=" group">
+              <img
+                src={author?.profile_image_url}
+                alt={`Profile picture of ${author?.user_name}`}
+                className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
+              />
+            </div>
 
-        {/* About */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h2 className="text-xs sm:text-sm font-bold">About</h2>
-          <p className="text-sm text-muted">{author?.bio}</p>
-        </div>
+            {/* User Info */}
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                {author?.pen_name}
+              </h2>
+            </div>
 
-        {/* Stats */}
-        <div className="flex gap-10 mt-4">
-          <div className="flex flex-col items-center">
-            <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
-              {authorFollowerList.length} Followers
-            </span>
-          </div>
+            {/* About */}
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h2 className="text-xs sm:text-sm font-bold">About</h2>
+              <p className="text-sm text-muted">{author?.bio}</p>
+            </div>
 
-          <div className="flex flex-col items-center">
-            <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
-              {authorFollowingsList.length} Followings
-            </span>
-          </div>
+            {/* Stats */}
+            <div className="flex gap-10 mt-4">
+              <div className="flex flex-col items-center">
+                <UserRoundCheck className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                {loadingAuthorFollowers ? (
+                  <span className="text-sm font-medium mt-1 text-gray-600">
+                    Loading
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium mt-1">
+                    {authorFollowerList.length} Followers
+                  </span>
+                )}
+              </div>
 
-          <div className="flex flex-col items-center">
-            <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
-            <span className="text-sm font-medium mt-1">
-              {publishedStories?.length} stories
-            </span>
-          </div>
-        </div>
+              <div className="flex flex-col items-center">
+                <UserRoundPlus className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                {loadingAuthorFollowing ? (
+                  <span className="text-sm font-medium mt-1 text-gray-600">
+                    Loading
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium mt-1">
+                    {authorFollowingsList.length} Followers
+                  </span>
+                )}
+              </div>
 
-        {/* Buttons: Follow / Share */}
-        <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
-          <div className="relative">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (followingList.includes(author?.id)) {
-                  setShowUnfollowBtn(true);
-                } else {
-                  handleFollowAuthor();
-                }
-              }}
-              className={`${baseStyle}`}
-            >
-              {followingList.includes(author?.id) ? (
-                <UserCheck2 className="w-5 h-5 sm:w-6 sm:h-6" />
-              ) : (
-                <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
-              )}
+              <div className="flex flex-col items-center">
+                <Book className="w-6 h-6 sm:w-7 sm:h-7 text-brand" />
+                <span className="text-sm font-medium mt-1">
+                  {publishedStories?.length} stories
+                </span>
+              </div>
+            </div>
 
-              {followingList.includes(author?.id) ? (
-                <span>Following</span>
-              ) : (
-                <span>Follow</span>
-              )}
-            </button>
-            <div
-              ref={unfollowRef}
-              className={`text-red-600 absolute right-0 -top-12 flex bg-gray-200 items-center justify-between p-2 rounded-lg ${
-                showUnfollowBtn ? "" : "hidden"
-              }`}
-            >
-              <button
-                onClick={() => setShowUnfollowBtn(false)}
-                className="p-1 hover:bg-gray-300 rounded"
-              >
-                <X className="size-4" />
-              </button>
-              <button
-                onClick={async () => {
-                  await handleUnfollowAuthor();
-                  setShowUnfollowBtn(false);
-                }}
-                className="text-red-600 text-sm font-medium"
-              >
-                Unfollow
+            {/* Buttons: Follow / Share */}
+            <div className="flex gap-2 sm:gap-4 mt-6 w-full justify-between">
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (followingList.includes(author?.id)) {
+                      setShowUnfollowBtn(true);
+                    } else {
+                      handleFollowAuthor();
+                    }
+                  }}
+                  className={`${baseStyle}`}
+                >
+                  {followingList.includes(author?.id) ? (
+                    <UserCheck2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  ) : (
+                    <UserPlus2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  )}
+
+                  {followingList.includes(author?.id) ? (
+                    <span>Following</span>
+                  ) : (
+                    <span>Follow</span>
+                  )}
+                </button>
+                <div
+                  ref={unfollowRef}
+                  className={`text-red-600 absolute right-0 -top-12 flex bg-gray-200 items-center justify-between p-2 rounded-lg ${
+                    showUnfollowBtn ? "" : "hidden"
+                  }`}
+                >
+                  <button
+                    onClick={() => setShowUnfollowBtn(false)}
+                    className="p-1 hover:bg-gray-300 rounded"
+                  >
+                    <X className="size-4" />
+                  </button>
+                  <button
+                    onClick={async () => {
+                      await handleUnfollowAuthor();
+                      setShowUnfollowBtn(false);
+                    }}
+                    className="text-red-600 text-sm font-medium"
+                  >
+                    Unfollow
+                  </button>
+                </div>
+              </div>
+
+              <button onClick={() => setShare(true)} className={baseStyle}>
+                <Share className="w-5 h-5 sm:w-6 sm:h-6" />
+                Share
               </button>
             </div>
-          </div>
-
-          <button onClick={() => setShare(true)} className={baseStyle}>
-            <Share className="w-5 h-5 sm:w-6 sm:h-6" />
-            Share
-          </button>
-        </div>
+          </>
+        )}
       </section>
 
       <div
@@ -283,16 +303,41 @@ const Page = ({ params }) => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
-          {activeTab === "published" &&
+          {storyLoading &&
+            Array.from({ length: 4 }).map((_, index) => (
+              <SmallStoryCardSkeleton type="user" key={index} />
+            ))}
+
+          {!storyLoading &&
+            activeTab === "published" &&
             stories?.map((story, index) =>
               story.status === "published" ? (
-                <SmallStoryCard key={index} story={story} storyId={story.id} type="viewer"/>
+                <SmallStoryCard
+                  key={index}
+                  story={story}
+                  storyId={story.id}
+                  type="viewer"
+                />
               ) : null
             )}
 
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              {announcements?.length === 0 ? (
+              {/* Skeleton loader for announcement loading */}
+              {announcementLoading && (
+                <div className="flex flex-col gap-6 text-center py-10 animate-pulse">
+                  {/* Icon placeholder */}
+                  <div className="mx-auto w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700" />
+
+                  {/* Text lines */}
+                  <div className="flex flex-col gap-3 items-center">
+                    <div className="h-5 w-56 bg-gray-200 dark:bg-gray-600 rounded" />
+                    <div className="h-4 w-40 bg-gray-200 dark:bg-gray-600 rounded" />
+                  </div>
+                </div>
+              )}
+
+              {!announcementLoading && announcements?.length === 0 ? (
                 <div className="flex flex-col gap-3">
                   <Bell className="mx-auto w-10 h-10 text-brand" />
                   <p className="text-lg text-muted">No announcements yet.</p>
