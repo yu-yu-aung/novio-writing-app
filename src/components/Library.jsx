@@ -122,13 +122,7 @@ const Library = ({ type = "home" }) => {
 
                       <Link
                         href={`/bookshelf/${shelf.id}`}
-                        className="
-                          inline-flex items-center justify-center
-                          px-4 py-2 rounded-md text-sm font-medium
-                          border border-amethyst-300 dark:border-amethyst-600
-                          hover:bg-amethyst-100 dark:hover:bg-amethyst-800
-                          transition text-gray-800 dark:text-gray-200
-                        "
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium border border-amethyst-300 dark:border-amethyst-600 hover:bg-amethyst-100 dark:hover:bg-amethyst-800 transition text-gray-800 dark:text-gray-200"
                       >
                         View shelf
                       </Link>
@@ -143,14 +137,7 @@ const Library = ({ type = "home" }) => {
           <div className="flex justify-center pt-10">
             <button
               onClick={() => router.push("/bookshelf/create_bookshelf")}
-              className="
-                px-6 py-3 rounded-lg
-                bg-amethyst-600 dark:bg-amethyst-300
-                text-white dark:text-black
-                text-sm font-medium
-                shadow hover:shadow-lg hover:scale-[1.02]
-                transition
-              "
+              className="px-6 py-3 rounded-lg bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black text-sm font-medium shadow hover:shadow-lg hover:scale-[1.02] transition"
             >
               Create a bookshelf
             </button>

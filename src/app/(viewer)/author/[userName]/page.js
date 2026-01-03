@@ -1,5 +1,6 @@
 "use client";
 
+import ProfileSectionLoader from "@/components/ProfileSectionLoader";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import SmallStoryCardSkeleton from "@/components/SmallStoryCardSkeleton";
@@ -146,7 +147,7 @@ const Page = ({ params }) => {
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
       <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b sm:border-r sm:border-b-transparent lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
-        {loadingFetchAuthor && <ProfileSectionSkeleton />}
+        {loadingFetchAuthor && <ProfileSectionLoader />}
 
         {!loadingFetchAuthor && (
           <>
@@ -308,18 +309,32 @@ const Page = ({ params }) => {
               <SmallStoryCardSkeleton type="user" key={index} />
             ))}
 
-          {!storyLoading &&
-            activeTab === "published" &&
-            stories?.map((story, index) =>
-              story.status === "published" ? (
-                <SmallStoryCard
-                  key={index}
-                  story={story}
-                  storyId={story.id}
-                  type="viewer"
-                />
-              ) : null
-            )}
+          {!storyLoading && activeTab === "published" && (
+            <>
+              {stories?.filter((s) => s.status === "published").length > 0 ? (
+                stories
+                  .filter((s) => s.status === "published")
+                  .map((story) => (
+                    <SmallStoryCard
+                      key={story.id}
+                      story={story}
+                      storyId={story.id}
+                    />
+                  ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <p className="font-semibold text-2xl text-gray-700 dark:text-gray-300 mb-4">
+                    No Published Story
+                  </p>
+                  <img
+                    src="/no_data.png"
+                    alt="No story"
+                    className="w-40 h-40 object-contain opacity-80"
+                  />
+                </div>
+              )}
+            </>
+          )}
 
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">

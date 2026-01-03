@@ -1,6 +1,5 @@
 import HeroSection from "@/components/HeroSection";
 import HomePage from "@/components/HomePage";
-import Library from "@/components/Library";
 
 export default function Home() {
   return (

@@ -36,14 +36,7 @@ const CategorySection = () => {
 
       {/* Scrollable row */}
       <div
-        className="
-          flex gap-3 sm:gap-4
-          overflow-x-auto
-          px-4
-          pb-2
-          snap-x snap-mandatory
-          scrollbar-none
-        "
+        className="flex gap-3 sm:gap-4 overflow-x-auto px-4 pb-2 snap-x snap-mandatory scrollbar-none"
       >
         {categories.map((c) => (
           <div key={c.id} className="snap-start">

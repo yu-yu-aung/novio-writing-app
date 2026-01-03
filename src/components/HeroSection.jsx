@@ -41,36 +41,14 @@ const HeroSection = () => {
           {!isLoggedIn ? (
             <Link
               href="/sign_up"
-              className="
-                inline-flex w-fit mx-auto lg:mx-0
-                items-center justify-center px-4
-                 py-3 sm:py-4
-                rounded-full
-                bg-coral-tree-700 text-white
-                text-sm sm:text-base lg:text-lg
-                font-semibold
-                shadow-md
-                hover:shadow-lg hover:scale-[1.02]
-                transition
-              "
+              className="inline-flex w-fit mx-auto lg:mx-0 items-center justify-center px-4 py-3 sm:py-4 rounded-full bg-coral-tree-700 text-white text-sm sm:text-base lg:text-lg font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition"
             >
               Get Started Now
             </Link>
           ) : (
             <Link
               href="/stories/create_story"
-              className="
-                inline-flex w-fit mx-auto lg:mx-0
-                items-center justify-center
-                px-6 sm:px-8 py-3 sm:py-4
-                rounded-full
-                bg-coral-tree-700 text-white
-                text-sm sm:text-base lg:text-lg
-                font-semibold
-                shadow-md
-                hover:shadow-lg hover:scale-[1.02]
-                transition
-              "
+              className="inline-flex w-fit mx-auto lg:mx-0 items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-coral-tree-700 text-white text-sm sm:text-base lg:text-lg font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition"
             >
               Create a Story
             </Link>
@@ -82,11 +60,7 @@ const HeroSection = () => {
           <img
             src="/images/img1.png"
             alt="A girl writing with her laptop"
-            className="
-              w-[260px] sm:w-[360px] lg:w-[500px]
-              h-auto object-contain
-              drop-shadow-xl
-            "
+            className="w-[260px] sm:w-[360px] lg:w-[500px] h-auto object-contain drop-shadow-xl"
           />
         </div>
       </div>

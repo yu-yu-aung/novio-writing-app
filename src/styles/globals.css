@@ -71,3 +71,29 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 10s linear infinite;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.6s ease-in-out forwards;
+}

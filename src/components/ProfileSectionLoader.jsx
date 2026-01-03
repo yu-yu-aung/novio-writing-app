@@ -1,4 +1,4 @@
-const ProfileSectionSkeleton = () => {
+const ProfileSectionLoader = () => {
   return (
     <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft animate-pulse">
       
@@ -41,3 +41,5 @@ const ProfileSectionSkeleton = () => {
     </section>
   );
 };
+
+export default ProfileSectionLoader

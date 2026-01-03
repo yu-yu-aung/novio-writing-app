@@ -2,6 +2,7 @@
 
 import BookShelf from "@/components/BookShelf";
 import Library from "@/components/Library";
+import ProfileSectionLoader from "@/components/ProfileSectionLoader";
 import SettingDrawer from "@/components/SettingDrawer";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
@@ -121,8 +122,7 @@ const Page = () => {
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
       {/* Left Sidebar — Profile Section */}
       <section className="lg:col-span-3 flex flex-col items-center gap-8 border-b lg:border-r lg:border-b-transparent border-default py-8 sm:py-16 lg:py-20 px-6 bg-background-soft">
-
-        {authorLoading && <ProfileSectionSkeleton />}
+        {authorLoading && <ProfileSectionLoader />}
 
         {!authorLoading && (
           <>
@@ -241,7 +241,6 @@ const Page = () => {
 
       {/* Right Content Section */}
       <section className="lg:col-span-4 px-6 lg:px-12 py-8 sm:py-16 lg:py-20 flex flex-col gap-10">
-
         {/* Tabs */}
         <div className="flex gap-6 border-b border-default pb-3 overflow-x-auto">
           {[
@@ -330,7 +329,6 @@ const Page = () => {
           {activeTab === "library" && <Library type="profile" />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
-              
               {/* Skeleton loader for announcement loading */}
               {announcementLoading && (
                 <div className="flex flex-col gap-6 text-center py-10 animate-pulse">
@@ -344,8 +342,9 @@ const Page = () => {
                   </div>
                 </div>
               )}
-              
-              {!announcementLoading && !showForm &&
+
+              {!announcementLoading &&
+                !showForm &&
                 (announcements?.length === 0 ? (
                   <>
                     <div className="flex flex-col gap-3">

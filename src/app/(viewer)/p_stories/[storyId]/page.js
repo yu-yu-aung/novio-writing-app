@@ -1,7 +1,9 @@
 "use client";
 
 import ChapterCard from "@/components/ChapterCard";
+import ChapterCardSkeleton from "@/components/ChapterCardSkeleton";
 import SmallHeading from "@/components/SmallHeading";
+import StoryDetailSkeleton from "@/components/StoryDetailSkeleton";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import useFetchLibrary from "@/hooks/useFetchLibrary";
@@ -132,8 +134,12 @@ const Page = ({ params }) => {
             bg-background-soft
             text-center
           "
-        >
-          <div className="w-full max-w-xs rounded-xl overflow-hidden shadow">
+        > 
+          {storyLoading ? (
+            <StoryDetailSkeleton />
+          ) : (
+            <>
+              <div className="w-full max-w-xs rounded-xl overflow-hidden shadow">
             <img
               src={story.image_url}
               alt="cover image of the story"
@@ -183,55 +189,41 @@ const Page = ({ params }) => {
             {isInLibrary ? (
               <button
                 onClick={handleRemoveLibrary}
-                className="
-               mx-auto 
-                bg-coral-tree-600 dark:bg-coral-tree-300
-                text-white dark:text-black 
-                px-8 py-3 
-                rounded-lg 
-                shadow 
-                hover:scale-105 transition 
-                font-semibold 
-              "
+                className="mx-auto bg-coral-tree-600 dark:bg-coral-tree-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold"
               >
                 Remove from Library
               </button>
             ) : (
               <button
                 onClick={handleAddLibrary}
-                className="
-               mx-auto 
-                bg-amethyst-600 dark:bg-amethyst-300 
-                text-white dark:text-black 
-                px-8 py-3 
-                rounded-lg 
-                shadow 
-                hover:scale-105 transition 
-                font-semibold 
-              "
+                className="mx-auto  bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold "
               >
                 Add to Library
               </button>
             )}
           </div>
+            </>
+          )}
+          
         </section>
 
         {/* RIGHT SECTION — CHAPTERS */}
         <section
-          className="
-            lg:col-span-6 
-            px-6 lg:px-12 
-            py-10 sm:py-16 lg:py-20 
-            flex flex-col gap-10
-          "
+          className="lg:col-span-6 px-6 lg:px-12 py-10 sm:py-16 lg:py-20 flex flex-col gap-10"
         >
           <h2 className="text-2xl font-bold">Chapters</h2>
 
           <div className="flex flex-col gap-3">
+            {chaptersLoading && (
+              Array.from({length: 6}).map((_, index) => (
+                <ChapterCardSkeleton  key={index}/>
+              ))
+            )}
             {!chapters || chapters.length === 0 ? (
               <p className="text-center text-text-secondary">
                 No chapters yet!
               </p>
+
             ) : (
               chapters.map(
                 (chapter, index) =>

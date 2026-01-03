@@ -10,22 +10,12 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
   const authorId = story?.author?.id;
   console.log("story", story);
 
-  //console.log("Author id: ", authorId, typeof authorId);
-
-  //fetch author's info using author id
-  //const { author, loading, error } = useFetchAuthor({userId: authorId});
   const { user, isLoggedIn } = useAuthStore(); 
-  //console.log("author info: ", author);
-
-
 
   const router = useRouter(); 
-
   
   const handleClickCard = (storyId) => {
-  //   console.log("userId", user?.userId, typeof user?.userId);
-  // console.log("author id", authorId, typeof authorId);
-  // console.log("equal?", user?.userId === authorId);
+
     if ( user?.userId === authorId) {
       router.push(`/stories/${storyId}`);
     } else if (user?.userId != authorId) {
@@ -34,28 +24,17 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
     return;
   }
     
-
   return (
     <div
     onClick={() => handleClickCard(storyId)}
-      className="
-        group flex gap-6 items-start 
-        p-3 sm:p-6 rounded-lg max-w-[400px] max-h-[220px]
-        bg-white dark:bg-amethyst-950 
-        shadow-sm hover:shadow-md transition-shadow
-        border border-transparent dark:border-amethyst-800
-      "
+      className="group flex gap-6 items-start p-3 sm:p-6 rounded-lg max-w-[400px] max-h-[220px] bg-white dark:bg-amethyst-950 shadow-sm hover:shadow-md transition-shadow border border-transparent dark:border-amethyst-800"
     >
 
       {/* Image */}
       <img
         src={story?.image_url}
         alt={story?.title}
-        className="
-          w-[120px] md:w-36 h-42 object-cover rounded-lg 
-          shadow-sm 
-          group-hover:scale-[1.02] transition-transform
-        "
+        className="w-[120px] md:w-36 h-42 object-cover rounded-lg shadow-sm group-hover:scale-[1.02] transition-transform"
       />
 
       {/* Content */}
@@ -85,22 +64,14 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
           {/* Edit Button */}
           <Link
             href="/stories/create_story"
-            className="
-              px-4 py-2 rounded-lg text-xs sm:text-sm font-medium
-              border border-brand text-brand bg-brand-soft
-              hover:bg-brand-light transition
-            "
+            className="px-4 py-2 rounded-lg text-xs sm:text-sm font-medium border border-brand text-brand bg-brand-soft hover:bg-brand-light transition"
           >
             Edit
           </Link>
 
           {/* Status Badge */}
           <span
-            className="
-              px-3 py-1 rounded-full text-xs font-medium
-              bg-amethyst-100 text-amethyst-700 
-              dark:bg-amethyst-800 dark:text-amethyst-200
-            "
+            className=" px-3 py-1 rounded-full text-xs font-medium bg-amethyst-100 text-amethyst-700  dark:bg-amethyst-800 dark:text-amethyst-200"
           >
             {story?.status}
           </span>
@@ -108,7 +79,6 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
         </div>
           )
         }
-        
 
       </div>
     </div>

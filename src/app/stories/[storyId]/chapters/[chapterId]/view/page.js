@@ -1,5 +1,6 @@
 "use client";
 
+import ChapterReaderSkeleton from "@/components/ChapterReaderSkeleton";
 import LeftContentBar from "@/components/LeftContentBar";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
@@ -16,7 +17,11 @@ import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { storyId, chapterId } = use(params);
-  const { chapter, loading, error } = useFetchChapter(chapterId);
+  const {
+    chapter,
+    loading: chapterLoading,
+    error,
+  } = useFetchChapter(chapterId);
   const { user } = useAuthStore();
   const [showLeftBar, setShowLeftBar] = useState(false);
 
@@ -34,19 +39,16 @@ const Page = ({ params }) => {
     error: storyFetchError,
   } = useFetchStory(storyId);
 
-  if (loading)
-    return (
-      <div className="w-full flex justify-center py-20 text-lg text-muted-foreground">
-        Loading...
-      </div>
-    );
-
   if (error)
     return (
       <div className="w-full flex justify-center py-20 text-lg text-red-500">
         Something went wrong.
       </div>
     );
+
+  if (loadingFetchChapters || loadingFetchStory || chapterLoading) {
+    return <ChapterReaderSkeleton />;
+  }
 
   if (!chapter)
     return (
@@ -93,21 +95,8 @@ const Page = ({ params }) => {
   };
 
   return (
-    <div
-      className="
-        flex flex-col sm:grid sm:grid-cols-7 
-        lg:grid lg:grid-cols-7 
-        w-full min-h-screen 
-        relative 
-        bg-background-default 
-        text-heading 
-        px-4 sm:px-6 lg:px-24
-      "
-    >
-      <div
-        className="hidden sm:flex 
-          sm:col-span-2 lg:col-span-2 "
-      >
+    <div className="flex flex-col sm:grid sm:grid-cols-7 lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-6 lg:px-24">
+      <div className="hidden sm:flex sm:col-span-2 lg:col-span-2 ">
         <LeftContentBar
           storyId={storyId}
           story={story}

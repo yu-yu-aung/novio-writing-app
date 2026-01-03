@@ -2,6 +2,7 @@
 
 import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
+import SmallStoryCardSkeleton from "@/components/SmallStoryCardSkeleton";
 import useFetchAllStories from "@/hooks/useFetchAllStories";
 import { saveStorytoDB } from "@/lib/story";
 import { uploadStoryImage } from "@/lib/upload";
@@ -27,7 +28,7 @@ const Page = () => {
   } = useForm();
 
   //console.log("user info: ", user);
-  const { stories, loading, error } = useFetchAllStories(user?.userId);
+  const { stories, loading: storyLoading, error } = useFetchAllStories(user?.userId);
 
   const handlePublishClick = () => {
     setClickPublish(true);
@@ -240,7 +241,13 @@ const Page = () => {
         {/* Published */}
         {clickPublish && (
           <>
-            {stories?.filter((s) => s.status === "published").length > 0 ? (
+            {storyLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+              <SmallStoryCardSkeleton type="user" key={index} />
+            ))
+            ) : 
+            
+            stories?.filter((s) => s.status === "published").length > 0 ? (
               stories
                 .filter((s) => s.status === "published")
                 .map((story) => (
@@ -268,7 +275,12 @@ const Page = () => {
         {/* Drafts */}
         {clickDraft && (
           <>
-            {stories?.filter((s) => s.status === "draft").length > 0 ? (
+            {storyLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <SmallStoryCardSkeleton type="user" key={index} />
+              ))
+            ) : 
+            stories?.filter((s) => s.status === "draft").length > 0 ? (
               stories
                 .filter((s) => s.status === "draft")
                 .map((story) => (

@@ -1,7 +1,6 @@
+import EntryLoader from "@/components/EntryLoader";
 import "@/styles/globals.css";
-import Header from "@/components/Header";
 import { ThemeProvider } from "next-themes";
-import MainFooter from "@/components/MainFooter";
 import { Toaster } from "sonner";
 
 export const metadata = {
@@ -15,7 +14,9 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider attribute={"class"} enableSystem defaultTheme="system">
-          {children}
+          <EntryLoader>
+            {children}
+          </EntryLoader>
         </ThemeProvider>
         <Toaster position="top-center" richColors closeButton expand />
       </body>

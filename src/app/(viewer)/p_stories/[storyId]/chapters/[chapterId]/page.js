@@ -1,5 +1,6 @@
 "use client";
 
+import ChapterReaderSkeleton from "@/components/ChapterReaderSkeleton";
 import CommentSection from "@/components/CommentSection";
 import LeftContentBar from "@/components/LeftContentBar";
 import ShareMoodle from "@/components/ShareMoodle";
@@ -46,17 +47,6 @@ const Page = ({ params }) => {
     error: storyFetchError,
   } = useFetchStory(storyId);
 
-  //console.log("fetched story: ", story);
-
-  //fetch author's info using author id
-  // const {
-  //   author,
-  //   loading: loadingFetchAuthor,
-  //   error: errorFetchAuthor,
-  // } = useFetchAuthor({ userId: story?.author_id });
-  //console.log("author info: ", author);
-
-  //fetch likes to check if the chapter is already liked
   const {
     likeList,
     error: fetchLikeError,
@@ -76,11 +66,7 @@ const Page = ({ params }) => {
     fetchLikeLoading ||
     loading
   ) {
-    return (
-      <div className="w-full flex justify-center py-20 text-lg text-muted-foreground">
-        Loading...
-      </div>
-    );
+    return <ChapterReaderSkeleton />;
   }
 
   if (error || fetchLikeError || storyFetchError) {
@@ -121,7 +107,6 @@ const Page = ({ params }) => {
     }
 
     toast.success("You liked the chapter!");
-    console.log("You liked the chapter!");
     setLiked(true);
     const { data: notiData, error: notiError } = await createLikeNotification(
       user?.userId,
@@ -138,7 +123,6 @@ const Page = ({ params }) => {
 
     if (error) {
       toast.error("Error removing like!");
-      console.log("Error removing like: ", error);
       return;
     }
 
@@ -172,19 +156,10 @@ const Page = ({ params }) => {
 
   return (
     <div
-      className="
-        flex flex-col sm:grid sm:grid-cols-7 
-        lg:grid lg:grid-cols-7 
-        w-full min-h-screen 
-        relative 
-        bg-background-default 
-        text-heading 
-        px-4 sm:px-6 lg:px-24
-      "
+      className="flex flex-col sm:grid sm:grid-cols-7 lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-6 lg:px-24"
     >
       <div
-        className="hidden sm:flex 
-          sm:col-span-2 lg:col-span-2 "
+        className="hidden sm:flex sm:col-span-2 lg:col-span-2 "
       >
         <LeftContentBar
           storyId={storyId}
