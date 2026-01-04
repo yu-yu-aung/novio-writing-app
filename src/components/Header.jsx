@@ -74,7 +74,7 @@ const Header = () => {
 
               <input
                 type="search"
-                className="block w-full rounded-lg p-2 sm:p-3 pl-2 sm:pl-10 text-xs sm:text-sm text-gray-900 dark:text-gray-100 bg-amethyst-100 dark:bg-amethyst-850 border border-gray-300 dark:border-gray-600 focus:outline-none transition"
+                className="block w-full rounded-lg p-2 pr-10 sm:p-3 pl-2 sm:pl-10 text-xs sm:text-sm text-gray-900 dark:text-gray-100 bg-amethyst-100 dark:bg-amethyst-850 border border-gray-300 dark:border-gray-600 focus:outline-none transition"
                 placeholder="Explore stories"
                 value={keyWord}
                 onChange={(e) => setKeyWord(e.target.value)}

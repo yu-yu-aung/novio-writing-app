@@ -28,14 +28,14 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
   return (
     <div
     onClick={() => handleClickCard(storyId)}
-      className="group flex gap-6 items-start p-3 sm:p-6 rounded-lg max-w-[400px] max-h-[220px] bg-white dark:bg-amethyst-950 shadow-sm hover:shadow-md transition-shadow border border-transparent dark:border-amethyst-800"
+      className="group flex gap-3 items-start p-3 sm:p-6 rounded-lg max-w-[400px] max-h-[220px] bg-white dark:bg-amethyst-950 shadow-sm hover:shadow-md transition-shadow border border-transparent dark:border-amethyst-800"
     >
 
       {/* Image */}
       <img
         src={story?.image_url}
         alt={story?.title}
-        className="w-[120px] md:w-36 h-42 object-cover rounded-lg shadow-sm group-hover:scale-[1.02] transition-transform"
+        className="w-[100px] md:w-36 h-42 object-cover rounded-lg shadow-sm group-hover:scale-[1.02] transition-transform"
       />
 
       {/* Content */}
@@ -60,7 +60,7 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
         {/* Bottom Buttons */}
         {
           type === "user" && (
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 pr-2">
 
           {/* Edit Button */}
           <Link

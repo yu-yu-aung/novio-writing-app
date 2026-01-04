@@ -280,7 +280,7 @@ const Page = ({ params }) => {
       </div>
 
       {/* Right Content Section */}
-      <section className="lg:col-span-4 px-6 lg:px-12 py-8 sm:py-16 lg:py-20 flex flex-col gap-10">
+      <section className="lg:col-span-4 px-4 lg:px-12 py-8 sm:py-16 lg:py-20 flex flex-col gap-10">
         {/* Tabs */}
         <div className="flex gap-6 border-b border-default pb-3 overflow-x-auto">
           {[
@@ -321,6 +321,7 @@ const Page = ({ params }) => {
                       key={story.id}
                       story={story}
                       storyId={story.id}
+                      type="viewer"
                     />
                   ))
               ) : (
