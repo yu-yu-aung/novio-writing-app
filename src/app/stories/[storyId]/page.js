@@ -36,17 +36,6 @@ const Page = ({ params }) => {
     error: chaptersError,
   } = useFetchAllChapters(storyId);
 
-  if (!story || storyError) {
-    return (
-      <>
-        <h2 className="font-semibold text-2xl text-red-600  my-4">
-          Story Not Found!
-        </h2>
-        <ErrorStage />
-      </>
-    );
-  }
-
   const handleClickPublish = async (storyId) => {
     //console.log("CLICKED storyId:", storyId);
 
@@ -89,7 +78,7 @@ const Page = ({ params }) => {
       .eq("id", storyId);
 
     if (storyError) {
-      console.log("Story Error: ", storyError);
+      //console.log("Story Error: ", storyError);
       return toast.error("Failed to unpublish the story!");
     }
 
@@ -113,6 +102,10 @@ const Page = ({ params }) => {
     toast.success("Story Deleted Successfully!");
     router.push("/profile");
   };
+
+  if (!story || storyError) {
+    return <ErrorStage />;
+  }
 
   return (
     <>

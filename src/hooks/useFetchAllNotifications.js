@@ -18,7 +18,7 @@ export default function useFetchAllNotifications(user) {
         .order("created_at", { ascending: true });
 
       if (error) {
-        console.log("Error fetching noti: ", error);
+        //console.log("Error fetching noti: ", error);
         setError(error);
       } else {
         setNotifications(data);

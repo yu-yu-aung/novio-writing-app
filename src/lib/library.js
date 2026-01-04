@@ -11,7 +11,7 @@ export async function addStorytoLibrary(story, user) {
     .single();
 
   if (error) {
-    console.log("Error adding story to library!", error);
+    //console.log("Error adding story to library!", error);
     return error;
   }
 

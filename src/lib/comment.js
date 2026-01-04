@@ -20,7 +20,7 @@ export async function addCommentToDb(
     .single();
 
   if (error) {
-    console.log("Comment Error: ", error);
+    //console.log("Comment Error: ", error);
     return error;
   }
 
@@ -34,7 +34,7 @@ export async function deleteComment(rowId) {
     .eq("id", rowId);
 
   if (error) {
-    console.log("Error deleting comment: ", error);
+    //console.log("Error deleting comment: ", error);
     return error;
   }
 

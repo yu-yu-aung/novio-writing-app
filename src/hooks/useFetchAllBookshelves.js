@@ -18,7 +18,7 @@ export default function useFetchAllBookshelves(user) {
         .order("created_at", { ascending: true });
 
       if (error) {
-        console.log("Error fetching bookshelves: ", error);
+        //console.log("Error fetching bookshelves: ", error);
         setError(error);
       } else {
         setBookshelves(data || []);

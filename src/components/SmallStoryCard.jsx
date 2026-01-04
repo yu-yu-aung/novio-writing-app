@@ -9,12 +9,9 @@ import { useRouter } from "next/navigation";
 
 const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
   const authorId = story?.author?.id;
-  console.log("story", story);
 
   const { user, isLoggedIn } = useAuthStore(); 
   const { likeList, error, loading } = useFetchStoryLikes(storyId); 
-
-  console.log("like list: ", likeList);
 
   const router = useRouter(); 
   

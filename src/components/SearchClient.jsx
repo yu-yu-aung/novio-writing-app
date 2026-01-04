@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import SearchResultSkeleton from "./SearchResultSkeleton";
+import ErrorStage from "./ErrorStage";
 
 export default function SearchClient() {
   const searchParams = useSearchParams();
@@ -25,7 +26,7 @@ export default function SearchClient() {
   }
 
   if (error) {
-    return <p>Something went wrong!</p>;
+    return <ErrorStage/>;
   }
 
   //console.log("search results: ", searchResults);

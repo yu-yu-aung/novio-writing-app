@@ -15,7 +15,7 @@ export async function addLiketoChapter(chapterId, userId, authorId, storyId) {
     .single();
 
   if (error) {
-    console.log("Error like chapter: ", error);
+    //console.log("Error like chapter: ", error);
     return error;
   }
 
@@ -30,7 +30,7 @@ export async function removeLikefromChapter(chapterId, userId) {
     .eq("user_id", userId);
 
   if (error) {
-    console.log("Error removing like: ", error);
+    //console.log("Error removing like: ", error);
     return error;
   }
 

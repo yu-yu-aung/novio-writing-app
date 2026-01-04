@@ -53,15 +53,17 @@ const Page = ({ params }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showUnfollowBtn]);
 
-  if (!userName) return;
-
   const {
     author,
     error: errorFetchAuthor,
     loading: loadingFetchAuthor,
   } = useFetchAuthor({ userName: userName });
 
-  const { stories, loading: storyLoading } = useFetchAllStories(author?.id);
+  const {
+    stories,
+    loading: storyLoading,
+    error: storyError,
+  } = useFetchAllStories(author?.id);
 
   const { followings, loading, error, refresh } = useFetchFollowingList(
     user?.userId
@@ -102,9 +104,9 @@ const Page = ({ params }) => {
   // console.log("stories", stories);
   // console.log("published stories: ", publishedStories);
 
-  if (errorFetchAuthor) {
+  if (!user || errorFetchAuthor) {
     //console.log("Error Fetching Author Info: ", errorFetchAuthor);
-    return <ErrorStage/>;
+    return <ErrorStage />;
   }
 
   const handleFollowAuthor = async () => {
@@ -301,7 +303,10 @@ const Page = ({ params }) => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
-          {storyLoading &&
+          {storyError && <ErrorStage />}
+
+          {!storyError &&
+            storyLoading &&
             Array.from({ length: 4 }).map((_, index) => (
               <SmallStoryCardSkeleton type="user" key={index} />
             ))}
@@ -335,8 +340,10 @@ const Page = ({ params }) => {
 
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
+              {announcementError && <ErrorStage />}
+
               {/* Skeleton loader for announcement loading */}
-              {announcementLoading && (
+              {!announcementError && announcementLoading && (
                 <div className="flex flex-col gap-6 text-center py-10 animate-pulse">
                   {/* Icon placeholder */}
                   <div className="mx-auto w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700" />

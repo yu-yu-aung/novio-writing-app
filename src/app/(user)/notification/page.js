@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorStage from "@/components/ErrorStage";
 import NotiCard from "@/components/NotiCard";
 import NotiCardSkeleton from "@/components/NotiCardSkeleton";
 import SmallHeading from "@/components/SmallHeading";
@@ -81,7 +82,7 @@ const Page = () => {
         : undefined;
     } else if (noti.action_type === "published_story") {
       story = stories.find((s) => s.id === noti.target_id);
-      console.log("story info: ", story);
+      //console.log("story info: ", story);
       content = story
         ? `${actor.pen_name} published a new story "${story?.title}"`
         : undefined;
@@ -137,7 +138,7 @@ const Page = () => {
     }
   };
 
-  if (!user) return;
+  if (!user || errorNoti) return <ErrorStage />;
 
   //console.log("Noti : ", notifications);
   //console.log("merged noti: ", mergedActions);

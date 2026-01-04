@@ -1,6 +1,7 @@
 "use client";
 
 import ChapterReaderSkeleton from "@/components/ChapterReaderSkeleton";
+import ErrorStage from "@/components/ErrorStage";
 import LeftContentBar from "@/components/LeftContentBar";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
@@ -39,24 +40,6 @@ const Page = ({ params }) => {
     error: storyFetchError,
   } = useFetchStory(storyId);
 
-  if (error)
-    return (
-      <div className="w-full flex justify-center py-20 text-lg text-red-500">
-        Something went wrong.
-      </div>
-    );
-
-  if (loadingFetchChapters || loadingFetchStory || chapterLoading) {
-    return <ChapterReaderSkeleton />;
-  }
-
-  if (!chapter)
-    return (
-      <div className="w-full flex justify-center py-20 text-lg text-muted-foreground">
-        Chapter not found.
-      </div>
-    );
-
   const handleConfirmPublish = async (chapter) => {
     const { error } = await supabase
       .from("chapters")
@@ -93,6 +76,12 @@ const Page = ({ params }) => {
     toast.success("Chapter unpublished successfully!");
     window.location.reload();
   };
+
+  if (loadingFetchChapters || loadingFetchStory || chapterLoading) {
+    return <ChapterReaderSkeleton />;
+  }
+
+  if (!chapter || error) return <ErrorStage />;
 
   return (
     <div className="flex flex-col sm:grid sm:grid-cols-7 lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-6 lg:px-24">

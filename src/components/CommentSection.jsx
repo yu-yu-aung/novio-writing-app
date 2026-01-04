@@ -10,7 +10,7 @@ import { createCommentNotification } from '@/lib/notification';
 const CommentSection = ({ chapterId, storyId, authorId }) => {
   const [commentText, setCommentText] = useState(""); 
   const { user } = useAuthStore();
-  console.log("current user: ", user);
+  //console.log("current user: ", user);
 
   const {commentList, loading: commentLoading, error: commentError, refetch} = useFetchComments(chapterId); 
 
@@ -18,7 +18,7 @@ const CommentSection = ({ chapterId, storyId, authorId }) => {
 
   const { users, error: usersError, loading: usersLoading} = useFetchUsersByIds(userIdList);
 
-  console.log("users im comment section: ", users);
+  //console.log("users im comment section: ", users);
 
   const mergedComments = commentList?.map((c) => {
     const userInfo = users?.find((u) => u.id === c.user_id)
@@ -28,7 +28,7 @@ const CommentSection = ({ chapterId, storyId, authorId }) => {
     };
   });
 
-  console.log("merged comments: ", mergedComments);
+  //console.log("merged comments: ", mergedComments);
 
 
   const handleSendComment = async () => {

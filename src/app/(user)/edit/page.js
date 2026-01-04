@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorStage from "@/components/ErrorStage";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchAuthor from "@/hooks/useFetchAuthor";
 import supabase from "@/lib/supabaseClient";
@@ -19,7 +20,7 @@ const Page = () => {
   const router = useRouter();
   //console.log("original user info: ", user);
 
-  const { author } = useFetchAuthor({ userId: user?.userId });
+  const { author, error } = useFetchAuthor({ userId: user?.userId });
 
   const {
     handleSubmit,
@@ -39,7 +40,8 @@ const Page = () => {
     }
   }, [author, reset]);
 
-  if (!author) return null;
+  if (!author || error) return <ErrorStage />;
+
 
   const onSubmit = async (data) => {
     if (!data) return null;
@@ -90,7 +92,7 @@ const Page = () => {
         image: profile?.profile_image_url,
       });
 
-      console.log("updated info: ", user);
+      //console.log("updated info: ", user);
       setLoading(false);
       toast.success("Profile updated!");
       router.push("/profile");

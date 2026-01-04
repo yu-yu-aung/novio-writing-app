@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorStage from "@/components/ErrorStage";
 import SmallHeading from "@/components/SmallHeading";
 import SmallStoryCard from "@/components/SmallStoryCard";
 import StoryCard from "@/components/StoryCard";
@@ -20,7 +21,11 @@ import { toast } from "sonner";
 
 const Page = ({ params }) => {
   const { bookshelfId } = use(params);
-  const { bookshelf, refresh: refreshShelf } = useFetchBookshelf(bookshelfId);
+  const {
+    bookshelf,
+    refresh: refreshShelf,
+    error,
+  } = useFetchBookshelf(bookshelfId);
   const { user } = useAuthStore();
   const [showLibrary, setShowLibrary] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -34,8 +39,6 @@ const Page = ({ params }) => {
     refresh,
     loading: itemLoading,
   } = useFetchBookshelfItems(bookshelfId);
-
-  console.log("bookshelf info: ", bookshelf);
 
   useEffect(() => {
     setMounted(true);
@@ -100,7 +103,7 @@ const Page = ({ params }) => {
     const { error: removeError } = await deleteItemFromBookshelf(id);
 
     if (removeError) {
-      console.log("Error removing book from bookahelf: ", removeError);
+      //console.log("Error removing book from bookahelf: ", removeError);
       toast.error("Error removing book from bookshelf!");
       return;
     }
@@ -108,6 +111,10 @@ const Page = ({ params }) => {
     toast.success("Story removed from bookshelf");
     refresh();
   };
+
+  if (!bookshelf || error) {
+    return <ErrorStage />;
+  }
 
   return (
     <div className="px-4 sm:px-8 lg:px-24 py-10 max-w-[1400px] mx-auto flex flex-col items-center">

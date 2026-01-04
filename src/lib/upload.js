@@ -2,7 +2,7 @@ import supabase from "./supabaseClient";
 
 export async function uploadStoryImage(file, userId) {
   if (!file) {
-    console.log("NO FILE RECEIVED");
+    //console.log("NO FILE RECEIVED");
     return null;
   }
 
@@ -37,7 +37,7 @@ export async function uploadChapterImage(file, storyId) {
     .upload(filePath, file);
 
   if (uploadError) {
-    console.log("Upload error: ", uploadError);
+    //console.log("Upload error: ", uploadError);
     return null;
   }
 
@@ -62,7 +62,7 @@ export async function uploadProfileImage(file, userId) {
     });
 
   if (uploadError) {
-    console.log("Upload Error: ", uploadError);
+    //console.log("Upload Error: ", uploadError);
     return null;
   }
 

@@ -19,7 +19,7 @@ export default function useFetchComments(chapterId) {
 
     if (error) {
       setError(error);
-      console.log("Error fetching comments: ", error);
+      //console.log("Error fetching comments: ", error);
     } else {
       setCommentList(data);
     }

@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorStage from "@/components/ErrorStage";
 import SmallHeading from "@/components/SmallHeading";
 import StoryCard from "@/components/StoryCard";
 import StoryCardSkeleton from "@/components/StoryCardSkeleton";
@@ -11,7 +12,7 @@ import React, { use, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
   const { bookshelfId } = use(params);
-  const { bookshelf } = useFetchBookshelf(bookshelfId);
+  const { bookshelf, error: bookshelfError } = useFetchBookshelf(bookshelfId);
   const [mounted, setMounted] = useState(false);
 
   const { items, loading: itemLoading } = useFetchBookshelfItems(bookshelfId);
@@ -21,6 +22,8 @@ const Page = ({ params }) => {
   }, []);
 
   if (!mounted) return null;
+
+  if (!bookshelf || bookshelfError) return <ErrorStage />;
 
   return (
     <div className="px-4 sm:px-8 lg:px-24 py-10 max-w-[1400px] mx-auto flex flex-col items-center">
@@ -33,10 +36,8 @@ const Page = ({ params }) => {
         ))}
 
       {/* Bookshelf Items */}
-      { !itemLoading && items?.length > 0 ? (
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8"
-        >
+      {!itemLoading && items?.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
           {items.map((item) => (
             <StoryCard key={item.id} story={item.story} />
           ))}

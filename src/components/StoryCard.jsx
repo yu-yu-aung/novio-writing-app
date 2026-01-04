@@ -5,7 +5,7 @@ import React from 'react'
 const StoryCard = ({ story }) => {
   const router = useRouter();
   //const { author } = useFetchAuthor({ userId: story.author_id });
-  console.log("story: ", story);
+  // console.log("story: ", story);
   return (
     <div
       onClick={() => router.push(`/p_stories/${story.id}`)}

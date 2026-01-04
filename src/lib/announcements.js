@@ -54,7 +54,7 @@ export async function deleteAnnouncement(rowId) {
     .eq("id", rowId);
 
     if (error) {
-    console.log("Error deleting announcement: ", error);
+    //console.log("Error deleting announcement: ", error);
     return error;
   }
 

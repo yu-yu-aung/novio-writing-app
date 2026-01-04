@@ -56,11 +56,11 @@ const Page = () => {
       imageUrl = await uploadStoryImage(file, user?.userId);
     }
 
-    console.log("data.image: ", data.image?.[0]);
-    console.log("file: ", file);
-    console.log("image: ", imageUrl);
-    console.log("user info: ", user);
-    console.log("data: ", data);
+    // console.log("data.image: ", data.image?.[0]);
+    // console.log("file: ", file);
+    // console.log("image: ", imageUrl);
+    // console.log("user info: ", user);
+    // console.log("data: ", data);
 
     const { data: newStory, error } = await saveStorytoDB(user, data, imageUrl);
 

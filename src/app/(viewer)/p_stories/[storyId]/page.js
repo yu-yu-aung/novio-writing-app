@@ -22,7 +22,6 @@ const Page = ({ params }) => {
   const { storyId } = use(params);
   const router = useRouter();
   const { user, isLoggedIn } = useAuthStore();
-  const [author, setAuthor] = useState(null);
 
   //Fetch story
   const {
@@ -77,7 +76,9 @@ const Page = ({ params }) => {
   if (!story || storyError) {
     return (
       <>
-        <h2 className="font-semibold text-2xl text-red-600  my-4">Story Not Found!</h2>
+        <h2 className="font-semibold text-2xl text-red-600  my-4">
+          Story Not Found!
+        </h2>
         <ErrorStage />
       </>
     );
@@ -115,9 +116,7 @@ const Page = ({ params }) => {
     <>
       <SmallHeading title="Story Dashboard" />
 
-      <div
-        className="flex flex-col lg:grid lg:grid-cols-9 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24"
-      >
+      <div className="flex flex-col lg:grid lg:grid-cols-9 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
         {/* LEFT SECTION — STORY INFO */}
         <section
           className="
@@ -130,35 +129,35 @@ const Page = ({ params }) => {
             bg-background-soft
             text-center
           "
-        > 
+        >
           {storyLoading ? (
             <StoryDetailSkeleton />
           ) : (
             <>
               <div className="w-full max-w-xs rounded-xl overflow-hidden shadow">
-            <img
-              src={story.image_url}
-              alt="cover image of the story"
-              className="w-full h-auto object-cover"
-            />
-          </div>
+                <img
+                  src={story.image_url}
+                  alt="cover image of the story"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
 
-          <h1 className="text-2xl font-bold">{story.title}</h1>
-          <Link
-            href={`/author/${story?.author?.user_name}`}
-            className="text-xl font-bold"
-          >
-            {story?.author?.pen_name}
-          </Link>
-          <h3 className="text-lg text-text-secondary">{story.category}</h3>
+              <h1 className="text-2xl font-bold">{story.title}</h1>
+              <Link
+                href={`/author/${story?.author?.user_name}`}
+                className="text-xl font-bold"
+              >
+                {story?.author?.pen_name}
+              </Link>
+              <h3 className="text-lg text-text-secondary">{story.category}</h3>
 
-          <div className="flex flex-wrap justify-center gap-3 w-full">
-            {story.tags.map(
-              (t, index) =>
-                t !== "" && (
-                  <button
-                    key={index}
-                    className="
+              <div className="flex flex-wrap justify-center gap-3 w-full">
+                {story.tags.map(
+                  (t, index) =>
+                    t !== "" && (
+                      <button
+                        key={index}
+                        className="
                       bg-coral-tree-400 dark:bg-coral-tree-200 
                       text-white dark:text-black
                       border rounded-full 
@@ -166,60 +165,55 @@ const Page = ({ params }) => {
                       text-sm 
                       shadow-sm
                     "
+                      >
+                        {t}
+                      </button>
+                    )
+                )}
+              </div>
+
+              <p className="text-sm text-text-secondary max-w-md leading-relaxed">
+                {story.description}
+              </p>
+
+              <p className="font-medium">
+                <span className="font-bold">Status:</span> {story.status}
+              </p>
+
+              <div className="flex justify-between">
+                {isInLibrary ? (
+                  <button
+                    onClick={handleRemoveLibrary}
+                    className="mx-auto bg-coral-tree-600 dark:bg-coral-tree-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold"
                   >
-                    {t}
+                    Remove from Library
                   </button>
-                )
-            )}
-          </div>
-
-          <p className="text-sm text-text-secondary max-w-md leading-relaxed">
-            {story.description}
-          </p>
-
-          <p className="font-medium">
-            <span className="font-bold">Status:</span> {story.status}
-          </p>
-
-          <div className="flex justify-between">
-            {isInLibrary ? (
-              <button
-                onClick={handleRemoveLibrary}
-                className="mx-auto bg-coral-tree-600 dark:bg-coral-tree-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold"
-              >
-                Remove from Library
-              </button>
-            ) : (
-              <button
-                onClick={handleAddLibrary}
-                className="mx-auto  bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold "
-              >
-                Add to Library
-              </button>
-            )}
-          </div>
+                ) : (
+                  <button
+                    onClick={handleAddLibrary}
+                    className="mx-auto  bg-amethyst-600 dark:bg-amethyst-300 text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold "
+                  >
+                    Add to Library
+                  </button>
+                )}
+              </div>
             </>
           )}
-          
         </section>
 
         {/* RIGHT SECTION — CHAPTERS */}
-        <section
-          className="lg:col-span-6 px-6 lg:px-12 py-10 sm:py-16 lg:py-20 flex flex-col gap-10"
-        >
+        <section className="lg:col-span-6 px-6 lg:px-12 py-10 sm:py-16 lg:py-20 flex flex-col gap-10">
           <h2 className="text-2xl font-bold">Chapters</h2>
 
           <div className="flex flex-col gap-3">
-            {chaptersLoading && (
-              Array.from({length: 6}).map((_, index) => (
-                <ChapterCardSkeleton  key={index}/>
-              ))
-            )}
+            {chaptersLoading &&
+              Array.from({ length: 6 }).map((_, index) => (
+                <ChapterCardSkeleton key={index} />
+              ))}
             {!chapters || chapters.length === 0 ? (
               <p className="text-center text-text-secondary">
                 No chapters yet!
               </p>
-
             ) : (
               chapters.map(
                 (chapter, index) =>

@@ -1,6 +1,7 @@
 "use client";
 
 import BookShelf from "@/components/BookShelf";
+import ErrorStage from "@/components/ErrorStage";
 import Library from "@/components/Library";
 import ProfileSectionLoader from "@/components/ProfileSectionLoader";
 import SettingDrawer from "@/components/SettingDrawer";
@@ -47,10 +48,14 @@ const Page = () => {
   const {
     stories,
     loading: storyLoading,
-    error,
+    error: storyError,
   } = useFetchAllStories(user?.userId);
 
-  const { author, loading: authorLoading } = useFetchAuthor({
+  const {
+    author,
+    loading: authorLoading,
+    error: authorError,
+  } = useFetchAuthor({
     userId: user?.userId,
   });
 
@@ -116,7 +121,7 @@ const Page = () => {
     setShowSetting(!showSetting);
   };
 
-  //console.log("user: ", user);
+  if (authorError) return <ErrorStage />;
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
@@ -265,7 +270,10 @@ const Page = () => {
 
         {/* Content */}
         <div className="flex flex-col gap-6">
-          {storyLoading &&
+          {storyError && <ErrorStage />}
+
+          {!storyError &&
+            storyLoading &&
             Array.from({ length: 4 }).map((_, index) => (
               <SmallStoryCardSkeleton type="user" key={index} />
             ))}
@@ -329,6 +337,10 @@ const Page = () => {
           {activeTab === "library" && <Library type="profile" />}
           {activeTab === "notice" && (
             <div className="flex flex-col gap-6 text-center py-10">
+
+              {/* Error Handling for Announcement  */}
+              {announcementError && <ErrorStage />}
+              
               {/* Skeleton loader for announcement loading */}
               {announcementLoading && (
                 <div className="flex flex-col gap-6 text-center py-10 animate-pulse">
