@@ -2,6 +2,7 @@
 
 import ChapterCard from "@/components/ChapterCard";
 import ChapterCardSkeleton from "@/components/ChapterCardSkeleton";
+import ErrorStage from "@/components/ErrorStage";
 import SmallHeading from "@/components/SmallHeading";
 import StoryDetailSkeleton from "@/components/StoryDetailSkeleton";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
@@ -35,8 +36,15 @@ const Page = ({ params }) => {
     error: chaptersError,
   } = useFetchAllChapters(storyId);
 
-  if (!story) {
-    return <div className="p-10">Story not found</div>;
+  if (!story || storyError) {
+    return (
+      <>
+        <h2 className="font-semibold text-2xl text-red-600  my-4">
+          Story Not Found!
+        </h2>
+        <ErrorStage />
+      </>
+    );
   }
 
   const handleClickPublish = async (storyId) => {
@@ -54,7 +62,6 @@ const Page = ({ params }) => {
 
     //console.log("SUPABASE STORY UPDATE ERROR:", storyError);
     if (storyError) {
-      console.log("story error: ", storyError);
       return toast.error("Failed to publish the story!");
     }
 
@@ -111,9 +118,7 @@ const Page = ({ params }) => {
     <>
       <SmallHeading title={`Story Dashboard`} />
 
-      <div
-        className="flex flex-col lg:grid lg:grid-cols-9 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24"
-      >
+      <div className="flex flex-col lg:grid lg:grid-cols-9 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24">
         {/* LEFT SECTION — STORY INFO */}
         <section className="lg:col-span-3 flex flex-col items-center gap-6 border-b lg:border-r lg:border-b-transparent border-default py-10 sm:py-16 lg:py-20 px-6 bg-background-soft text-center">
           {storyLoading ? (
@@ -197,9 +202,7 @@ const Page = ({ params }) => {
         </section>
 
         {/* RIGHT SECTION — CHAPTERS */}
-        <section
-          className="lg:col-span-6 px-6 lg:px-12 py-10 sm:py-16 lg:py-20 flex flex-col gap-10"
-        >
+        <section className="lg:col-span-6 px-6 lg:px-12 py-10 sm:py-16 lg:py-20 flex flex-col gap-10">
           <h2 className="text-2xl font-bold">Chapters</h2>
 
           <div className="flex flex-col gap-3">
@@ -233,9 +236,7 @@ const Page = ({ params }) => {
           </div>
 
           <Link href={`/stories/${storyId}/new_chapter`}>
-            <button
-              className="mx-auto  bg-amethyst-600 dark:bg-amethyst-300  text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold"
-            >
+            <button className="mx-auto  bg-amethyst-600 dark:bg-amethyst-300  text-white dark:text-black px-8 py-3 rounded-lg shadow hover:scale-105 transition font-semibold">
               Create New Chapter
             </button>
           </Link>

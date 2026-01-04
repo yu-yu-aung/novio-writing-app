@@ -51,7 +51,7 @@ const MainFooter = () => {
              {footerCategories.map((c) => (
               <li key={c.value}>
                 <Link
-                  href={`/search?category=${encodeURIComponent(c.value)}`}
+                  href={`/search?query=${encodeURIComponent(c.value)}`}
                   className="hover:text-amethyst-500 transition"
                 >
                   {c.label}
@@ -68,7 +68,7 @@ const MainFooter = () => {
              {footerGenres.map((g) => (
               <li key={g.value}>
                 <Link
-                  href={`/search?genre=${encodeURIComponent(g.value)}`}
+                  href={`/search?query=${encodeURIComponent(g.value)}`}
                   className="hover:text-amethyst-500 transition"
                 >
                   {g.label}

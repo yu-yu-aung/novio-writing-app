@@ -1,36 +1,38 @@
-"use client"
+"use client";
 
 import supabase from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 
-export function useFetchLikes(chapterId) {
+const useFetchStoryLikes = (storyId) => {
   const [likeList, setLikeList] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!chapterId) return;
+    if (!storyId) return;
 
-    async function fetchLikes() {
+    async function loadLikes() {
       setLoading(true);
 
       const { data, error } = await supabase
         .from("likes")
         .select("*")
-        .eq("chapter_id", chapterId);
+        .eq("story_id", storyId);
 
       if (error) {
-        // console.log("Error fetching likes:", error);
+        //console.log("Error fetching story like: ", error);
         setError(error);
       } else {
-        setLikeList(data); 
+        setLikeList(data);
       }
 
       setLoading(false);
     }
 
-    fetchLikes(); 
-  }, [chapterId]);
+    loadLikes();
+  }, [storyId]);
 
   return { likeList, error, loading };
-}
+};
+
+export default useFetchStoryLikes;

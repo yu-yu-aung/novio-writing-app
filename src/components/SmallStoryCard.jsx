@@ -1,6 +1,7 @@
 "use client";
 
 import useFetchAuthor from "@/hooks/useFetchAuthor";
+import useFetchStoryLikes from "@/hooks/useFetchStoryLikes";
 import useAuthStore from "@/store/useAuthStore";
 import { Star } from "lucide-react";
 import Link from "next/link";
@@ -11,6 +12,9 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
   console.log("story", story);
 
   const { user, isLoggedIn } = useAuthStore(); 
+  const { likeList, error, loading } = useFetchStoryLikes(storyId); 
+
+  console.log("like list: ", likeList);
 
   const router = useRouter(); 
   
@@ -52,7 +56,7 @@ const  SmallStoryCard = ({ story, storyId, type = "user" }) => {
 
           <div className="flex items-center gap-2 text-yellow-500 text-sm mt-1">
             <Star className="w-4 h-4" />
-            <span>4k Likes</span>
+            <span>{likeList.length} Likes</span>
           </div>
         </div>
 

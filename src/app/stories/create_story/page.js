@@ -240,7 +240,7 @@ const Page = () => {
 
         {/* Published */}
         {clickPublish && (
-          <>
+          <div className="flex flex-col gap-6 py-6">
             {storyLoading ? (
               Array.from({ length: 4 }).map((_, index) => (
               <SmallStoryCardSkeleton type="user" key={index} />
@@ -269,12 +269,12 @@ const Page = () => {
                 />
               </div>
             )}
-          </>
+          </div>
         )}
 
         {/* Drafts */}
         {clickDraft && (
-          <>
+          <div className="flex flex-col gap-6 py-6">
             {storyLoading ? (
               Array.from({ length: 4 }).map((_, index) => (
                 <SmallStoryCardSkeleton type="user" key={index} />
@@ -302,7 +302,7 @@ const Page = () => {
                 />
               </div>
             )}
-          </>
+          </div>
         )}
       </section>
     </div>

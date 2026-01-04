@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorStage from "@/components/ErrorStage";
 import ProfileSectionLoader from "@/components/ProfileSectionLoader";
 import ShareMoodle from "@/components/ShareMoodle";
 import SmallStoryCard from "@/components/SmallStoryCard";
@@ -102,12 +103,8 @@ const Page = ({ params }) => {
   // console.log("published stories: ", publishedStories);
 
   if (errorFetchAuthor) {
-    console.log("Error Fetching Author Info: ", errorFetchAuthor);
-    return <p>Can't view author's profile!</p>;
-  }
-
-  if (loadingFetchAuthor) {
-    return <p>Loading...</p>;
+    //console.log("Error Fetching Author Info: ", errorFetchAuthor);
+    return <ErrorStage/>;
   }
 
   const handleFollowAuthor = async () => {

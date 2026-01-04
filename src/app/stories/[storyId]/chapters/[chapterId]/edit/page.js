@@ -1,5 +1,6 @@
 "use client";
 
+import EditChapterSkeleton from "@/components/EditChapterSkeleton";
 import SmallHeading from "@/components/SmallHeading";
 import useFetchChapter from "@/hooks/useFetchChapter";
 import supabase from "@/lib/supabaseClient";
@@ -55,13 +56,19 @@ const Page = ({ params }) => {
     }
   }, [chapter, reset]);
 
-  if (error) {
-    //console.log("Error Fetching chapter: ", error);
-    return toast.error("Error editing chapter!");
+  if (chapterLoading) {
+    return <EditChapterSkeleton />;
   }
 
-  if (loading) {
-    return <p>Loading...</p>;
+  if (!chapter || error) {
+    return (
+      <>
+        <h2 className="font-semibold text-2xl text-red-600  my-4">
+          Chapter Not Found!
+        </h2>
+        <ErrorStage />
+      </>
+    );
   }
 
   const onSubmit = async (data) => {

@@ -2,6 +2,7 @@
 
 import ChapterReaderSkeleton from "@/components/ChapterReaderSkeleton";
 import CommentSection from "@/components/CommentSection";
+import ErrorStage from "@/components/ErrorStage";
 import LeftContentBar from "@/components/LeftContentBar";
 import ShareMoodle from "@/components/ShareMoodle";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
@@ -69,22 +70,16 @@ const Page = ({ params }) => {
     return <ChapterReaderSkeleton />;
   }
 
-  if (error || fetchLikeError || storyFetchError) {
+  if (!chapter || error) {
     return (
-      <div className="w-full flex justify-center py-20 text-lg text-red-500">
-        Something went wrong.
-      </div>
+      <>
+        <h2 className="font-semibold text-2xl text-red-600  my-4">
+          Chapter Not Found!
+        </h2>
+        <ErrorStage />
+      </>
     );
   }
-
-  if (!chapter)
-    return (
-      <div className="w-full flex justify-center py-20 text-lg text-muted-foreground">
-        Chapter not found.
-      </div>
-    );
-
-  //console.log("user info: ", user);
 
   // --- handlers ---
   const handleClickLikeBtn = async () => {
@@ -102,7 +97,6 @@ const Page = ({ params }) => {
 
     if (error) {
       toast.error("Something went wrong!");
-      console.error("Like Error: ", error);
       return;
     }
 
@@ -155,12 +149,8 @@ const Page = ({ params }) => {
   };
 
   return (
-    <div
-      className="flex flex-col sm:grid sm:grid-cols-7 lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-6 lg:px-24"
-    >
-      <div
-        className="hidden sm:flex sm:col-span-2 lg:col-span-2 "
-      >
+    <div className="flex flex-col sm:grid sm:grid-cols-7 lg:grid lg:grid-cols-7 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-6 lg:px-24">
+      <div className="hidden sm:flex sm:col-span-2 lg:col-span-2 ">
         <LeftContentBar
           storyId={storyId}
           story={story}

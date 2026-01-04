@@ -17,7 +17,7 @@ const Page = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  console.log("original user info: ", user);
+  //console.log("original user info: ", user);
 
   const { author } = useFetchAuthor({ userId: user?.userId });
 
@@ -28,7 +28,6 @@ const Page = () => {
     formState: { errors },
   } = useForm();
 
-  console.log("user old data: ", author);
   useEffect(() => {
     if (!author) return;
     if (author) {
@@ -78,7 +77,6 @@ const Page = () => {
       //console.log("returned info: ", profile);
 
       if (error) {
-        console.error("Supabase Error: ", error);
         toast.error("Error updating profile!");
         return;
       }

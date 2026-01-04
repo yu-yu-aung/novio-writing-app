@@ -2,6 +2,7 @@
 
 import ChapterCard from "@/components/ChapterCard";
 import ChapterCardSkeleton from "@/components/ChapterCardSkeleton";
+import ErrorStage from "@/components/ErrorStage";
 import SmallHeading from "@/components/SmallHeading";
 import StoryDetailSkeleton from "@/components/StoryDetailSkeleton";
 import useFetchAllChapters from "@/hooks/useFetchAllChapters";
@@ -73,8 +74,13 @@ const Page = ({ params }) => {
 
   //console.log("fetched author: ", author);
 
-  if (!story) {
-    return <div className="p-10">Story not found</div>;
+  if (!story || storyError) {
+    return (
+      <>
+        <h2 className="font-semibold text-2xl text-red-600  my-4">Story Not Found!</h2>
+        <ErrorStage />
+      </>
+    );
   }
 
   const handleAddLibrary = async () => {
@@ -87,7 +93,6 @@ const Page = ({ params }) => {
 
     if (error) {
       toast.error("Error adding story to the library!");
-      console.log("Error adding story to the library! ", error);
     }
 
     toast.success("Story added to library!");
@@ -99,7 +104,6 @@ const Page = ({ params }) => {
 
     if (error) {
       toast.error("Error removing story from library!");
-      console.error("Error removing story from library! ", error);
       return;
     }
 
@@ -112,15 +116,7 @@ const Page = ({ params }) => {
       <SmallHeading title="Story Dashboard" />
 
       <div
-        className="
-          flex flex-col 
-          lg:grid lg:grid-cols-9 
-          w-full min-h-screen 
-          relative 
-          bg-background-default 
-          text-heading 
-          px-4 sm:px-8 lg:px-24
-        "
+        className="flex flex-col lg:grid lg:grid-cols-9 w-full min-h-screen relative bg-background-default text-heading px-4 sm:px-8 lg:px-24"
       >
         {/* LEFT SECTION — STORY INFO */}
         <section

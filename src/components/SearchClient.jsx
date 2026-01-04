@@ -7,6 +7,7 @@ import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import SearchResultSkeleton from "./SearchResultSkeleton";
 
 export default function SearchClient() {
   const searchParams = useSearchParams();
@@ -20,14 +21,14 @@ export default function SearchClient() {
   const { searchResults, error, loading } = useSearchQuery(query);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <SearchResultSkeleton />;
   }
 
   if (error) {
     return <p>Something went wrong!</p>;
   }
 
-  console.log("search results: ", searchResults);
+  //console.log("search results: ", searchResults);
 
   const { authors, stories, bookshelves } = searchResults;
 
@@ -58,8 +59,6 @@ export default function SearchClient() {
         ))}
       </div>
 
-
-      {/* STORIES */}
 
       <section className="space-y-4">
         {

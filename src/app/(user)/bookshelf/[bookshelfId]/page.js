@@ -73,7 +73,7 @@ const Page = ({ params }) => {
       .eq("id", bookshelfId);
 
     if (publicError) {
-      console.log("Error making public: ", publicError);
+      //console.log("Error making public: ", publicError);
       return toast.error("Error changing privacy to public!");
     }
 
@@ -88,7 +88,7 @@ const Page = ({ params }) => {
       .eq("id", bookshelfId);
 
     if (privateError) {
-      console.log("Error making private: ", privateError);
+      //console.log("Error making private: ", privateError);
       return toast.error("Error changing privacy to private!");
     }
 
