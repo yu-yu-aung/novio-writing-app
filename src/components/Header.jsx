@@ -172,23 +172,23 @@ const Header = () => {
                 onClick={() => setShowLogIn(false)}
               >
                 <div 
-                  className="relative p-4 w-full max-w-md max-h-full bg-amethyst-200 dark:bg-amethyst-700 border border-default rounded-lg"
+                  className="relative p-4 w-[240px] sm:w-full max-w-md max-h-full bg-amethyst-200 dark:bg-amethyst-700 border border-default rounded-lg"
                   onClick={(e) => {e.stopPropagation()}}  
                 >
-                  <div className="relative p-4 md:p-6">
+                  <div className="relative px-2 py-1 sm:p-4 md:p-6">
                     <button 
                       type="button" 
                       onClick={() => setShowLogIn(false)}
-                      className="absolute top-3 end-2.5 text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                      className="absolute top-1 end-1 text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center">
                       <X className="size-5"/>
                     </button>
-                    <div className="p-4 md:p-5 flex flex-col items-center">
+                    <div className="p-2 sm:p-4 md:p-5 flex flex-col items-center">
                       <img 
                         src="/oops.png" 
                         alt="Oops bombing image" 
                         className="w-60 object-cover px-auto"/>
-                      <h3 className="mb-6 text-lg font-semibold font-sans">
-                        You haven't logged into your account yet! Log in or Sign up to create stories.
+                      <h3 className="mb-6 text-sm sm:text-lg font-medium font-sans">
+                        You haven't logged in yet! Log in or Sign up to create stories.
                       </h3>
 
                       <div className="flex items-center space-x-4 justify-center">
@@ -198,7 +198,7 @@ const Header = () => {
                           router.push('/sign_up')
                         }}
                           href='/sign_up' 
-                          className="text-white bg-coral-tree-700 box-border  hover:scale-110 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
+                          className="text-white bg-coral-tree-700 box-border  hover:scale-110 shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 sm:px-4 sm:py-2.5 focus:outline-none">
                           Sign Up
                         </button>
                         <button
@@ -206,7 +206,7 @@ const Header = () => {
                           setShowLogIn(false)
                           router.push('/log_in')
                         }}
-                          className="text-white bg-amethyst-850 box-border hover:bg-neutral-tertiary-medium hover:scale-110  shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
+                          className="text-white bg-amethyst-850 box-border hover:bg-neutral-tertiary-medium hover:scale-110  shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 sm:px-4 sm:py-2.5 focus:outline-none">
                           Log In
                         </button>
                       </div>
