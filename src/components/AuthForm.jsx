@@ -54,7 +54,7 @@ const AuthForm = ({ mode = "Log In" }) => {
 
       router.push(redirectTo); 
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       toast.error("Unexpected error occurred!");
     } finally {
       setLoading(false);
