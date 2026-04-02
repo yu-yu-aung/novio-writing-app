@@ -13,8 +13,10 @@ const SmallHeading = ({title = ""}) => {
             alt="Logo"
             className="size-[100px] hidden dark:block"
           />
-          <h2 className="text-2xl lg:text-3xl font-bold text-heading">
-            {title}
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-800 dark:text-gray-100">
+            <span className="bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">
+              {title}
+            </span>
           </h2>
         </div>
         

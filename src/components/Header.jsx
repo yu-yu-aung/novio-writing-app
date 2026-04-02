@@ -43,7 +43,7 @@ const Header = () => {
 
   const isActive = (path) =>
     pathname === path
-      ? "bg-amethyst-200 dark:bg-amethyst-800 text-coral-tree-200"
+      ? "bg-amethyst-200 dark:bg-amethyst-800 text-coral-tree-800 dark:text-coral-tree-100"
       : "text-gray-700 dark:text-gray-200";
 
   const unreadNoti = notifications.filter(
